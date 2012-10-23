@@ -1,0 +1,21 @@
+#Do not commit binaries (and bundles)
+*.exe
+*.dll
+*.so
+*.dlyb
+*.framework
+*.app
+
+#Do not commit static libraries and objects
+*.a
+*.o
+*.obj
+*.lib
+
+
+#Other things...
+*.ilk
+*.pdb
+*.tlog
+*.idb
+*.exe.*
