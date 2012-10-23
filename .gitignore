@@ -19,3 +19,4 @@
 *.tlog
 *.idb
 *.exe.*
+*.vcxproj.user
