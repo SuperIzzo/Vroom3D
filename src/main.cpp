@@ -79,6 +79,92 @@ void glDrawRay( const Ray &ray )
 }
 
 
+void glDrawRaySeg( const Ray &ray, float t1, float t2 )
+{
+	glBegin( GL_LINES );
+		glColor3f( 1, 1, 1 );
+		glVertex3f( ray.origin.x(), ray.origin.y(), ray.origin.z() );
+		glVertex3f( ray.origin.x() + t1*ray.direction.x(),
+					ray.origin.y() + t1*ray.direction.y(),
+					ray.origin.z() + t1*ray.direction.z() );
+
+		// Colored section
+		glColor3f( 1, 0, 0 );
+		glVertex3f( ray.origin.x() + t1*ray.direction.x(),
+					ray.origin.y() + t1*ray.direction.y(),
+					ray.origin.z() + t1*ray.direction.z() );
+		glVertex3f( ray.origin.x() + t2*ray.direction.x(),
+					ray.origin.y() + t2*ray.direction.y(),
+					ray.origin.z() + t2*ray.direction.z() );
+
+		glColor3f( 1, 1, 1 );
+		glVertex3f( ray.origin.x() + t2*ray.direction.x(),
+					ray.origin.y() + t2*ray.direction.y(),
+					ray.origin.z() + t2*ray.direction.z() );
+		glVertex3f( ray.origin.x() + 100*ray.direction.x(), 
+					ray.origin.y() + 100*ray.direction.y(), 
+					ray.origin.z() + 100*ray.direction.z() );
+	glEnd();
+}
+
+
+
+bool GetRayAABBIntersectionPoints( const Ray &ray, const AABB &aabb, float &outTMin, float &outTMax )
+{
+	float epsilon = FLT_EPSILON;
+
+	float tMin = -FLT_MAX;
+	float tMax = FLT_MAX;
+
+	for( int i=0; i < 3; i++ )
+	{
+		float planeMin = aabb.min[i];
+		float planeMax = aabb.max[i];
+
+		if( ray.direction[i] < epsilon && ray.direction[i] > -epsilon )
+		{
+			// If the ray is paralel to the planes then it's origin must be between
+			// them (otherwise it's a miss);
+			if(  ray.origin[i] > planeMax || ray.origin[i] < planeMin )
+				return false;
+			else
+				continue;
+		}
+
+		// PlanePoint = ray.origin + ray.direction * t
+		// => t = (planePint - ray.origin) / ray.direction
+		float min;
+		float max;
+
+		if( ray.direction[i] > 0 )
+		{
+			min = (planeMin - ray.origin[i]) / ray.direction[i];
+			max = (planeMax - ray.origin[i]) / ray.direction[i];
+		}
+		else
+		{
+			max = (planeMin - ray.origin[i]) / ray.direction[i];
+			min = (planeMax - ray.origin[i]) / ray.direction[i];
+		}
+
+		if( min > tMin )
+			tMin = min;
+
+		if( max < tMax )
+			tMax = max;
+
+		if( tMax < tMin )
+			return false;
+	}
+
+	outTMin = tMin;
+	outTMax = tMax;
+
+	return true;
+}
+
+
+
 int main(int argc, char* args[])
 {
 	if ( argc > 1   &&   strcmp("-test", args[1])==0 )
@@ -103,7 +189,9 @@ int main(int argc, char* args[])
 
 		Ray ray;
 		ray.origin		<< -0.5,    0,    0;
-		ray.direction	<<    1,    0,	  0;
+		ray.direction	<<    1,    0.4,	  0;
+
+		ray.direction.normalize();
 
 		// For rotation animation
 		float angle = 0;
@@ -137,7 +225,18 @@ int main(int argc, char* args[])
 
 			// Do drawings
 			glDrawAABB( aabb );
-			glDrawRay( ray );
+
+
+			float t1, t2;
+
+			if( GetRayAABBIntersectionPoints( ray, aabb, t1, t2 ) )
+			{
+				glDrawRaySeg( ray, t1, t2 );
+			}
+			else
+			{
+				glDrawRay( ray );
+			}
 
 
 			// Flip buffers
