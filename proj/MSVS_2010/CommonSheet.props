@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <ProjectRoot>$(SolutionDir)..\..</ProjectRoot>
+    <ProjectLIB>$(ProjectRoot)\lib</ProjectLIB>
+    <ProjectInclude>$(ProjectRoot)\include</ProjectInclude>
+    <ProjectSource>$(ProjectRoot)\src</ProjectSource>
+    <ProjectBIN>$(ProjectRoot)\bin</ProjectBIN>
+    <ProjectSub>$(ProjectRoot)\sub</ProjectSub>
+    <ProjectBuild>$(ProjectRoot)\build</ProjectBuild>
+  </PropertyGroup>
+  <PropertyGroup>
+    <IncludePath>$(ProjectSource);$(ProjectInclude);$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectLIB)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(ProjectBIN)\$(Configuration);$(ProjectBIN);$(ExecutablePath)</ExecutablePath>
+    <SourcePath>$(ProjectSource);$(VCInstallDir)atlmfc\src\mfc;$(VCInstallDir)atlmfc\src\mfcm;$(VCInstallDir)atlmfc\src\atl;$(VCInstallDir)crt\src;</SourcePath>
+    <IntDir>$(ProjectBuild)\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="ProjectRoot">
+      <Value>$(ProjectRoot)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ProjectLIB">
+      <Value>$(ProjectLIB)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ProjectInclude">
+      <Value>$(ProjectInclude)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ProjectSource">
+      <Value>$(ProjectSource)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ProjectBIN">
+      <Value>$(ProjectBIN)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ProjectSub">
+      <Value>$(ProjectSub)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="ProjectBuild">
+      <Value>$(ProjectBuild)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Win32">
+      <UniqueIdentifier>{07cb7d3b-f9f9-45a7-b13a-c88b93e8a38f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\Win32\TimeHelpers.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\AssertException.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\Checks.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\CurrentTest.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\DeferredTestReporter.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\DeferredTestResult.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\MemoryOutStream.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\ReportAssert.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\Test.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\TestDetails.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\TestList.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\TestReporter.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\TestReporterStdout.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\TestResults.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\TestRunner.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\TimeConstraint.cpp" />
+    <ClCompile Include="$(ProjectSub)\UnitTest++\src\XmlTestReporter.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\Win32\TimeHelpers.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\AssertException.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\CheckMacros.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\Checks.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\Config.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\CurrentTest.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\DeferredTestReporter.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\DeferredTestResult.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\ExecuteTest.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\MemoryOutStream.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\ReportAssert.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\Test.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TestDetails.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TestList.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TestMacros.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TestReporter.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TestReporterStdout.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TestResults.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TestRunner.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TestSuite.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TimeConstraint.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\TimeHelpers.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\UnitTest++.h" />
+    <ClInclude Include="$(ProjectSub)\UnitTest++\src\XmlTestReporter.h" />
+  </ItemGroup>
+</Project>
