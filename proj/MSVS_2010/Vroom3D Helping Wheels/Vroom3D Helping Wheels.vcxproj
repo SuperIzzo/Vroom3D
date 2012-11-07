@@ -45,23 +45,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectSub)\Eigen-3.1.1;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectSub)\SFML-2.0-rc\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectSub)\UnitTest++\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectSub)\SFML-2.0-rc\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>UnitTest++.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UnitTest++.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(TargetPath)" -test</Command>
@@ -73,14 +75,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>UnitTest++.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UnitTest++.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(TargetPath)" -test</Command>
