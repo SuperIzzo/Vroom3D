@@ -45,7 +45,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectSub)\UnitTest++\src;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectSub)\Eigen-3.1.1;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
