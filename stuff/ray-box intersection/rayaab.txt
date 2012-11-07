@@ -1,0 +1,17 @@
+
+plane point = pp
+
+pp.x = ray.x + ray.dir.x * t
+
+t = ?
+t = (pp.x - ray.x) / ray.dir.x
+
+t
+
+we also have to make sure that min is less than max
+
+we do this a couple of times for each set of planes (3 in total) and at each round we get the maximal tmin and minimal tmax
+
+if tmin > tmax then we failed
+
+NOTE: in negative directions tmin and tmax switch places
