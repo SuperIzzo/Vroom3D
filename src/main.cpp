@@ -81,29 +81,32 @@ void glDrawRay( const Ray &ray )
 
 void glDrawRaySeg( const Ray &ray, float t1, float t2 )
 {
+	Eigen::Vector3f p1 = ray.origin + t1*ray.direction;
+	Eigen::Vector3f p2 = ray.origin + t2*ray.direction;
+
 	glBegin( GL_LINES );
-		glColor3f( 1, 1, 1 );
-		glVertex3f( ray.origin.x(), ray.origin.y(), ray.origin.z() );
-		glVertex3f( ray.origin.x() + t1*ray.direction.x(),
-					ray.origin.y() + t1*ray.direction.y(),
-					ray.origin.z() + t1*ray.direction.z() );
+
+		if( t1 > 0 )
+		{
+			glColor3f( 1, 1, 1 );
+			glVertex3f( ray.origin.x(), ray.origin.y(), ray.origin.z() );
+			glVertex3f( p1.x(),	p1.y(), p1.z() );
+		}
+		else
+		{
+			p1 = ray.origin;
+		}
 
 		// Colored section
 		glColor3f( 1, 0, 0 );
-		glVertex3f( ray.origin.x() + t1*ray.direction.x(),
-					ray.origin.y() + t1*ray.direction.y(),
-					ray.origin.z() + t1*ray.direction.z() );
-		glVertex3f( ray.origin.x() + t2*ray.direction.x(),
-					ray.origin.y() + t2*ray.direction.y(),
-					ray.origin.z() + t2*ray.direction.z() );
+		glVertex3f( p1.x(),	p1.y(), p1.z() );
+		glVertex3f( p2.x(),	p2.y(), p2.z() );
 
 		glColor3f( 1, 1, 1 );
-		glVertex3f( ray.origin.x() + t2*ray.direction.x(),
-					ray.origin.y() + t2*ray.direction.y(),
-					ray.origin.z() + t2*ray.direction.z() );
-		glVertex3f( ray.origin.x() + 100*ray.direction.x(), 
-					ray.origin.y() + 100*ray.direction.y(), 
-					ray.origin.z() + 100*ray.direction.z() );
+		glVertex3f( p2.x(),	p2.y(), p2.z() );
+		glVertex3f( ray.origin.x() + 10*ray.direction.x(), 
+					ray.origin.y() + 10*ray.direction.y(), 
+					ray.origin.z() + 10*ray.direction.z() );
 	glEnd();
 }
 
@@ -165,6 +168,35 @@ bool GetRayAABBIntersectionPoints( const Ray &ray, const AABB &aabb, float &outT
 
 
 
+void traverseAndDrawBoxes(const Ray &ray, const AABB &aabb, const std::vector<AABB> *subBoxes, int numBoxes)
+{
+	float t1, t2;
+	if(	GetRayAABBIntersectionPoints( ray, aabb, t1, t2 ) )
+	{
+		// Initialization
+		// We need to pin the ray to the first voxel it hits in the grid
+		// 
+
+		// Get the entrance point in box coord space
+		Eigen::Vector3f point1 = ray.origin + ray.direction * t1 - aabb.min;
+
+		std::cout << "Ray hits volume at: " << point1.x() << ", " << point1.y() << ", " << point1.z() << std::endl;
+
+		point1.x() /= (aabb.max.x() - aabb.min.x())/numBoxes;
+		point1.y() /= (aabb.max.y() - aabb.min.y())/numBoxes;
+		point1.z() /= (aabb.max.z() - aabb.min.z())/numBoxes;
+
+		//point1.x() = floor( point1.x() );
+		//point1.y() = floor( point1.y() );
+		//point1.z() = floor( point1.z() );
+
+		std::cout << "Ray is in voxel: " << point1.x() << ", " << point1.y() << ", " << point1.z() << std::endl;
+
+		//Eigen::Vector3f point2 = ray.origin + ray.direction * t2 - aabb.min;		
+	}
+}
+
+
 int main(int argc, char* args[])
 {
 	if ( argc > 1   &&   strcmp("-test", args[1])==0 )
@@ -179,7 +211,15 @@ int main(int argc, char* args[])
 	}
 	else
 	{
-		sf::RenderWindow theWindow( sf::VideoMode(640, 480), "The window" ); 
+		sf::Window theWindow( sf::VideoMode(640, 480), "The window" ); 
+
+		// Set color and depth clear value
+		glClearDepth(1.f);
+		glClearColor(0.f, 0.f, 0.f, 0.f);
+
+		// Enable Z-buffer read and write
+		glEnable(GL_DEPTH_TEST);
+		glDepthMask(GL_TRUE);
 
 
 		// Our AABB
@@ -188,13 +228,42 @@ int main(int argc, char* args[])
 		aabb.max		<<  0.2,  0.2,  0.2;
 
 		Ray ray;
-		ray.origin		<< -0.5,    0,    0;
-		ray.direction	<<    1,    0.4,	  0;
+		ray.origin		<< 0.5,    0,    0;
+		ray.direction	<<    1,    0.4,	  0.2;
 
 		ray.direction.normalize();
 
 		// For rotation animation
 		float angle = 0;
+
+
+		std::vector<AABB> subBoxes;
+		int numBoxes = 3;
+
+		// And some fictional voxels
+		{	
+			Eigen::Vector3f sbSize = (aabb.max - aabb.min)/numBoxes;
+
+			for( int z = 0; z< numBoxes; z++)
+			{
+				for( int y = 0; y< numBoxes; y++)
+				{
+					for( int x = 0; x< numBoxes; x++)
+					{
+						AABB subBox;
+						subBox.min.x() = sbSize.x() * x			+ aabb.min.x();
+						subBox.max.x() = sbSize.x() * (x+1)		+ aabb.min.x();
+
+						subBox.min.y() = sbSize.y() * y			+ aabb.min.y();
+						subBox.max.y() = sbSize.y() * (y+1)		+ aabb.min.y();
+
+						subBox.min.z() = sbSize.z() * z			+ aabb.min.z();
+						subBox.max.z() = sbSize.z() * (z+1)		+ aabb.min.z();
+						subBoxes.push_back(subBox);
+					}
+				}
+			}
+		}
 
 
 		
@@ -212,24 +281,45 @@ int main(int argc, char* args[])
 			}
 
 			// Clear the screen
-			theWindow.clear();
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 			// Do view transformations here...
+			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
+			glOrtho(-1, 1, -1, 1, 0, 100);
 
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
 			angle += 0.1;
+			glTranslatef( 0, 0, -5 );
 			glRotatef( 30 , 1.0, 0.0, 0.0);
-			glRotatef( angle , 0.0, 1.0, 0.0);
+			glRotatef( angle*2 , 0.0, 1.0, 0.0);
+			
 
 
-			// Do drawings
+			// Draw Our AABB
 			glDrawAABB( aabb );
 
 
+			for( int i=0; i< subBoxes.size(); i++ )
+			{
+			//	glDrawAABB( subBoxes[i] );
+			}
+
+
+
+			ray.origin		<< angle/700 - 0.5f,    0,    0;
+			ray.direction	<<    1,    0.4,	  0.2;
+
+			ray.direction.normalize();
+
+
+			traverseAndDrawBoxes( ray, aabb, &subBoxes, numBoxes );
+
 			float t1, t2;
 
-			if( GetRayAABBIntersectionPoints( ray, aabb, t1, t2 ) )
+			if( GetRayAABBIntersectionPoints( ray, aabb, t1, t2 ) && t1>0 && t2>0)
 			{
 				glDrawRaySeg( ray, t1, t2 );
 			}
