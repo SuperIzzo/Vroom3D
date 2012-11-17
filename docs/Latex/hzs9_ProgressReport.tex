@@ -1,0 +1,93 @@
+\documentclass[11pt,fleqn,twoside]{article}
+\usepackage{makeidx}
+\makeindex
+\usepackage{palatino} %or {times} etc
+\usepackage{plain} %bibliography style 
+\usepackage{amsmath} %math fonts - just in case
+\usepackage{amsfonts} %math fonts
+\usepackage{amssymb} %math fonts
+\usepackage{lastpage} %for footer page numbers
+\usepackage{fancyhdr} %header and footer package
+\usepackage{mmpv2} 
+\usepackage{url}
+
+% the following packages are used for citations - You only need to include one. 
+%
+% Use the cite package if you are using the numeric style (e.g. IEEEannot). 
+% Use the natbib package if you are using the author-date style (e.g. authordate2annot). 
+% Only use one of these and comment out the other one. 
+\usepackage{cite}
+%\usepackage{natbib}
+
+\begin{document}
+
+\name{Hristoz Stefnov Stefanov}
+\userid{hzs9}
+\projecttitle{3D Volume Rendering Engine for Interactive Applications}
+\projecttitlememoir{3D Volume Rendering Engine for Interactive Applications} %same as the project title or abridged version for page header
+\reporttitle{Progress Report}
+\version{0.1}
+\docstatus{Draft}
+\modulecode{CS39440}
+\supervisor{Bernie Tiddeman} % e.g. Neil Taylor
+\supervisorid{bpt}
+\degreeschemecode{G451}
+\degreeschemename{Computer Graphics, Vision And Games (Inc Integrated Industrial And Professional Training)}
+\wordcount{4500}
+
+%optional - comment out next line to use current date for the document
+\documentdate{18th November 2012} 
+\mmp
+
+\setcounter{tocdepth}{3} %set required number of level in table of contents
+\tableofcontents
+
+\newpage
+
+%==============================================================================
+\section{Project Summary}
+%==============================================================================
+Text in here.
+
+%==============================================================================
+\section{Current Progress}
+%==============================================================================
+Text in here. 
+
+%==============================================================================
+\section{Planning}
+%==============================================================================
+Text in here.
+
+%
+% Start to comment out / remove the following lines. They are only provided for instruction for this example template.  You don't need the following section title, because it will be added as part of the bibliography section. 
+%
+%==============================================================================
+\section*{Your Bibliography - REMOVE for final version}
+%==============================================================================
+%
+You need to include an annotated bibliography. This should list all relevant web pages, books, journals etc. that you have consulted in researching your project. Each reference should include an annotation. 
+
+The purpose of the section is to understand what sources you are looking at.  A correctly formatted list of items is sufficient. You might go further and make use of bibliographic tools, e.g. BibTeX in a LaTeX document, could be used to provide citations, for example \cite{NumericalRecipes} \cite{MarksPaper} \cite[99-101]{FailBlog} \cite{kittenpic_ref}.  The bibliographic tools are not a requirement, but you are welcome to use them.   
+
+You can remove the above {\em Your Bibliography} section heading because it will be added in by the renewcommand which is part of the bibliography. The correct annotated bibliography information is provided below. 
+%
+% End of comment out / remove the lines. They are only provided for instruction for this example template. 
+%
+
+
+\nocite{*} % include everything from the bibliography, irrespective of whether it has been referenced.
+
+% the following line is included so that the bibliography is also shown in the table of contents. There is the possibility that this is added to the previous page for the bibliography. To address this, a newline is added so that it appears on the first page for the bibliography. 
+\newpage
+\addcontentsline{toc}{section}{Annotated Bibliography} 
+
+%
+% example of including an annotated bibliography. The current style is an author date one. If you want to change, comment out the line and uncomment the subsequent line. You should also modify the packages included at the top (see the notes earlier in the file) and then trash your aux files and re-run. 
+%\bibliographystyle{authordate2annot}
+\bibliographystyle{IEEEannot}
+\renewcommand{\refname}{Annotated Bibliography}  % if you put text into the final {} on this line, you will get an extra title, e.g. References. This isn't necessary for the outline project specification. 
+\bibliography{mmp} % References file
+
+
+\end{document}
