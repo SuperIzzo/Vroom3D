@@ -43,7 +43,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
     <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectSub)\SFML-2.0-rc\lib;$(LibraryPath)</LibraryPath>
