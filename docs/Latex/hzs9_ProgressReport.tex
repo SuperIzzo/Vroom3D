@@ -10,6 +10,8 @@
 \usepackage{fancyhdr} %header and footer package
 \usepackage{mmpv2} 
 \usepackage{url}
+\usepackage{sidecap} %for side captions
+\usepackage[section]{placeins}
 
 % the following packages are used for citations - You only need to include one. 
 %
@@ -18,6 +20,9 @@
 % Only use one of these and comment out the other one. 
 \usepackage{cite}
 %\usepackage{natbib}
+
+
+
 
 \begin{document}
 
@@ -55,13 +60,110 @@ Text in here.
 
 
 \subsection{Research}
-The predominant part of my work so far has been research. Initially I was concerned about the relevancy of my project as volume rendering is not new technology. I started researching the already existing solutions placing more importance on open-source ones, in the event of finding a suitable one I would use it as a starting point for my project. Indeed I did find a couple of good engines, which however were not suitable for one reason or another.
+The predominant part of my work so far has been research.
 
-Voreen - GPL, targeted at researchers, non-commercial use which contradicts with my goal - open source volume rendering engine which encourages people to use it for whatever purpose they need
-Voxlap - source incredibly cryptic, no comments, magic numbers and syntax I've never seen
-Voxrend - minimalistic ray-tracer, written in C, sourcecode in spanish
-PolyVox - minecraft like geared voxel engine - i.e. cubes
+\subsubsection{Relevant Technology}
+Initially I was concerned about the relevancy of my project as volume rendering is not new technology. I started researching the already existing solutions placing more importance on open-source projects, in the event of finding a suitable one I would use it as a starting point for my project. Indeed I did find a couple of working engines, which however were not suitable for one reason or another.
 
+\begin{description}
+	\item[Voreen\cite{Volreen}]
+	the best open-sourced volume rendering engine available. Has a standalone visualization application, provides good development API and documentation. Utilizes hardware acceleration trough shaders. It is primarily targeted towards researchers, and non-commercial medical equipment users. The greatest drawback is its license - GPL. My target audience (game developers) get very anxious around GPL and it discourages them from using such software, even if they end up producing nothing commercially worth.
+	\item[Voxlap\cite{Voxlap}]
+	the oldest popular open-source game geared voxel rendering engine in existence. Its written by Ken Silverman (the developer who created the engine for Duke Nukem 3D) and is the renderer of choice amongst enthusiasts who like to try out the technology. It supports animations, dynamic shadows and shading. A big drawback is that the source is incredibly cryptic - it's written in C, there are no comments, it's full of magic numbers and uses syntax I've never seen. It would be hard for me to fully understand and modify it.
+	\item[Voxrend\cite{VoxRend}]
+	a minimalistic open-source ray-tracer with very few, but core features. The source is written in C and is well commented, but it is mostly in Spanish. Also the project seems to have been discontinued for quite a while.
+	\item[PolyVox\cite{PolyVox}]
+	A popular recent voxel engine; has well documented code; written in C++. It supports generic voxel structures but the problem is it understands voxels mostly as cubes (with materials) like in MineCraft. While some of it can be used for a volume renderer it comes short when basic color operations have to be used like interpolations geared voxel engine. It is not exactly what I have in mind.
+\end{description}
+
+There a few more engines I have rejected for similar reasons.
+
+If I wanted to make a volumetric graphics game at this rate I would chose Voxlap, because it has the minimal functionality I would require, it is aimed for games and comes with a commercially-friendly license. Even though I cannot use any of these as a starting point I will still use the code as a reference when I hit specific issues I cannot solve. Voxlap and Voxrend are both minimal in design, even though source is hard to read I could use visible API design ideas from both. Voreen is also good for the same purpose, although it is more complex (in fact unnecessarily). PolyVox is not a volume rendering engine, but it has to tackle some of the same issues I have, for instance it tackles the memory issue with in-memory running line encoding of volume data.
+
+I also took a look at a few commercial/closed-sourced project, but did not consider them as viable options. I look at the following only for ``market'' awareness sake. ``Automontage''\cite{Automontage} and ``Unlimited Detail''\cite{UnlimitedDetail} are two recent commercial engines both of which advertise volume data, both are under development and none has released an interactive demo.
+
+Voxel Engine\cite{VoxelEngineDevelopment} is a closed source engine which experiments with NVidia CUDA to gain hardware acceleration. It occasionally releases demos and comments on issues. Peter Houska's Direct Volume Renderer\cite{PHDVR}] is a university project developed by Peter Houska. The downloadable demo demonstrates a number of different techniques, doxigen documentation available, also a separate presentation file found on the website explains the toon edge effect.
+
+
+\subsubsection{Relevant Literature}
+
+I found a lot of articles, reports, proceedings and theses.
+The most comprehensive research article I found and the one I liked the most was Cyril Crassin's PhD thesis\cite{CCrassinThesis} which documents a cone based hierarchical volume ray-tracing engine called GigaVoxel. It tackles various issues that come with ray-tracing - to deal with the huge memory usage it uses octree hierarchies of voxels constructed based on visual LOD requirements (the further an object is the less memory is used for its representation). It caches data on several levels the quickest being the GPU. The engine is hardware accelerated either by NVidia CUDA or pixel shaders. It is capable of rendering alongside polygons by reading the color and depth buffers and composing the final image from the rasterized  polygon and voxel renders, what is more it uses those buffers to terminate rays early if an opaque polygon is already placed in front of a volume object. It does a lot of clever tricks and has been my primary text book. For complex geometry it becomes hundreds of times more efficient than polygon based rasterizer. The engine itself is going to be released as open-source, so there would be no point reimplementing it, but I can certainly use some of its ideas for my own project.
+
+Amongst other literature I've read is M. Mei\ss{}ner's summary on volume rendering techniques\cite{VolumeRenderingTut}. It explains terms and various techniques used by many volume renderers in slightly less technical language. It has medical visualization in mind and mentions the oddities of the different scanners but also explains the basics of interpolation, shading, normal computation, rendering techniques and possible optimisations. It was helpful for grasping some of the ideas but is far from extensive. Another paper from the same author\cite{AlgorithmComparison} compares the 4 most popular rendering techniques used in medical imaging - volume ray-casting, splatting, shear-warp and 3D texture mapping (slices). It is quite useful to me at the moment because I'm trying to chose the one I will use later.
+
+
+...
+
+
+\subsection{Environment Setup}
+
+
+\subsubsection{Project diary}
+
+\subsubsection{Unit testing}
+My programming language of choice is C++ because that is the standard in the gaming industry. I decided to follow the XP model and one of the first thing I had to consider was a unit testing framework. At first I tried CppUnit thinking it would be a straight port of JUnit for C++, I didn't like how complex it was to use, not to mention how long it took me to setup. After some research I found out about three other good unit testing framework, BoostTest, GoogleTest and UnitTest++. After some consideration I tried UnitTest++ first and it worked, so I stuck with it.
+
+I was easily able to integrate it with the build process and when a test fails the entire build will fail.
+
+\subsubsection{Version control}
+I've used SVN before, but decided to switch to GIT for this year as it is considered to be better. In my case it really is more practical, because I don't have constant internet access at home and often have to wait until it is good enough to commit. Another advantage of GIT over SVN is its advanced branching system which does automatically takes care of merging, this makes it possible to integrate GIT's branches into a work flow (see chapter 3 of Git Pro\cite{ProGit}). My branch structure will look something like what is shown in \ref{fig:gitXPbranches}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.9\textwidth]{git-XP-branches}
+\caption{Git branching integrated into eXtreme Programming work flow}
+\label{fig:gitXPbranches}
+\end{figure}
+
+The a)main branch  only contains a stable version of the program, everything is developed onto a b)development branch which may be unstable, when it stabilizes it merges back into the a)main branch. When a new user story is started it branches out from the b)development branch into a c)user story branch and is developed there, when the user story is complete and all of the tests pass it gets merged back to the b) development branch. There are also the occasional d)spike branches which are created for fast prototyping. They may branch out from anywhere and never make it back (they get thrown away).
+
+Since my project is meant to be open-source I had no reservations about placing it on git-hub. The repository is located at: https://github.com/SuperIzzo/Vroom3D
+
+\subsubsection{User stories}
+An important element of the XP methodology are the user stories. My interpretation of this is an online sticky note board. I'm my own client and I don't have a constant workstation so it suits my needs. It could be accesses at http://www.stixy.com/guest/236395
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.3\textwidth]{user-story}
+\caption{An example StixyBoard user story}
+\label{fig:stixyUserStory}
+\end{figure}
+
+For priority notation I use the MoSCoW stategy\cite{AgileModUserStories} (Must, Should, Could, Won't), to stay away from numbers (see \ref{fig:stixyUserStory}), I have not decided on estimation conventions yet, but it won't be numbers either.
+
+\FloatBarrier
+\subsubsection{Project setup}
+The project tree is structured as shown in \ref{fig:projectSetup}. At present it is a MSVC 2010 project, but I would like to make it a CMake project, so that it is easier to keep multi-platform project consistency, but I do not know CMake very well and it is not a high priority. The main deliverable will be a library (in both static and dynamic form)
+
+\begin{SCfigure}
+\centering
+\includegraphics[width=0.35\textwidth]{project-structure}
+\caption{Project tree structure. The project is set up using this 
+tree structure. Source files and hidden API are located in the "src" directory,
+public API headers go in the include folder. "test" is where all unit test files are located. "proj" contains project files. "sub" contains third party libraries. "docs" is where the documentation lives. Object files go into the "build" directory, while executables and dynamic libraries in "bin" and static libraries in "lib".
+}
+\label{fig:projectSetup}
+\end{SCfigure}
+
+
+\FloatBarrier
+\subsection{Prototypes}
+
+\begin{aquote}{Cyril Crassin\cite{CCrassinThesis}}
+	``...there are three major issues to overcome before making detailed rendering of massive volumes
+	a standard rendering primitive:
+	\begin{itemize}
+		\item How to store a pre-filtered voxel representation ?
+		\item How to render it efficiently ?
+		\item How to handle large amounts of voxel data ?
+	\end{itemize}''
+\end{aquote}
+
+So far my focus has been on researching the different rendering methods and considering which one will be most suitable for use in interactive applications. Volume slicing is arguably faster\cite{AlgorithmComparison} because it is supported by hardware, but I have a personal bias towards ray-tracing, so I have been playing with both technologies, as well as finding quotes against volume slicing such as:
+
+``Conventional slicing is of limited use for such large datasets
+due to the enormous amount of slices.''\cite{LargeVolumesThesis}
 
 UnitTest++
 Eigen

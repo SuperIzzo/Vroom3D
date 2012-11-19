@@ -133,3 +133,15 @@
 	\renewcommand{\footrulewidth}{0.0pt}
 }
 
+%==============================================================================
+% Quotation environment, obtained from: 
+% http://tex.stackexchange.com/questions/13756/quote-environment-with-reference-at-the-end-right
+%==============================================================================
+\def\signed #1{{\leavevmode\unskip\nobreak\hfil\penalty50\hskip2em
+  \hbox{}\nobreak\hfil(#1)%
+  \parfillskip=0pt \finalhyphendemerits=0 \endgraf}}
+
+\newsavebox\mybox
+\newenvironment{aquote}[1]
+  {\savebox\mybox{#1}\begin{quote}}
+  {\signed{\usebox\mybox}\end{quote}}
