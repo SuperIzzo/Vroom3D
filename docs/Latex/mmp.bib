@@ -1,0 +1,216 @@
+%======================================================================
+% Related Literature
+%======================================================================
+@phdthesis{CCrassinThesis,
+  title={{GigaVoxels: A Voxel-Based Rendering Pipeline For Efficient Exploration Of Large And Detailed Scenes}},
+  author={Cyril Crassin},
+  school={UNIVERSITE DE GRENOBLE},
+  year={2011},
+  month={July},
+  url={http://maverick.inria.fr/Membres/Cyril.Crassin/index.html}
+}
+
+@mastersthesis{LargeVolumesThesis,
+	title={{Efficient Volume Visualization of Large Medical Datasets}},
+	author={Stefan Bruckner},
+	school={Vienna University of Technology},
+	year={2004},
+	url={http://www.cg.tuwien.ac.at/~bruckner/homepage/content/mastersthesis/},
+	annote={The research concentrates on the issue of large medical datasets and tries to answer the question of how to render them efficiently. Several techniques are described including object caching, bricking (volume segmentation), multithreaded rendering. Provides sufficient background on volume ray-casting.}
+}
+
+@techreport{VolumeRenderingTut,
+	title={{Volume Visualization and Volume Rendering Techniques}},
+	author={M. Mei\ss{}ner, H. Pfister, R. Westermann and C.M. Wittenbrink},
+	institution={The Eurographics Association},
+	year={2000},
+	annote={An extensive tutorial on rendering techniques, defines core terms also used in many other publications and is a good starting point. Compares different rendering and data processing techniques.}
+}	
+
+@techreport{AlgorithmComparison,
+	title={A Practical Evaluation of Popular Volume Rendering Algorithms},
+	author = {Michael Mei\ss{}ner and Jian Huang and Dirk Bartz and Klaus Mueller and Roger Crawfis},
+	booktitle = {IN PROCEEDINGS OF THE 2000 IEEE SYMPOSIUM ON VOLUME VISUALIZATION},
+	year = {2000},
+	pages = {81--90},
+	publisher = {ACM Press},
+	annote={ A comparison of the most 4 popular direct volume rendering methods - ray-casting, splatting, shear-warp, 3D texture mapping (slices). Concludes that 3D texture mapping is the fasters, followed by shear-warp, voxel splatting and finally ray-casting.}
+}	
+
+
+@conference{GPUAccelTech,
+  title={{Acceleration techniques for GPU-based volume rendering}},
+  booktitle={Visualization, 2003. VIS 2003. IEEE},
+  author={Kr\"{u}ger, J. and Westermann, R.},
+  pages={287 - 292},
+  year={2003},
+  month={October}
+  annote={A summary of various hardware (and software) acceleartion techniques for different volume rendering methods. 3D texture trilinear interpolation for slice based volume rendering, shader based ray-casting, empty space skipping.}
+}
+
+@inbook{GPUGemsCh39,
+  title={{GPU Gems}},
+  chapter={39 "Volume Rendering Techniques"},
+  author={Randima Fernando},
+  publisher={Addison-Wesley Professional},
+  year={2004},
+  month={March},
+  url={http://http.developer.nvidia.com/GPUGems/gpugems_ch39.html},
+  annote={A chapter dedicated to 3D texture mapping which explains the concepts and algorithms behind it, touches on the subject of dynamic lighting}
+}
+
+
+@misc{CodermindArts,
+  title={{Codermind Technical Articles}},
+  author={Codermind Team},
+  howpublished={\url{http://www.codermind.com/articles/Technical-articles.html}},
+  note={Articles on ray tracing and volumetric terrain rendering. Last accessed November 2012.}
+  annote={Comprehensive tutorials on ray tracing and volumetric terrain rendering. Explains volume ray-casting; terrain rendering optimisation. Provides the full source code from the tutorials. }
+}
+
+
+@misc{TextureMappingTut,
+  title={{Lecture notes on 3D texture mapping}},
+  author={Oliver Kreylos},
+  howpublished={\url{http://idav.ucdavis.edu/~okreylos/PhDStudies/Winter2000/TextureMapping.html}},
+  year={2000},
+  note={Oliver Kreylos's lecture notes on 3D texture mapping. Last accessed November 2012.}
+}
+
+@techport{ImageReconstr,
+	title={{Wavelet Frame Based Image Restoration With Missing/Damaged Pixels}},
+	author={Hui Ji, Zuowei Shen and Yuhong Xu},
+	institution={National University of Singapore},
+	year={2009},
+	annote={An image processing paper for reconstruction of missing and damage pixels, it covers topics such as noise removal and debluring using different approaches.}
+}
+
+
+%======================================================================
+% Related Projects
+%======================================================================
+@misc{Volreen,
+  title={Volreen Project},
+  author={Various},
+  howpublished={\url{http://www.voreen.org/}},
+  year={2005},
+  note={Open-source volume rendering engine, online publications. Last accessed November 2012.}
+}
+
+@misc{Voxlap,
+  title={Voxlap Project},
+  author={Ken Silverman},
+  howpublished={\url{http://advsys.net/ken/voxlap.htm}},
+  year={2000},
+  month={May},
+  note={Open-source voxel ray-tracing rendering engine. Last accessed November 2012.}
+}
+
+@misc{Field3D,
+  title={Field3D Project},
+  author={Sony Pictures Imageworks},
+  howpublished={\url{http://opensource.imageworks.com/?p=field3d}},
+  year={2009},
+  note={Open-source voxel data library. Last accessed November 2012.}
+}
+
+
+@misc{VoxRend,
+  title={VoxRend Project},
+  author={\~{N}u\~{n}o Martínez},
+  howpublished={\url{http://voxrend.sourceforge.net/}},
+  year={2005},
+  note={Open-source volume ray tracer. Clone of Voxlap. Last accessed November 2012.}
+}
+
+@misc{PolyVox,
+  title={PolyVox Project},
+  author={Mat Williams, David Williams and others},
+  howpublished={\url{http://www.volumesoffun.com/polyvox-about/}},
+  year={2006},
+  note={Open-source polygon based voxel engine, online publications. Last accessed November 2012.}
+}
+
+@misc{Automontage,
+  title={Automontage Engine},
+  author={Remake System},
+  howpublished={\url{http://www.atomontage.com/}},
+  year={2010},
+  note={A promissing commercial volume rendering engine, currently in development.},
+  annote={An unreleased (at the time of writing) commercial engine which promises very high resolution voxel based rendering.}
+}
+
+@misc{UnlimitedDetail,
+  title={Unlimited Detail},
+  author={Euclideon},
+  howpublished={\url{http://www.euclideon.com/}},
+  year={2010},
+  note={An advertised commercial volume rendering engine.}
+  annote={An unreleased (at the time of writing) commercial engine heavilly criticised for the lack of technical backing for the claims it makes.}
+}
+
+@misc{VoxelEngineDevelopment,
+  title={Voxel Engine Development},
+  author={Keine Kommentare},
+  howpublished={\url{http://voxels.blogspot.co.uk/}},
+  year={2009},
+  note={A volumetric engine development blog.}
+  annote={A closed source project experimenting with various hardware acceleration techniques. Most notably CUDA. Occasional demo releases and discussions on implementation issues.}
+}
+
+@misc{PHDVR,
+  title={Peter Houska's Direct Volume Renderer},
+  author={Peter Houska},
+  howpublished={\url{http://www.cg.tuwien.ac.at/courses/Visualisierung/2006-2007/Beispiel1/houska/webpage/index.html}},
+  year={2006},
+  school={Vienna University of Technology},
+  note={A volume renderer by Peter Houska, written as a univerity project.}
+}
+
+
+
+%======================================================================
+% UnRelated Projects
+%======================================================================
+@misc{Eigen,
+  title={Eigen},
+  author={Various},
+  howpublished={\url{http://eigen.tuxfamily.org/}},
+  year={2009},
+  note={Open-source C++ linear algebra library. Last accessed November 2012.}
+}
+
+@misc{UnitTest++,
+  title={UnitTest++},
+  author={Noel Llopis and Charles Nicholson},
+  howpublished={\url{http://unittest-cpp.sourceforge.net/}},
+  year={2006},
+  note={Open-source C++ unit test framework. Last accessed November 2012.}
+}
+
+
+
+%======================================================================
+% UnRelated Literature
+%======================================================================
+@book{ProGit,
+	author = {Chacon, Scott},
+	title = {Pro Git},
+	year = {2009},
+	isbn = {1430218339, 9781430218333},
+	edition = {1st},
+	publisher = {Apress},
+	address = {Berkely, CA, USA},
+	aanote={The book on GIT. A lot of useful information and usage guide. Also useful as a reference manual.
+	}
+}
+
+
+@misc{AgileModUserStories,
+  title={{Agile Modeling - user stories}},
+  author={Scott W. Ambler},
+  howpublished={\url{http://www.agilemodeling.com/artifacts/userStory.htm}},
+  note={A tutorial on user stories. Last accessed November 2012.}
+}
+
+

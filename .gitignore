@@ -22,7 +22,7 @@ build
 *.a
 *.lib
 
-#Do not commit binaries (and bundles)
+# Do not commit binaries (and bundles)
 *.exe
 *.app
 
@@ -31,3 +31,15 @@ build
 *.suo
 *.vcxproj.user
 proj/MSVS_2010/ipch
+
+
+# Do not commit latex output files
+docs/Latex/*.aux
+docs/Latex/*.bbl
+docs/Latex/*.blg
+docs/Latex/*.dvi
+docs/Latex/*.idx
+docs/Latex/*.log
+docs/Latex/*.pdf
+docs/Latex/*.synctex.gz
+docs/Latex/*.toc
