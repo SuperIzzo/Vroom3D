@@ -2,8 +2,12 @@
 #include <iostream>
 
 #include <Eigen/Dense>
+#include <Eigen/Geometry>
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
+#include <GLX/glext.h>
+
+#include <vector>
 
 class AABB
 {
@@ -13,186 +17,188 @@ public:
 };
 
 
-
-class Ray
+class SliceBox
 {
 public:
-	Eigen::Vector3f origin;
-	Eigen::Vector3f direction;
+	AABB box;
+
+	void draw(Eigen::Vector3f view);
 };
 
-
-void glDrawAABB( const AABB &box )
+/*
 {
-	glBegin( GL_LINES );
-		glVertex3f( box.min.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.max.x(),  box.min.y(),	box.min.z() );
-
-		glVertex3f( box.min.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.min.x(),  box.max.y(),	box.min.z() );
-
-		glVertex3f( box.min.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.min.x(),  box.min.y(),	box.max.z() );
-
-
-		glVertex3f( box.max.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.max.x(),  box.max.y(),	box.min.z() );
-
-		glVertex3f( box.max.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.max.x(),  box.min.y(),	box.max.z() );
-
-		
-		glVertex3f( box.min.x(),  box.max.y(),	box.min.z() );
-		glVertex3f( box.max.x(),  box.max.y(),	box.min.z() );
-
-		glVertex3f( box.min.x(),  box.max.y(),	box.min.z() );
-		glVertex3f( box.min.x(),  box.max.y(),	box.max.z() );
-
-
-		glVertex3f( box.min.x(),  box.min.y(),	box.max.z() );
-		glVertex3f( box.max.x(),  box.min.y(),	box.max.z() );
-
-		glVertex3f( box.min.x(),  box.min.y(),	box.max.z() );
-		glVertex3f( box.min.x(),  box.max.y(),	box.max.z() );
-
-
-		glVertex3f( box.max.x(),  box.max.y(),	box.max.z() );
-		glVertex3f( box.max.x(),  box.max.y(),	box.min.z() );
-
-		glVertex3f( box.max.x(),  box.max.y(),	box.max.z() );
-		glVertex3f( box.max.x(),  box.min.y(),	box.max.z() );
-
-		glVertex3f( box.max.x(),  box.max.y(),	box.max.z() );
-		glVertex3f( box.min.x(),  box.max.y(),	box.max.z() );
-	glEnd();
-}
-
-
-void glDrawRay( const Ray &ray )
-{
-	glBegin( GL_LINES );
-		glVertex3f( ray.origin.x(), ray.origin.y(), ray.origin.z() );
-		glVertex3f( ray.origin.x() + 100*ray.direction.x(), 
-					ray.origin.y() + 100*ray.direction.y(), 
-					ray.origin.z() + 100*ray.direction.z() );
-	glEnd();
-}
-
-
-void glDrawRaySeg( const Ray &ray, float t1, float t2 )
-{
-	Eigen::Vector3f p1 = ray.origin + t1*ray.direction;
-	Eigen::Vector3f p2 = ray.origin + t2*ray.direction;
-
-	glBegin( GL_LINES );
-
-		if( t1 > 0 )
-		{
-			glColor3f( 1, 1, 1 );
-			glVertex3f( ray.origin.x(), ray.origin.y(), ray.origin.z() );
-			glVertex3f( p1.x(),	p1.y(), p1.z() );
-		}
-		else
-		{
-			p1 = ray.origin;
-		}
-
-		// Colored section
-		glColor3f( 1, 0, 0 );
-		glVertex3f( p1.x(),	p1.y(), p1.z() );
-		glVertex3f( p2.x(),	p2.y(), p2.z() );
-
-		glColor3f( 1, 1, 1 );
-		glVertex3f( p2.x(),	p2.y(), p2.z() );
-		glVertex3f( ray.origin.x() + 10*ray.direction.x(), 
-					ray.origin.y() + 10*ray.direction.y(), 
-					ray.origin.z() + 10*ray.direction.z() );
-	glEnd();
-}
-
-
-
-bool GetRayAABBIntersectionPoints( const Ray &ray, const AABB &aabb, float &outTMin, float &outTMax )
-{
-	float epsilon = FLT_EPSILON;
-
-	float tMin = -FLT_MAX;
-	float tMax = FLT_MAX;
-
-	for( int i=0; i < 3; i++ )
+	for( int i=0; i< xSliceNum; i++ )
 	{
-		float planeMin = aabb.min[i];
-		float planeMax = aabb.max[i];
+		float xTex = i/(float)xSliceNum;
+		float xCoord = box.min.x() + (box.max.x() - box.min.x()) * xTex;
 
-		if( ray.direction[i] < epsilon && ray.direction[i] > -epsilon )
-		{
-			// If the ray is paralel to the planes then it's origin must be between
-			// them (otherwise it's a miss);
-			if(  ray.origin[i] > planeMax || ray.origin[i] < planeMin )
-				return false;
-			else
-				continue;
-		}
+		glBegin( GL_TRIANGLE_FAN );
 
-		// PlanePoint = ray.origin + ray.direction * t
-		// => t = (planePint - ray.origin) / ray.direction
-		float min;
-		float max;
+			glTexCoord3d(xTex, 0, 0);
+			glVertex3d(xCoord, box.min.y(), box.min.z());
 
-		if( ray.direction[i] > 0 )
-		{
-			min = (planeMin - ray.origin[i]) / ray.direction[i];
-			max = (planeMax - ray.origin[i]) / ray.direction[i];
-		}
-		else
-		{
-			max = (planeMin - ray.origin[i]) / ray.direction[i];
-			min = (planeMax - ray.origin[i]) / ray.direction[i];
-		}
+			glTexCoord3d(xTex, 0, 1);
+			glVertex3d(xCoord, box.min.y(), box.max.z());
 
-		if( min > tMin )
-			tMin = min;
+			glTexCoord3d(xTex, 1, 1);
+			glVertex3d(xCoord, box.max.y(), box.max.z());
 
-		if( max < tMax )
-			tMax = max;
+			glTexCoord3d(xTex, 1, 0);
+			glVertex3d(xCoord, box.max.y(), box.min.z());
 
-		if( tMax < tMin )
-			return false;
+		glEnd();
 	}
 
-	outTMin = tMin;
-	outTMax = tMax;
-
-	return true;
-}
-
-
-
-void traverseAndDrawBoxes(const Ray &ray, const AABB &aabb, const std::vector<AABB> *subBoxes, int numBoxes)
-{
-	float t1, t2;
-	if(	GetRayAABBIntersectionPoints( ray, aabb, t1, t2 ) )
+	for( int i=0; i< zSliceNum; i++ )
 	{
-		// Initialization
-		// We need to pin the ray to the first voxel it hits in the grid
-		// 
+		float zTex = i/(float)zSliceNum;
+		float zCoord = box.min.z() + (box.max.z() - box.min.z()) * zTex;
 
-		// Get the entrance point in box coord space
-		Eigen::Vector3f point1 = ray.origin + ray.direction * t1 - aabb.min;
+		glBegin( GL_TRIANGLE_FAN );
 
-		std::cout << "Ray hits volume at: " << point1.x() << ", " << point1.y() << ", " << point1.z() << std::endl;
+			glTexCoord3d(0, 0, zTex);
+			glVertex3d(box.min.x(), box.min.y(), zCoord );
 
-		point1.x() /= (aabb.max.x() - aabb.min.x())/numBoxes;
-		point1.y() /= (aabb.max.y() - aabb.min.y())/numBoxes;
-		point1.z() /= (aabb.max.z() - aabb.min.z())/numBoxes;
+			glTexCoord3d(0, 1, zTex);
+			glVertex3d(box.min.x(), box.max.y(), zCoord );
 
-		//point1.x() = floor( point1.x() );
-		//point1.y() = floor( point1.y() );
-		//point1.z() = floor( point1.z() );
+			glTexCoord3d(1, 1, zTex);
+			glVertex3d(box.max.x(), box.max.y(), zCoord );
 
-		std::cout << "Ray is in voxel: " << point1.x() << ", " << point1.y() << ", " << point1.z() << std::endl;
+			glTexCoord3d(1, 0, zTex);
+			glVertex3d(box.max.x(), box.min.y(), zCoord );
 
-		//Eigen::Vector3f point2 = ray.origin + ray.direction * t2 - aabb.min;		
+		glEnd();
+	}
+}
+*/
+
+void SliceBox::draw(Eigen::Vector3f view)
+{
+	Eigen::Vector3f xDir(1,0,0);
+	Eigen::Vector3f yDir(0,1,0);
+	Eigen::Vector3f zDir(0,0,1);
+
+	int sliceNum = 100;
+
+	// We can do with an inverse view vectr (because the cosine doesn't change :)
+	float xcos = view.dot( xDir );
+	float ycos = view.dot( yDir );
+	float zcos = view.dot( zDir );
+
+	// The sum of xcos^2 + ycos^2 + zcos^2 = 1
+	float xcos_sq = xcos * xcos;
+	float ycos_sq = ycos * ycos;
+	float zcos_sq = zcos * zcos;
+
+	// The sign of the cosine tells us the order of the
+	// planes -1 is back to front; 1 is front to back
+	int x_sign = xcos>0 ? 1 : -1;
+	int y_sign = ycos>0 ? 1 : -1;
+	int z_sign = zcos>0 ? 1 : -1;
+
+	float xStep = 1;//xcos_sq; //abs(xcos) > abs(ycos) && abs(xcos) >= abs(zcos);
+	float yStep = 1;//ycos_sq; //abs(ycos) > abs(zcos) && abs(ycos) >= abs(xcos);
+	float zStep = 1;//zcos_sq; //abs(zcos) > abs(xcos) && abs(zcos) >= abs(ycos);
+
+	float stepLen = xStep + yStep + zStep;
+	xStep /= stepLen;
+	yStep /= stepLen;
+	zStep /= stepLen;
+
+	float x_accum = 0;
+	float y_accum = 0;
+	float z_accum = 0;
+
+	for( int i=0; i< sliceNum; i++ )
+	{
+		x_accum+= xStep;
+		y_accum+= yStep;
+		z_accum+= zStep;
+
+		if( x_accum >= 1)
+		{
+			x_accum-=1;
+
+			float xTex;
+			if( x_sign < 0 )
+				xTex = (sliceNum - (i+0.5))/(float)sliceNum;
+			else
+				xTex = (i+0.5)/(float)sliceNum;
+			float xCoord = box.min.x() + (box.max.x() - box.min.x()) * xTex;
+
+			glBegin( GL_TRIANGLE_FAN );
+
+				glTexCoord3d(xTex, 0, 0);
+				glVertex3d(xCoord, box.min.y(), box.min.z());
+
+				glTexCoord3d(xTex, 0, 1);
+				glVertex3d(xCoord, box.min.y(), box.max.z());
+
+				glTexCoord3d(xTex, 1, 1);
+				glVertex3d(xCoord, box.max.y(), box.max.z());
+
+				glTexCoord3d(xTex, 1, 0);
+				glVertex3d(xCoord, box.max.y(), box.min.z());
+
+			glEnd();
+		}
+
+		if( y_accum >= 1)
+		{
+			y_accum-=1;
+
+			float yTex;
+			if( y_sign < 0 )
+				yTex = (sliceNum - (i+0.5))/(float)sliceNum;
+			else
+				yTex = (i+0.5)/(float)sliceNum;
+			float yCoord = box.min.y() + (box.max.y() - box.min.y()) * yTex;
+
+			glBegin( GL_TRIANGLE_FAN );
+
+				glTexCoord3d(0, yTex, 0);
+				glVertex3d(box.min.x(), yCoord, box.min.y());
+
+				glTexCoord3d(1, yTex, 0);
+				glVertex3d(box.max.x(), yCoord, box.min.z());
+
+				glTexCoord3d(1, yTex, 1);
+				glVertex3d(box.max.x(), yCoord, box.max.z());
+
+				glTexCoord3d(0, yTex, 1);
+				glVertex3d(box.min.x(), yCoord, box.max.z());
+
+			glEnd();
+		}
+
+		if( z_accum >= 1)
+		{
+			z_accum-=1;
+
+			float zTex;
+			if( z_sign < 0 )
+				zTex = (sliceNum - (i+0.5))/(float)sliceNum;
+			else
+				zTex = (i+0.5)/(float)sliceNum;
+			float zCoord = box.min.z() + (box.max.z() - box.min.z()) * zTex;
+
+			glBegin( GL_TRIANGLE_FAN );
+
+				glTexCoord3d(0, 0, zTex);
+				glVertex3d(box.min.x(), box.min.y(), zCoord );
+
+				glTexCoord3d(0, 1, zTex);
+				glVertex3d(box.min.x(), box.max.y(), zCoord );
+
+				glTexCoord3d(1, 1, zTex);
+				glVertex3d(box.max.x(), box.max.y(), zCoord );
+
+				glTexCoord3d(1, 0, zTex);
+				glVertex3d(box.max.x(), box.min.y(), zCoord );
+
+			glEnd();
+		}
 	}
 }
 
@@ -224,65 +230,70 @@ int main(int argc, char* args[])
 
 		// Our AABB
 		AABB aabb;
-		aabb.min		<< -0.2, -0.2, -0.2;
-		aabb.max		<<  0.2,  0.2,  0.2;
+		aabb.min		<< -0.7, -0.7, -0.7;
+		aabb.max		<<  0.7,  0.7,  0.7;
 
-		Ray ray;
-		ray.origin		<< 0.5,    0,    0;
-		ray.direction	<<    1,    0.4,	  0.2;
 
-		ray.direction.normalize();
+		glEnable( GL_BLEND );
+		glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
-		// For rotation animation
+		// 3D Texture nitialization
+		glEnable(GL_TEXTURE_3D);
+
+		PFNGLTEXIMAGE3DPROC glTexImage3D;
+		glTexImage3D = (PFNGLTEXIMAGE3DPROC) wglGetProcAddress("glTexImage3D");
+
+
+		sf::Image the3DImage;
+		the3DImage.loadFromFile("../../../data/test.png");
+
+
+		//(generate texel code omitted)
+		GLvoid *voxels = new char[32*32*32 * 4];
+		char * v = (char*) voxels; 
+
+		for(int i=0; i<32; i++)
+			for(int j=0; j<32; j++)
+				for(int k=0; k<32; k++)
+				{
+					sf::Color c = the3DImage.getPixel(i + k*32, 31-j);
+					*(v++) = c.r;
+					*(v++) = c.g;
+					*(v++) = c.b;
+					*(v++) = c.a;
+				}
+
+
+		unsigned int texID;
+		glGenTextures(1, &texID);
+		glBindTexture(GL_TEXTURE_3D, texID);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 32, 32, 32, 0, GL_RGBA, 
+			GL_UNSIGNED_BYTE, voxels );
+
+		SliceBox sliceBox;
+		sliceBox.box = aabb;
+
 		float angle = 0;
 
-
-		std::vector<AABB> subBoxes;
-		int numBoxes = 3;
-
-		// And some fictional voxels
-		{	
-			Eigen::Vector3f sbSize = (aabb.max - aabb.min)/numBoxes;
-
-			for( int z = 0; z< numBoxes; z++)
-			{
-				for( int y = 0; y< numBoxes; y++)
-				{
-					for( int x = 0; x< numBoxes; x++)
-					{
-						AABB subBox;
-						subBox.min.x() = sbSize.x() * x			+ aabb.min.x();
-						subBox.max.x() = sbSize.x() * (x+1)		+ aabb.min.x();
-
-						subBox.min.y() = sbSize.y() * y			+ aabb.min.y();
-						subBox.max.y() = sbSize.y() * (y+1)		+ aabb.min.y();
-
-						subBox.min.z() = sbSize.z() * z			+ aabb.min.z();
-						subBox.max.z() = sbSize.z() * (z+1)		+ aabb.min.z();
-						subBoxes.push_back(subBox);
-					}
-				}
-			}
-		}
-
-
-		
 		while( theWindow.isOpen() )
 		{
-			sf::Event theEvent;
+			sf::Event theEvent; 
 			while( theWindow.pollEvent(theEvent) )
 			{
-				switch( theEvent.type )
+				if( theEvent.type == sf::Event::Closed )
 				{
-					case sf::Event::Closed :
-						theWindow.close();
-					break;
+					theWindow.close();
 				}
 			}
 
+			
 			// Clear the screen
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 
 			// Do view transformations here...
 			glMatrixMode(GL_PROJECTION);
@@ -290,49 +301,57 @@ int main(int argc, char* args[])
 			glOrtho(-1, 1, -1, 1, 0, 100);
 
 			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();
+			//glLoadIdentity();
 			angle += 0.1;
+
+			/*
 			glTranslatef( 0, 0, -5 );
 			glRotatef( 30 , 1.0, 0.0, 0.0);
 			glRotatef( angle*2 , 0.0, 1.0, 0.0);
-			
+			*/
+
+			Eigen::Transform<float,3, Eigen::Affine> transf;
+			transf =	Eigen::Translation3f( 0,0, -5 )
+						*
+						Eigen::AngleAxisf( 30/180.f*3.14f, Eigen::Vector3f(1,0,0) )
+						*
+						Eigen::AngleAxisf( angle*2/180.f, Eigen::Vector3f(0,1,0) );
+
+			glLoadMatrixf( transf.data() );
+
+			Eigen::Vector3f origView(0,0,-1);
+			Eigen::Vector3f camView = transf.inverse() * origView;
 
 
-			// Draw Our AABB
-			glDrawAABB( aabb );
+			static double a = 0;
+			a+= 0.0001;
 
+			if( a> 1 )
+				a = 0;
 
-			for( int i=0; i< subBoxes.size(); i++ )
-			{
-			//	glDrawAABB( subBoxes[i] );
-			}
+			glBindTexture( GL_TEXTURE_3D, texID );
+			sliceBox.draw( camView.normalized() );
 
+			/*
+			glBegin( GL_TRIANGLE_FAN );
 
+				glTexCoord3d(1, 1, a);
+				glVertex3d(-0.2, -0.2, -0.2);
 
-			ray.origin		<< angle/700 - 0.5f,    0,    0;
-			ray.direction	<<    1,    0.4,	  0.2;
+				glTexCoord3d(0, 1, a);
+				glVertex3d(0.2, -0.2, -0.2);
 
-			ray.direction.normalize();
+				glTexCoord3d(0, 0, a);
+				glVertex3d(0.2, 0.2, -0.2);
 
+				glTexCoord3d(1, 0, a);
+				glVertex3d(-0.2, 0.2, -0.2);
 
-			traverseAndDrawBoxes( ray, aabb, &subBoxes, numBoxes );
+			glEnd();
+			*/
 
-			float t1, t2;
-
-			if( GetRayAABBIntersectionPoints( ray, aabb, t1, t2 ) && t1>0 && t2>0)
-			{
-				glDrawRaySeg( ray, t1, t2 );
-			}
-			else
-			{
-				glDrawRay( ray );
-			}
-
-
-			// Flip buffers
 			theWindow.display();
 		}
-
 		return 0;
 	}
 }
