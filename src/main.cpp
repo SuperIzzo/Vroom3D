@@ -7,73 +7,28 @@
 #include <SFML/OpenGL.hpp>
 #include <GLX/glext.h>
 
+
 #include <vector>
 
-class AABB
-{
-public:
-	Eigen::Vector3f min;
-	Eigen::Vector3f max;
-};
+
+#include "AABB.h"
+#include "Ray.h"
 
 
 class SliceBox
 {
 public:
-	AABB box;
+	AABB aabb;
 
-	void draw(Eigen::Vector3f view);
+	void Draw(Eigen::Vector3f view);
+	void DrawCameraSlices(Eigen::Vector3f view);
 };
 
-/*
-{
-	for( int i=0; i< xSliceNum; i++ )
-	{
-		float xTex = i/(float)xSliceNum;
-		float xCoord = box.min.x() + (box.max.x() - box.min.x()) * xTex;
 
-		glBegin( GL_TRIANGLE_FAN );
 
-			glTexCoord3d(xTex, 0, 0);
-			glVertex3d(xCoord, box.min.y(), box.min.z());
 
-			glTexCoord3d(xTex, 0, 1);
-			glVertex3d(xCoord, box.min.y(), box.max.z());
 
-			glTexCoord3d(xTex, 1, 1);
-			glVertex3d(xCoord, box.max.y(), box.max.z());
-
-			glTexCoord3d(xTex, 1, 0);
-			glVertex3d(xCoord, box.max.y(), box.min.z());
-
-		glEnd();
-	}
-
-	for( int i=0; i< zSliceNum; i++ )
-	{
-		float zTex = i/(float)zSliceNum;
-		float zCoord = box.min.z() + (box.max.z() - box.min.z()) * zTex;
-
-		glBegin( GL_TRIANGLE_FAN );
-
-			glTexCoord3d(0, 0, zTex);
-			glVertex3d(box.min.x(), box.min.y(), zCoord );
-
-			glTexCoord3d(0, 1, zTex);
-			glVertex3d(box.min.x(), box.max.y(), zCoord );
-
-			glTexCoord3d(1, 1, zTex);
-			glVertex3d(box.max.x(), box.max.y(), zCoord );
-
-			glTexCoord3d(1, 0, zTex);
-			glVertex3d(box.max.x(), box.min.y(), zCoord );
-
-		glEnd();
-	}
-}
-*/
-
-void SliceBox::draw(Eigen::Vector3f view)
+void SliceBox::Draw(Eigen::Vector3f view)
 {
 	Eigen::Vector3f xDir(1,0,0);
 	Eigen::Vector3f yDir(0,1,0);
@@ -82,9 +37,9 @@ void SliceBox::draw(Eigen::Vector3f view)
 	int sliceNum = 100;
 
 	// We can do with an inverse view vectr (because the cosine doesn't change :)
-	float xcos = view.dot( xDir );
-	float ycos = view.dot( yDir );
-	float zcos = view.dot( zDir );
+	float xcos = view.x();	//view.dot( xDir );
+	float ycos = view.y();	//view.dot( yDir );
+	float zcos = view.z();	//view.dot( zDir );
 
 	// The sum of xcos^2 + ycos^2 + zcos^2 = 1
 	float xcos_sq = xcos * xcos;
@@ -97,9 +52,9 @@ void SliceBox::draw(Eigen::Vector3f view)
 	int y_sign = ycos>0 ? 1 : -1;
 	int z_sign = zcos>0 ? 1 : -1;
 
-	float xStep = 1;//xcos_sq; //abs(xcos) > abs(ycos) && abs(xcos) >= abs(zcos);
-	float yStep = 1;//ycos_sq; //abs(ycos) > abs(zcos) && abs(ycos) >= abs(xcos);
-	float zStep = 1;//zcos_sq; //abs(zcos) > abs(xcos) && abs(zcos) >= abs(ycos);
+	float xStep = /*1;//xcos_sq; /*/abs(xcos) > abs(ycos) && abs(xcos) >= abs(zcos);
+	float yStep = /*1;//ycos_sq; /*/abs(ycos) > abs(zcos) && abs(ycos) >= abs(xcos);
+	float zStep = /*1;//zcos_sq; /*/abs(zcos) > abs(xcos) && abs(zcos) >= abs(ycos);
 
 	float stepLen = xStep + yStep + zStep;
 	xStep /= stepLen;
@@ -125,21 +80,21 @@ void SliceBox::draw(Eigen::Vector3f view)
 				xTex = (sliceNum - (i+0.5))/(float)sliceNum;
 			else
 				xTex = (i+0.5)/(float)sliceNum;
-			float xCoord = box.min.x() + (box.max.x() - box.min.x()) * xTex;
+			float xCoord = aabb.min.x() + (aabb.max.x() - aabb.min.x()) * xTex;
 
 			glBegin( GL_TRIANGLE_FAN );
 
 				glTexCoord3d(xTex, 0, 0);
-				glVertex3d(xCoord, box.min.y(), box.min.z());
+				glVertex3d(xCoord, aabb.min.y(), aabb.min.z());
 
 				glTexCoord3d(xTex, 0, 1);
-				glVertex3d(xCoord, box.min.y(), box.max.z());
+				glVertex3d(xCoord, aabb.min.y(), aabb.max.z());
 
 				glTexCoord3d(xTex, 1, 1);
-				glVertex3d(xCoord, box.max.y(), box.max.z());
+				glVertex3d(xCoord, aabb.max.y(), aabb.max.z());
 
 				glTexCoord3d(xTex, 1, 0);
-				glVertex3d(xCoord, box.max.y(), box.min.z());
+				glVertex3d(xCoord, aabb.max.y(), aabb.min.z());
 
 			glEnd();
 		}
@@ -153,21 +108,21 @@ void SliceBox::draw(Eigen::Vector3f view)
 				yTex = (sliceNum - (i+0.5))/(float)sliceNum;
 			else
 				yTex = (i+0.5)/(float)sliceNum;
-			float yCoord = box.min.y() + (box.max.y() - box.min.y()) * yTex;
+			float yCoord = aabb.min.y() + (aabb.max.y() - aabb.min.y()) * yTex;
 
 			glBegin( GL_TRIANGLE_FAN );
 
 				glTexCoord3d(0, yTex, 0);
-				glVertex3d(box.min.x(), yCoord, box.min.y());
+				glVertex3d(aabb.min.x(), yCoord, aabb.min.y());
 
 				glTexCoord3d(1, yTex, 0);
-				glVertex3d(box.max.x(), yCoord, box.min.z());
+				glVertex3d(aabb.max.x(), yCoord, aabb.min.z());
 
 				glTexCoord3d(1, yTex, 1);
-				glVertex3d(box.max.x(), yCoord, box.max.z());
+				glVertex3d(aabb.max.x(), yCoord, aabb.max.z());
 
 				glTexCoord3d(0, yTex, 1);
-				glVertex3d(box.min.x(), yCoord, box.max.z());
+				glVertex3d(aabb.min.x(), yCoord, aabb.max.z());
 
 			glEnd();
 		}
@@ -181,26 +136,112 @@ void SliceBox::draw(Eigen::Vector3f view)
 				zTex = (sliceNum - (i+0.5))/(float)sliceNum;
 			else
 				zTex = (i+0.5)/(float)sliceNum;
-			float zCoord = box.min.z() + (box.max.z() - box.min.z()) * zTex;
+			float zCoord = aabb.min.z() + (aabb.max.z() - aabb.min.z()) * zTex;
 
 			glBegin( GL_TRIANGLE_FAN );
 
 				glTexCoord3d(0, 0, zTex);
-				glVertex3d(box.min.x(), box.min.y(), zCoord );
+				glVertex3d(aabb.min.x(), aabb.min.y(), zCoord );
 
 				glTexCoord3d(0, 1, zTex);
-				glVertex3d(box.min.x(), box.max.y(), zCoord );
+				glVertex3d(aabb.min.x(), aabb.max.y(), zCoord );
 
 				glTexCoord3d(1, 1, zTex);
-				glVertex3d(box.max.x(), box.max.y(), zCoord );
+				glVertex3d(aabb.max.x(), aabb.max.y(), zCoord );
 
 				glTexCoord3d(1, 0, zTex);
-				glVertex3d(box.max.x(), box.min.y(), zCoord );
+				glVertex3d(aabb.max.x(), aabb.min.y(), zCoord );
 
 			glEnd();
 		}
 	}
 }
+
+
+
+
+/*
+bool GetSegPlaneIntersoection(Eigen::Vector3f &pOut, Eigen::Vector3f p0, Eigen::Vector3f p1, Eigen::Vector3f n, float D)
+{
+	Eigen::Vector3f displP = p1 - p0;
+	float denom = n.dot( displP );
+
+	if( denom == 0.0f )
+	{
+		return false;
+	}
+	else
+	{
+		float t = (D - n.dot( p0 )) / denom;
+
+		if( t < 0 || t > 1 )
+		{
+			return false;
+		}
+		else
+		{
+			pOut = p0 + displP * t;
+			return true;
+		}
+	}
+}
+
+
+
+void SliceBox::DrawCameraSlices(Eigen::Vector3f view)
+{
+	Eigen::Vector3f closePoint;
+	Eigen::Vector3f farPoint;
+
+	if( view.x() >= 0 )
+	{
+		closePoint.x() = aabb.min.x();
+		farPoint.x()   = aabb.max.x();
+	}
+	else
+	{
+		closePoint.x() = aabb.max.x();
+		farPoint.x()   = aabb.min.x();
+	}
+
+	if( view.y() >= 0 )
+	{
+		closePoint.y() = aabb.min.y();
+		farPoint.y()   = aabb.max.y();
+	}
+	else
+	{
+		closePoint.y() = aabb.max.y();
+		farPoint.y()   = aabb.min.y();
+	}
+
+	if( view.z() >= 0 )
+	{
+		closePoint.z() = aabb.min.z();
+		farPoint.z()   = aabb.max.z();
+	}
+	else
+	{
+		closePoint.z() = aabb.max.z();
+		farPoint.z()   = aabb.min.z();
+	}
+
+
+	Eigen::Vector3f boxDiag = farPoint - closePoint;
+	float viewAxisProjLength = view.dot(boxDiag);
+
+	Eigen::Vector3f		p000(		0,		0,				0 );
+	Eigen::Vector3f		p001(		0,		0,	boxDiag.z() );
+	Eigen::Vector3f		p010(		0,		0,		0 );
+
+
+	std::vector< Eigen::Vector3f > planeVerts;
+
+	
+}
+
+*/
+
 
 
 int main(int argc, char* args[])
@@ -230,8 +271,15 @@ int main(int argc, char* args[])
 
 		// Our AABB
 		AABB aabb;
-		aabb.min		<< -0.7, -0.7, -0.7;
-		aabb.max		<<  0.7,  0.7,  0.7;
+		aabb.min		<< -0.2, -0.2, -0.2;
+		aabb.max		<<  0.2,  0.2,  0.2;
+
+
+		// Our ray
+		Ray ray;
+		ray.origin		<<  -0.5,   -0.3, -0.5;
+		ray.direction	<<	1,	 0.4,	0.7;
+		ray.direction.normalize();
 
 
 		glEnable( GL_BLEND );
@@ -276,7 +324,7 @@ int main(int argc, char* args[])
 			GL_UNSIGNED_BYTE, voxels );
 
 		SliceBox sliceBox;
-		sliceBox.box = aabb;
+		sliceBox.aabb = aabb;
 
 		float angle = 0;
 
@@ -311,11 +359,15 @@ int main(int argc, char* args[])
 			*/
 
 			Eigen::Transform<float,3, Eigen::Affine> transf;
-			transf =	Eigen::Translation3f( 0,0, -5 )
+			
+			transf =
+				Eigen::Translation3f( 0,0, -5 )
 						*
-						Eigen::AngleAxisf( 30/180.f*3.14f, Eigen::Vector3f(1,0,0) )
+				Eigen::AngleAxisf( 30/180.f*3.14f, Eigen::Vector3f(1,0,0) )
 						*
-						Eigen::AngleAxisf( angle*2/180.f, Eigen::Vector3f(0,1,0) );
+				Eigen::AngleAxisf( angle*2/180.f, Eigen::Vector3f(0,1,0) );
+
+			
 
 			glLoadMatrixf( transf.data() );
 
@@ -323,32 +375,12 @@ int main(int argc, char* args[])
 			Eigen::Vector3f camView = transf.inverse() * origView;
 
 
-			static double a = 0;
-			a+= 0.0001;
-
-			if( a> 1 )
-				a = 0;
-
 			glBindTexture( GL_TEXTURE_3D, texID );
-			sliceBox.draw( camView.normalized() );
+			sliceBox.Draw( camView.normalized() );
 
-			/*
-			glBegin( GL_TRIANGLE_FAN );
-
-				glTexCoord3d(1, 1, a);
-				glVertex3d(-0.2, -0.2, -0.2);
-
-				glTexCoord3d(0, 1, a);
-				glVertex3d(0.2, -0.2, -0.2);
-
-				glTexCoord3d(0, 0, a);
-				glVertex3d(0.2, 0.2, -0.2);
-
-				glTexCoord3d(1, 0, a);
-				glVertex3d(-0.2, 0.2, -0.2);
-
-			glEnd();
-			*/
+			///glColor3f(1,1,1);
+			//sliceBox.aabb.Draw();
+			//ray.Draw();
 
 			theWindow.display();
 		}
