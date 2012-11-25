@@ -112,6 +112,135 @@ void glDrawRaySeg( const Ray &ray, float t1, float t2 )
 
 
 
+
+class Volume
+{
+public:
+	unsigned char * data;
+
+	Volume();
+	~Volume();
+
+	void LoadImageXZImage( const char * imgFile, int width );
+
+	int GetWidth() const;
+	int GetHeight() const;
+	int GetDepth() const;
+
+	sf::Color GetVoxel(int x, int y, int z) const;
+
+private:
+	void Clear();
+
+	int  mWidth;
+	int  mHeight;
+	int  mDepth;
+};
+
+
+Volume::Volume()
+	: data( 0 )
+{
+	Clear();
+}
+
+
+Volume::~Volume()
+{
+	Clear();
+}
+
+
+void Volume::Clear()
+{
+	if( data )
+	{
+		delete[] data;
+	}
+
+	mWidth = 0;
+	mHeight = 0;
+	mDepth = 0;
+}
+
+int Volume::GetWidth() const
+{
+	return mWidth;
+}
+
+int Volume::GetHeight() const
+{
+	return mHeight;
+}
+
+int Volume::GetDepth() const
+{
+	return mDepth;
+}
+
+sf::Color Volume::GetVoxel(int x, int y, int z) const
+{
+	sf::Color col;
+
+	int idx = (x + y*mWidth + z*mWidth*mHeight) *4;
+
+	col.r = data[ idx +0 ];
+	col.g = data[ idx +1 ];
+	col.b = data[ idx +2 ];
+	col.a = data[ idx +3 ];
+
+	return col;
+}
+
+void Volume::LoadImageXZImage( const char * imgFile, int width )
+{
+	sf::Image the3DImage;
+
+	the3DImage.loadFromFile( imgFile );
+
+	int W = width;
+	int H = the3DImage.getSize().y;
+	int D = the3DImage.getSize().x / width;
+
+	Clear();
+	data = new unsigned char[ W*H*D * 4 ];
+
+	unsigned char	*volPointer = data;
+	const sf::Uint8 *texPointer = the3DImage.getPixelsPtr();
+
+	for( int z=0; z< D; z++ )
+	{
+		for( int y=0; y< H; y++ )
+		{
+			texPointer = the3DImage.getPixelsPtr() + y*the3DImage.getSize().x + z*W;
+
+			for( int x=0; x< W; x++ )
+			{
+				sf::Color col = the3DImage.getPixel(x + z*W, y);
+
+				*(volPointer++) = col.r;
+				*(volPointer++) = col.g;
+				*(volPointer++) = col.b;
+				*(volPointer++) = col.a;
+
+				/*
+				*(volPointer++) = *(texPointer++);	// Copy red, move forward
+				*(volPointer++) = *(texPointer++);	// Copy green, move forward
+				*(volPointer++) = *(texPointer++);	// Copy blue, move forward
+				*(volPointer++) = *(texPointer++);	// Copy alpha, move forward
+				*/
+			}
+		}
+	}
+
+	mWidth  = W;
+	mHeight = H;
+	mDepth  = D;
+}
+
+
+
+
 bool GetRayAABBIntersectionPoints( const Ray &ray, const AABB &aabb, float &outTMin, float &outTMax )
 {
 	float epsilon = FLT_EPSILON;
@@ -197,6 +326,119 @@ void traverseAndDrawBoxes(const Ray &ray, const AABB &aabb, const std::vector<AA
 }
 
 
+inline float max(float a, float b)
+{
+	return a>b ? a : b;
+}
+
+inline float min(float a, float b)
+{
+	return a<b ? a : b;
+}
+
+sf::Color RayTraceColor(const Ray &ray, const AABB &aabb, const Volume &volume)
+{
+	sf::Color col(0,0,0,0);
+
+	float t1, t2;
+	if(	GetRayAABBIntersectionPoints( ray, aabb, t1, t2 ) )
+	{
+		Eigen::Vector3f floatPoint = ray.origin + ray.direction * t1 - aabb.min;		
+		floatPoint.x() /= (aabb.max.x() - aabb.min.x())/ volume.GetWidth();
+		floatPoint.y() /= (aabb.max.y() - aabb.min.y())/ volume.GetHeight();
+		floatPoint.z() /= (aabb.max.z() - aabb.min.z())/ volume.GetDepth();
+
+		float &fx = floatPoint.x();
+		float &fy = floatPoint.y();
+		float &fz = floatPoint.z();
+
+		fx = min( max( fx, 0 ), volume.GetWidth() );
+		fy = min( max( fy, 0 ), volume.GetHeight() );
+		fz = min( max( fz, 0 ), volume.GetDepth() );
+
+
+		float deltaStep = 0.5f;
+		float dx = ray.direction.x() * deltaStep;
+		float dy = ray.direction.y() * deltaStep;
+		float dz = ray.direction.z() * deltaStep;
+
+
+		float maxCoord, *curCoord;
+
+		// Determine the coordinate that changes the most
+		// And calculate it's value at t2
+		if( dx>dy )
+		{
+			if( dx>dz )
+			{
+				curCoord = &fx;
+				maxCoord = (ray.origin.x() + ray.direction.x() * t2 - aabb.min.x()) 
+						   / ((aabb.max.x() - aabb.min.x())/ volume.GetWidth());				
+			}
+			else
+			{
+				curCoord = &fz;
+				maxCoord = (ray.origin.z() + ray.direction.z() * t2 - aabb.min.z()) 
+						   / ((aabb.max.z() - aabb.min.z())/ volume.GetDepth());
+			}
+		}
+		else
+		{
+			if( dy>dz )
+			{
+				curCoord = &fy;
+				maxCoord = (ray.origin.y() + ray.direction.y() * t2 - aabb.min.y()) 
+						   / ((aabb.max.y() - aabb.min.y())/ volume.GetHeight());				
+			}
+			else
+			{
+				curCoord = &fz;
+				maxCoord = (ray.origin.z() + ray.direction.z() * t2 - aabb.min.z()) 
+						   / ((aabb.max.z() - aabb.min.z())/ volume.GetDepth());
+			}
+		}
+
+		int displY = volume.GetWidth();
+		int displZ = volume.GetWidth() * volume.GetDepth();
+
+		while( (col.a<240) && (*curCoord < maxCoord))
+		{
+			int floor_x = (int) floor( fx );
+			int floor_y = (int) floor( fy );
+			int floor_z = (int) floor( fz );
+
+			int floor_idx = floor_x + floor_y*displY + floor_z*displZ;
+			/*			
+
+			float sx = fx - floor_x;
+			float sy = fy - floor_y;
+			float sz = fz - floor_z;
+
+			float rsx = 1 - sx;
+			float rsy = 1 - sy;
+			float rsz = 1 - sz;
+
+			unsigned char *vox = &volume.data[ floor_idx * 4 ];
+			sf::Color c1( ((*vox)++) * sx,
+						  ((*vox)++) * sx,
+			*/
+
+			col.r = volume.data[ floor_idx * 4 +0 ];
+			col.g = volume.data[ floor_idx * 4 +1 ];
+			col.b = volume.data[ floor_idx * 4 +2 ];
+			col.a = volume.data[ floor_idx * 4 +3 ];
+
+			fx += dx;
+			fy += dy;
+			fz += dz;
+		}
+	}
+
+	return col;
+}
+
+
+
 int main(int argc, char* args[])
 {
 	if ( argc > 1   &&   strcmp("-test", args[1])==0 )
@@ -211,15 +453,30 @@ int main(int argc, char* args[])
 	}
 	else
 	{
-		sf::Window theWindow( sf::VideoMode(640, 480), "The window" ); 
+		sf::RenderWindow theWindow( sf::VideoMode(640, 480), "The window" ); 
+		sf::Image theBuffer;
+
+
+		theBuffer.create(640, 480, sf::Color::Black );
+
+
+		sf::Texture theBufferTexture;
+		theBufferTexture.loadFromImage(theBuffer);
+
+		sf::Sprite theBufferSprite;
+		theBufferSprite.setTexture(theBufferTexture);
+
+		Volume volume;
+
+		volume.LoadImageXZImage( "../../../data/test.png", 32 );
 
 		// Set color and depth clear value
-		glClearDepth(1.f);
-		glClearColor(0.f, 0.f, 0.f, 0.f);
+		//glClearDepth(1.f);
+		//glClearColor(0.f, 0.f, 0.f, 0.f);
 
 		// Enable Z-buffer read and write
-		glEnable(GL_DEPTH_TEST);
-		glDepthMask(GL_TRUE);
+		//glEnable(GL_DEPTH_TEST);
+		//glDepthMask(GL_TRUE);
 
 
 		// Our AABB
@@ -228,44 +485,12 @@ int main(int argc, char* args[])
 		aabb.max		<<  0.2,  0.2,  0.2;
 
 		Ray ray;
-		ray.origin		<< 0.5,    0,    0;
-		ray.direction	<<    1,    0.4,	  0.2;
+		ray.origin		<< 0.5,    0,    -1;
+		ray.direction	<<   0,    0,	  1;
 
 		ray.direction.normalize();
 
-		// For rotation animation
-		float angle = 0;
-
-
-		std::vector<AABB> subBoxes;
-		int numBoxes = 3;
-
-		// And some fictional voxels
-		{	
-			Eigen::Vector3f sbSize = (aabb.max - aabb.min)/numBoxes;
-
-			for( int z = 0; z< numBoxes; z++)
-			{
-				for( int y = 0; y< numBoxes; y++)
-				{
-					for( int x = 0; x< numBoxes; x++)
-					{
-						AABB subBox;
-						subBox.min.x() = sbSize.x() * x			+ aabb.min.x();
-						subBox.max.x() = sbSize.x() * (x+1)		+ aabb.min.x();
-
-						subBox.min.y() = sbSize.y() * y			+ aabb.min.y();
-						subBox.max.y() = sbSize.y() * (y+1)		+ aabb.min.y();
-
-						subBox.min.z() = sbSize.z() * z			+ aabb.min.z();
-						subBox.max.z() = sbSize.z() * (z+1)		+ aabb.min.z();
-						subBoxes.push_back(subBox);
-					}
-				}
-			}
-		}
-
-
+		float angle = 30;
 		
 		while( theWindow.isOpen() )
 		{
@@ -280,6 +505,92 @@ int main(int argc, char* args[])
 				}
 			}
 
+
+
+			Eigen::Transform<float,3, Eigen::Affine> transf;
+
+			angle += 0.1;
+			transf =
+				Eigen::Translation3f( 0,0, -5 )
+				*
+				Eigen::AngleAxisf( 30/180.f*3.14f, Eigen::Vector3f(1,0,0) )
+				*
+				Eigen::AngleAxisf( angle*2/180.f, Eigen::Vector3f(0,1,0) );
+
+			Eigen::Transform<float,3, Eigen::Affine> transfInv = transf.inverse();
+
+
+			sf::Clock rayProf;
+			sf::Clock allProf;
+
+			// Raytracing 
+			int rayTm = 0;
+			for( int x=0; x<640; x++ )
+			{
+				for( int y=0; y<480; y++ )
+				{
+					ray.origin.x() = x/320.0f - 1;
+					ray.origin.y() = y/240.0f - 1;
+
+					Ray viewRay;
+					viewRay.direction = transfInv * ray.direction;
+					viewRay.origin = transfInv * ray.origin;
+
+					viewRay.direction.normalize();
+
+					// PROFILE
+					rayProf.restart();
+
+					sf::Color col = RayTraceColor(viewRay, aabb, volume);
+
+					rayTm += rayProf.getElapsedTime().asMicroseconds();
+					// PROFILE END
+
+					//col.a = 255;
+					theBuffer.setPixel(x, y, col );
+				}
+			}
+
+			std::cout << "Avg. time per ray: " << rayTm/(640*480) << "mcs." << std::endl;
+			std::cout << "Time for all rays: " << rayTm << "mcs." << std::endl;
+			std::cout << "Time for the entire rendering: " << allProf.getElapsedTime().asMicroseconds() << "mcs." << std::endl;
+
+			//Debug Volume
+			/*
+			static float a = 0;
+			a+=0.1;
+
+			if( a>= volume.GetDepth())
+				a = 0;
+
+			for( int x=0; x<volume.GetWidth(); x++ )
+			{
+				for( int y=0; y<volume.GetHeight(); y++ )
+				{					
+					theBuffer.setPixel(x+100, y+100, volume.GetVoxel(x, y, (int)a) );
+				}
+			}
+			*/
+
+
+			theBufferTexture.loadFromImage( theBuffer );
+
+
+
+
+			theWindow.clear();			
+
+			theWindow.draw( theBufferSprite );
+
+			theWindow.display();
+
+		}
+	}
+}
+
+
+
+/*
 			// Clear the screen
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -302,12 +613,6 @@ int main(int argc, char* args[])
 			glDrawAABB( aabb );
 
 
-			for( int i=0; i< subBoxes.size(); i++ )
-			{
-			//	glDrawAABB( subBoxes[i] );
-			}
-
-
 
 			ray.origin		<< angle/700 - 0.5f,    0,    0;
 			ray.direction	<<    1,    0.4,	  0.2;
@@ -315,7 +620,7 @@ int main(int argc, char* args[])
 			ray.direction.normalize();
 
 
-			traverseAndDrawBoxes( ray, aabb, &subBoxes, numBoxes );
+			//traverseAndDrawBoxes( ray, aabb, numBoxes );
 
 			float t1, t2;
 
@@ -336,3 +641,5 @@ int main(int argc, char* args[])
 		return 0;
 	}
 }
+
+*/
