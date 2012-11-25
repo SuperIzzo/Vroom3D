@@ -5,109 +5,26 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 
-class AABB
-{
-public:
-	Eigen::Vector3f min;
-	Eigen::Vector3f max;
-};
+#include "AABB.h"
+#include "Ray.h"
 
-
-
-class Ray
-{
-public:
-	Eigen::Vector3f origin;
-	Eigen::Vector3f direction;
-};
 
 
 void glDrawAABB( const AABB &box )
 {
-	glBegin( GL_LINES );
-		glVertex3f( box.min.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.max.x(),  box.min.y(),	box.min.z() );
-
-		glVertex3f( box.min.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.min.x(),  box.max.y(),	box.min.z() );
-
-		glVertex3f( box.min.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.min.x(),  box.min.y(),	box.max.z() );
-
-
-		glVertex3f( box.max.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.max.x(),  box.max.y(),	box.min.z() );
-
-		glVertex3f( box.max.x(),  box.min.y(),	box.min.z() );
-		glVertex3f( box.max.x(),  box.min.y(),	box.max.z() );
-
-		
-		glVertex3f( box.min.x(),  box.max.y(),	box.min.z() );
-		glVertex3f( box.max.x(),  box.max.y(),	box.min.z() );
-
-		glVertex3f( box.min.x(),  box.max.y(),	box.min.z() );
-		glVertex3f( box.min.x(),  box.max.y(),	box.max.z() );
-
-
-		glVertex3f( box.min.x(),  box.min.y(),	box.max.z() );
-		glVertex3f( box.max.x(),  box.min.y(),	box.max.z() );
-
-		glVertex3f( box.min.x(),  box.min.y(),	box.max.z() );
-		glVertex3f( box.min.x(),  box.max.y(),	box.max.z() );
-
-
-		glVertex3f( box.max.x(),  box.max.y(),	box.max.z() );
-		glVertex3f( box.max.x(),  box.max.y(),	box.min.z() );
-
-		glVertex3f( box.max.x(),  box.max.y(),	box.max.z() );
-		glVertex3f( box.max.x(),  box.min.y(),	box.max.z() );
-
-		glVertex3f( box.max.x(),  box.max.y(),	box.max.z() );
-		glVertex3f( box.min.x(),  box.max.y(),	box.max.z() );
-	glEnd();
+	box.Draw();
 }
 
 
 void glDrawRay( const Ray &ray )
 {
-	glBegin( GL_LINES );
-		glVertex3f( ray.origin.x(), ray.origin.y(), ray.origin.z() );
-		glVertex3f( ray.origin.x() + 100*ray.direction.x(), 
-					ray.origin.y() + 100*ray.direction.y(), 
-					ray.origin.z() + 100*ray.direction.z() );
-	glEnd();
+	ray.Draw();
 }
 
 
 void glDrawRaySeg( const Ray &ray, float t1, float t2 )
 {
-	Eigen::Vector3f p1 = ray.origin + t1*ray.direction;
-	Eigen::Vector3f p2 = ray.origin + t2*ray.direction;
-
-	glBegin( GL_LINES );
-
-		if( t1 > 0 )
-		{
-			glColor3f( 1, 1, 1 );
-			glVertex3f( ray.origin.x(), ray.origin.y(), ray.origin.z() );
-			glVertex3f( p1.x(),	p1.y(), p1.z() );
-		}
-		else
-		{
-			p1 = ray.origin;
-		}
-
-		// Colored section
-		glColor3f( 1, 0, 0 );
-		glVertex3f( p1.x(),	p1.y(), p1.z() );
-		glVertex3f( p2.x(),	p2.y(), p2.z() );
-
-		glColor3f( 1, 1, 1 );
-		glVertex3f( p2.x(),	p2.y(), p2.z() );
-		glVertex3f( ray.origin.x() + 10*ray.direction.x(), 
-					ray.origin.y() + 10*ray.direction.y(), 
-					ray.origin.z() + 10*ray.direction.z() );
-	glEnd();
+	ray.DrawSeg( t1, t2 );
 }
 
 
@@ -168,7 +85,7 @@ bool GetRayAABBIntersectionPoints( const Ray &ray, const AABB &aabb, float &outT
 
 
 
-void traverseAndDrawBoxes(const Ray &ray, const AABB &aabb, const std::vector<AABB> *subBoxes, int numBoxes)
+void traverseAndDrawBoxes(const Ray &ray, const AABB &aabb, int numBoxes)
 {
 	float t1, t2;
 	if(	GetRayAABBIntersectionPoints( ray, aabb, t1, t2 ) )
@@ -315,7 +232,7 @@ int main(int argc, char* args[])
 			ray.direction.normalize();
 
 
-			traverseAndDrawBoxes( ray, aabb, &subBoxes, numBoxes );
+			traverseAndDrawBoxes( ray, aabb, numBoxes );
 
 			float t1, t2;
 
