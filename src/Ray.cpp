@@ -3,7 +3,7 @@
 #include <SFML/OpenGL.hpp>
 
 
-void Ray::Draw()
+void Ray::Draw() const
 {
 	glBegin( GL_LINES );
 		glVertex3f( origin.x(), origin.y(), origin.z() );
@@ -15,7 +15,7 @@ void Ray::Draw()
 
 
 
-void Ray::DrawSeg( float t1, float t2 )
+void Ray::DrawSeg( float t1, float t2 ) const
 {
 		Eigen::Vector3f p1 = origin + t1*direction;
 		Eigen::Vector3f p2 = origin + t2*direction;

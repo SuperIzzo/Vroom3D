@@ -12,8 +12,8 @@ public:
 	Eigen::Vector3f origin;
 	Eigen::Vector3f direction;
 
-	void Draw();
-	void DrawSeg( float t1, float t2 );
+	void Draw() const;
+	void DrawSeg( float t1, float t2 ) const;
 };
 
 
