@@ -11,7 +11,7 @@ public:
 	Eigen::Vector3f min;
 	Eigen::Vector3f max;
 
-	void Draw();
+	void Draw() const;
 };
 
 

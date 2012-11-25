@@ -5,7 +5,7 @@
 #include <SFML/OpenGL.hpp>
 
 
-void AABB::Draw()
+void AABB::Draw() const
 {
 	glBegin( GL_LINES );
 	glVertex3f( min.x(), min.y(),	min.z() );
