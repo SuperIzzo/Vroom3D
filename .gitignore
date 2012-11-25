@@ -22,7 +22,7 @@ build
 *.a
 *.lib
 
-#Do not commit binaries (and bundles)
+# Do not commit binaries (and bundles)
 *.exe
 *.app
 

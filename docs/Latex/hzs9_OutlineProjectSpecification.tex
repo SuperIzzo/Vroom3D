@@ -1,0 +1,86 @@
+\documentclass[11pt,fleqn,twoside]{article}
+\usepackage{makeidx}
+\makeindex
+\usepackage{palatino} %or {times} etc
+\usepackage{plain} %bibliography style 
+\usepackage{amsmath} %math fonts - just in case
+\usepackage{amsfonts} %math fonts
+\usepackage{amssymb} %math fonts
+\usepackage{lastpage} %for footer page numbers
+\usepackage{fancyhdr} %header and footer package
+\usepackage{mmp} 
+\usepackage{url}
+\usepackage{cite}
+
+\begin{document}
+
+\name{Hristoz Stefnov Stefanov}
+\userid{hzs9}
+\projecttitle{3D Volume Rendering Engine for Interactive Applications}
+\projecttitlememoir{3D Volume Rendering Engine for Interactive Applications} %same as the project title or abridged version for page header
+\reporttitle{Outline Project Specification}
+\version{0.1}
+\docstatus{Release}
+\modulecode{CS39440}
+\supervisor{Bernie Tiddeman} % e.g. Neil Taylor
+\supervisorid{bpt}
+\degreeschemecode{G451}
+\degreeschemename{Computer Graphics, Vision And Games (Inc Integrated Industrial And Professional Training)}
+
+\documentdate{22nd October 2012} 
+\mmp
+
+\setcounter{tocdepth}{3} %set required number of level in table of contents
+
+
+%==============================================================================
+\section{Project description}
+%==============================================================================
+Volume rendering in computer graphics refers to a number of techniques for rendering 3D objects described in terms of their substance rather than their outer surfaces, which is how most modern polygon based technology works. Volume graphics, analogous to 2D raster graphics, use primitive color elements called ``voxels'' (derived from ``volume''+``pixel''), which are arranged in a 3D Cartesian grid to compose the 3D images.
+
+Volume graphics are a more natural way to describe real objects as they do not suffer from penalties when rendering complex shapes over flat surfaces and also make it easier to generate and modify 3D data. Voxels display transparent substance much more accurately as they can accumulate the color in depth. They find their application in medical visualization, the filming industry and 3D graphics packages. However voxels also have several big disadvantages over polygons - the amount of memory they require to store scenes at native resolutions on modern machines could easily reach gigabytes; the popularity of their polygon counterpart has pushed the hardware development in a different direction, so there is little innate support for voxels and animating volume data is not as easy as animating polygons.
+
+There has been a lot of research on different aspects of volumetric graphics tackling these issues and there is a number of open source projects that use the technology, so voxels are not considered to be a new thing, but recent innovations in hardware has made it possible to program the GPU directly, as a result voxel engines starting to gain more popularity and will soon be the next big thing in the gaming industry.
+
+For my project I have as a goal to implement an open source SDK for storing, manipulating and rendering 3D voxel data at interactive frame rate (30fps) that is suitable for use in games software. It will initially be based on OpenGL and will be for the Windows OS platform (but not directly reliant on either).
+
+%==============================================================================
+\section{Work to be tackled}
+%==============================================================================
+I will design and implement an object-oriented C++ SDK for use in games software. This includes tackling the problem of efficient voxel data representation and researching the various techniques that are currently used --- octrees and other sparse structures; instancing; data compression; batching and fetching used data only; different file formats support. Rendering volumes brings another broad category of issues --- deciding on a rendering technique: ray-tracing vs volume slicing vs volume splatting or if even better allow for multiple supported techniques; hybrid voxel and polygon graphics rendering; lighting, shading, reflection and other light effects; anti-aliasing and voxel interpolation.
+
+Most of my work will probably be based on existing projects and ideas. I have not found a project which I am completely happy to use as a base for my project so I will most probably start from scratch and build up implementing different features based on the time left. I do not (yet) plan to employ hardware acceleration techniques for the scope of this project but my ultimate goal is to design a system that is reliable and works, has the minimal set of features required and is readable and flexible enough to be used as a playground by other developers and researchers.
+
+
+%==============================================================================
+\section{Project deliverables}
+%==============================================================================
+\begin{description}
+\item[SDK]			--- sources and binaries (DLLs, LIBs) of the rendering engine
+\item[Test Suite]	--- Unit tests covering most of the code.
+\item[Demos]		--- At least one executable which runs using the SDK and demonstrates its capabilities.
+\item[Documentation]--- API reference, installation and usage manual, final year report.
+\end{description}
+
+%==============================================================================
+\section{Initial bibliography}
+%==============================================================================
+A short non-extensive bibliography on the resources I have taken a closer look at and find most relevant.
+
+\nocite{CCrassinThesis}
+\nocite{GPUAccelTech}
+\nocite{GPUGemsCh39}
+\nocite{CodermindArts}
+
+\nocite{Volreen}
+\nocite{Voxlap}
+\nocite{PolyVox}
+\nocite{Field3D}
+
+% example of including
+\bibliographystyle{plain}
+\renewcommand{\refname}{}  % if you put text into the final {} on this line, you will get an extra title, e.g. References. This isn't necessary for the outline project specification. 
+\bibliography{mmp} % References file
+
+
+\end{document}
