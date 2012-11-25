@@ -11,7 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\AABB.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
+    <ClCompile Include="..\..\..\src\Ray.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\AABB.h" />
+    <ClInclude Include="..\..\..\include\Ray.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4BC5426A-60DE-452D-8434-FE42EC8D23AF}</ProjectGuid>
