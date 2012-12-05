@@ -10,10 +10,36 @@
     <Filter Include="src">
       <UniqueIdentifier>{428cee08-71ee-4eb2-a190-3a4b93f61ef5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\MoreUnitTest++">
+      <UniqueIdentifier>{f225514f-8db6-405a-a84e-631d03abf1a2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\TestVolume.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Volume.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\Volume.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Platform.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreCheckMacros.h">
+      <Filter>test\MoreUnitTest++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreChecks.h">
+      <Filter>test\MoreUnitTest++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreUnitTest++.h">
+      <Filter>test\MoreUnitTest++</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
