@@ -2,6 +2,7 @@
 //	Inlude
 //---------------------------------------
 #include "Volume.h"
+#include "IndexOutOfBoundsException.h"
 
 
 
@@ -50,7 +51,7 @@ UInt8 * Volume::GetData()
 //=================================================================
 //	Volume::GetDataSize
 //---------------------------------------
-UInt32 Volume::GetDataSize()
+UInt32 Volume::GetDataSize()	const
 {
 	static const UInt32 BYTES_PER_VOXEL = 4;
 
@@ -64,7 +65,7 @@ UInt32 Volume::GetDataSize()
 //=================================================================
 //	Volume::GetWidth
 //---------------------------------------
-UInt32 Volume::GetWidth()
+UInt32 Volume::GetWidth()	const
 {
 	return mWidth;
 }
@@ -76,7 +77,7 @@ UInt32 Volume::GetWidth()
 //=================================================================
 //	Volume::GetHeight
 //---------------------------------------
-UInt32 Volume::GetHeight()
+UInt32 Volume::GetHeight()	const
 {
 	return mHeight;
 }
@@ -88,9 +89,29 @@ UInt32 Volume::GetHeight()
 //=================================================================
 //	Volume::GetDepth
 //---------------------------------------
-UInt32 Volume::GetDepth()
+UInt32 Volume::GetDepth()	const
 {
 	return mDepth;
+}
+
+
+
+
+
+//=================================================================
+//	Volume::SetVoxel
+//---------------------------------------
+void Volume::SetVoxel( UInt32 x, UInt32 y, UInt32 z, Color &col )
+{
+	if( x >= mWidth || y >= mHeight || z >= mDepth )
+	{
+		throw IndexOutOfBoundsException();
+	}
+
+	Color *colorData	= (Color*)mData;
+	UInt32 voxelIdx		= x + (y + z*mHeight)*mWidth;
+
+	colorData[ voxelIdx ] = col;
 }
 
 

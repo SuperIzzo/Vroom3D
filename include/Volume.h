@@ -9,6 +9,7 @@
 //	Inlude
 //---------------------------------------
 #include <Platform.h>
+#include <Color.h>
 
 
 
@@ -26,10 +27,12 @@ public:
 
 	// Getters
 	UInt8			  *	GetData();
-	UInt32				GetDataSize();
-	UInt32				GetWidth();
-	UInt32				GetHeight();
-	UInt32				GetDepth();
+	UInt32				GetDataSize()	const;
+	UInt32				GetWidth()		const;
+	UInt32				GetHeight()		const;
+	UInt32				GetDepth()		const;
+
+	void				SetVoxel( UInt32 x, UInt32 y, UInt32 z, Color &col );
 
 	void				Create( UInt32 inWidth, UInt32 inHeight, UInt32 inDepth );
 
