@@ -13,6 +13,9 @@
     <Filter Include="test\MoreUnitTest++">
       <UniqueIdentifier>{f225514f-8db6-405a-a84e-631d03abf1a2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\DataGen">
+      <UniqueIdentifier>{a96bb1e3-e3fd-4783-8793-215f772146d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\main.cpp">
@@ -22,6 +25,15 @@
       <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Volume.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp">
+      <Filter>test\DataGen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Color.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -40,6 +52,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreUnitTest++.h">
       <Filter>test\MoreUnitTest++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\test\TestingDataGenerator.h">
+      <Filter>test\DataGen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Color.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h">
+      <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

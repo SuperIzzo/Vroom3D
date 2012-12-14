@@ -11,16 +11,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\Color.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
     <ClCompile Include="..\..\..\src\Volume.cpp" />
+    <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp" />
+    <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\test\TestVolume.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\Color.h" />
+    <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h" />
     <ClInclude Include="..\..\..\include\Platform.h" />
+    <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h" />
     <ClInclude Include="..\..\..\include\Volume.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreChecks.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreCheckMacros.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreUnitTest++.h" />
+    <ClInclude Include="..\..\..\test\TestingDataGenerator.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4BC5426A-60DE-452D-8434-FE42EC8D23AF}</ProjectGuid>
@@ -52,7 +59,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
     <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(IncludePath)</IncludePath>
   </PropertyGroup>
