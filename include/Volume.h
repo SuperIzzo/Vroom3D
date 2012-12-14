@@ -40,7 +40,7 @@ public:
 	void					Create( UInt32 inWidth, UInt32 inHeight, UInt32 inDepth );
 
 private:
-	void					CheckInRange(UInt32 x, UInt32 y, UInt32 z);
+	void					CheckInRange(UInt32 x, UInt32 y, UInt32 z) const;
 
 private:
 	UInt32					mWidth;

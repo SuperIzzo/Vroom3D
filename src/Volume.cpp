@@ -142,9 +142,9 @@ void Volume::Create( UInt32 inWidth, UInt32 inHeight, UInt32 inDepth )
 
 
 //=================================================================
-//	Volume::VerifyRange
+//	Volume::CheckInRange
 //---------------------------------------
-void Volume::CheckInRange(UInt32 x, UInt32 y, UInt32 z)
+void Volume::CheckInRange(UInt32 x, UInt32 y, UInt32 z) const
 {
 	if( x >= mWidth || y >= mHeight || z >= mDepth )
 	{
