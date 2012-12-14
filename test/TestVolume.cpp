@@ -13,10 +13,17 @@ SUITE( Volume )
 		FIXTURE_EmptyVolume()
 		{
 			volume.Create( 32, 64, 16 );
+
+			voxelData = volume.GetData();
+			voxelColorData = (Color*) voxelData;
 		}
 
 		Volume volume;
+		UInt8 *voxelData;
+		Color *voxelColorData;
 	};
+
+
 
 	TEST( TEST_default_volume_has_no_data_and_zeroed_dimensions )
 	{
@@ -98,29 +105,26 @@ SUITE( Volume )
 
 	TEST_FIXTURE( FIXTURE_EmptyVolume,	TEST_volume_data_can_be_mapped_to_color_object )
 	{
-		UInt8 *voxData = volume.GetData();
-		Color *voxColorData = (Color*) voxData;
 		Color color( 10, 220, 49, 130 );
 
 		UInt32 voxelIndex = 10;
-		voxColorData[voxelIndex] = color;
+		voxelColorData[voxelIndex] = color;
 
-		CHECK_EQUAL( 10,	*( voxData + voxelIndex*4 + 0) );
-		CHECK_EQUAL( 220,	*( voxData + voxelIndex*4 + 1) );
-		CHECK_EQUAL( 49,	*( voxData + voxelIndex*4 + 2) );
-		CHECK_EQUAL( 130,	*( voxData + voxelIndex*4 + 3) );
+		CHECK_EQUAL( 10,	*( voxelData + voxelIndex*4 + 0) );
+		CHECK_EQUAL( 220,	*( voxelData + voxelIndex*4 + 1) );
+		CHECK_EQUAL( 49,	*( voxelData + voxelIndex*4 + 2) );
+		CHECK_EQUAL( 130,	*( voxelData + voxelIndex*4 + 3) );
 
-		CHECK_EQUAL( color.red,		*( voxData + voxelIndex*4 + 0) );
-		CHECK_EQUAL( color.green,	*( voxData + voxelIndex*4 + 1) );
-		CHECK_EQUAL( color.blue,	*( voxData + voxelIndex*4 + 2) );
-		CHECK_EQUAL( color.alpha,	*( voxData + voxelIndex*4 + 3) );
+		CHECK_EQUAL( color.red,		*( voxelData + voxelIndex*4 + 0) );
+		CHECK_EQUAL( color.green,	*( voxelData + voxelIndex*4 + 1) );
+		CHECK_EQUAL( color.blue,	*( voxelData + voxelIndex*4 + 2) );
+		CHECK_EQUAL( color.alpha,	*( voxelData + voxelIndex*4 + 3) );
 	}
 
 
 
 	TEST_FIXTURE( FIXTURE_EmptyVolume,	TEST_set_voxel_modifies_correct_place_in_memory )
 	{
-		UInt8 *voxData = volume.GetData();
 		Color color( 0, 10, 30 );
 		UInt32 x = 12;
 		UInt32 y = 10;
@@ -129,10 +133,10 @@ SUITE( Volume )
 
 		volume.SetVoxel( x, y, z, color );
 
-		CHECK_EQUAL( 0,		*(voxData + voxelIndex*4 + 0) );
-		CHECK_EQUAL( 10,	*(voxData + voxelIndex*4 + 1) );
-		CHECK_EQUAL( 30,	*(voxData + voxelIndex*4 + 2) );
-		CHECK_EQUAL( 255,	*(voxData + voxelIndex*4 + 3) );
+		CHECK_EQUAL( 0,		*(voxelData + voxelIndex*4 + 0) );
+		CHECK_EQUAL( 10,	*(voxelData + voxelIndex*4 + 1) );
+		CHECK_EQUAL( 30,	*(voxelData + voxelIndex*4 + 2) );
+		CHECK_EQUAL( 255,	*(voxelData + voxelIndex*4 + 3) );
 	}
 
 

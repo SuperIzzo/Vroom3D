@@ -2,7 +2,6 @@
 
 void TestingDataGenerator::GenerateCheckBoardPattern( Volume &vol )
 {
-
 	vol.Create( 32, 32, 32 );
 
 	for(int z=0; z< vol.GetDepth(); z++)
@@ -11,7 +10,8 @@ void TestingDataGenerator::GenerateCheckBoardPattern( Volume &vol )
 		{
 			for(int x=0; x< vol.GetDepth(); x++)
 			{
-				//vol.Set
+				Color col( (x+y+z)%2 * 255, 0, 255 );
+				vol.SetVoxel(x, y, z, col);
 			}
 		}
 	}

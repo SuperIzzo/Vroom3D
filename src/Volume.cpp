@@ -9,6 +9,15 @@
 
 
 //=================================================================
+//	Volume::BYTES_PER_VOXEL
+//---------------------------------------
+const UInt32 Volume::BYTES_PER_VOXEL = 4;
+
+
+
+
+
+//=================================================================
 //	Volume::Volume
 //---------------------------------------
 Volume::Volume() :
@@ -53,8 +62,6 @@ UInt8 * Volume::GetData()
 //---------------------------------------
 UInt32 Volume::GetDataSize()	const
 {
-	static const UInt32 BYTES_PER_VOXEL = 4;
-
 	return mWidth*mHeight*mDepth * BYTES_PER_VOXEL;
 }
 
@@ -103,10 +110,7 @@ UInt32 Volume::GetDepth()	const
 //---------------------------------------
 void Volume::SetVoxel( UInt32 x, UInt32 y, UInt32 z, Color &col )
 {
-	if( x >= mWidth || y >= mHeight || z >= mDepth )
-	{
-		throw IndexOutOfBoundsException();
-	}
+	CheckInRange(x,y,z);
 
 	Color *colorData	= (Color*)mData;
 	UInt32 voxelIdx		= x + (y + z*mHeight)*mWidth;
@@ -123,10 +127,27 @@ void Volume::SetVoxel( UInt32 x, UInt32 y, UInt32 z, Color &col )
 //---------------------------------------
 void Volume::Create( UInt32 inWidth, UInt32 inHeight, UInt32 inDepth )
 {
+	delete[] mData;
+
 	mWidth	= inWidth;
 	mHeight = inHeight;
 	mDepth	= inDepth;
 
 	UInt32 dataSize = GetDataSize();
 	mData = new UInt8[ dataSize ];
+}
+
+
+
+
+
+//=================================================================
+//	Volume::VerifyRange
+//---------------------------------------
+void Volume::CheckInRange(UInt32 x, UInt32 y, UInt32 z)
+{
+	if( x >= mWidth || y >= mHeight || z >= mDepth )
+	{
+		throw IndexOutOfBoundsException();
+	}
 }
