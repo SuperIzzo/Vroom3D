@@ -103,13 +103,7 @@ void traverseAndDrawBoxes(const Ray &ray, const AABB &aabb, int numBoxes)
 		point1.y() /= (aabb.max.y() - aabb.min.y())/numBoxes;
 		point1.z() /= (aabb.max.z() - aabb.min.z())/numBoxes;
 
-		//point1.x() = floor( point1.x() );
-		//point1.y() = floor( point1.y() );
-		//point1.z() = floor( point1.z() );
-
 		std::cout << "Ray is in voxel: " << point1.x() << ", " << point1.y() << ", " << point1.z() << std::endl;
-
-		//Eigen::Vector3f point2 = ray.origin + ray.direction * t2 - aabb.min;		
 	}
 }
 
