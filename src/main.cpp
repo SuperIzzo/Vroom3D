@@ -84,27 +84,180 @@ bool GetRayAABBIntersectionPoints( const Ray &ray, const AABB &aabb, float &outT
 }
 
 
-
-void traverseAndDrawBoxes(const Ray &ray, const AABB &aabb, int numBoxes)
+void GetCloseAndFarAABBPointForRay( Eigen::Vector3f &dir, AABB &aabb, 
+										Eigen::Vector3f &closePoint,
+										Eigen::Vector3f &farPoint )
 {
-	float t1, t2;
-	if(	GetRayAABBIntersectionPoints( ray, aabb, t1, t2 ) )
+	for( int axis=0; axis<3; axis++ )
 	{
-		// Initialization
-		// We need to pin the ray to the first voxel it hits in the grid
-		// 
 
-		// Get the entrance point in box coord space
-		Eigen::Vector3f point1 = ray.origin + ray.direction * t1 - aabb.min;
-
-		std::cout << "Ray hits volume at: " << point1.x() << ", " << point1.y() << ", " << point1.z() << std::endl;
-
-		point1.x() /= (aabb.max.x() - aabb.min.x())/numBoxes;
-		point1.y() /= (aabb.max.y() - aabb.min.y())/numBoxes;
-		point1.z() /= (aabb.max.z() - aabb.min.z())/numBoxes;
-
-		std::cout << "Ray is in voxel: " << point1.x() << ", " << point1.y() << ", " << point1.z() << std::endl;
+		if( dir[axis] >= 0 )
+		{
+			closePoint[axis] = aabb.min[axis];
+			farPoint[axis]   = aabb.max[axis];
+		}
+		else
+		{
+			closePoint[axis] = aabb.max[axis];
+			farPoint[axis]   = aabb.min[axis];
+		}
 	}
+}
+
+
+int t = 800;
+void glDrawSlices( Ray &ray, AABB &aabb )
+{
+	float maxT = (aabb.max - aabb.min).norm();
+	printf( "maxT %f\n", maxT );
+	for( float t=0; t< 0.6; t+=0.04 )
+	{
+	Eigen::Vector3f closePoint;
+	Eigen::Vector3f farPoint;
+
+	GetCloseAndFarAABBPointForRay( ray.direction, aabb,  closePoint, farPoint );
+
+	Eigen::Vector3f points[6];
+	
+	for(int axis= 0; axis< 3; axis++)
+	{
+		int a = axis*2; 
+		int b = a+1;
+		points[a] = closePoint;
+		points[b] = closePoint;
+
+		points[a][axis] += t/ray.direction[axis];
+
+		if( abs(points[a][axis]-closePoint[axis]) > abs(farPoint[axis]-closePoint[axis]) )
+		{
+			float diff = abs(points[a][axis]-farPoint[axis]);
+
+			int bAxis = (axis + 1)%3;
+			int aAxis = (axis + 2)%3;
+			points[a][aAxis] += diff/ray.direction[aAxis]*ray.direction[axis];
+			points[b][bAxis] += diff/ray.direction[bAxis]*ray.direction[axis];
+			points[a][axis] = farPoint[axis];
+			points[b][axis] = farPoint[axis];
+
+			if( abs(points[a][aAxis]-closePoint[aAxis]) > abs(farPoint[aAxis]-closePoint[aAxis]) )
+			{
+				float diff = abs(points[a][aAxis]-farPoint[aAxis]);
+
+				points[a][bAxis] += diff/ray.direction[bAxis]*ray.direction[aAxis];
+				points[a][aAxis] = farPoint[aAxis];
+			}
+
+			if( abs(points[b][bAxis]-closePoint[bAxis]) > abs(farPoint[bAxis]-closePoint[bAxis]) )
+			{
+				float diff = abs(points[b][bAxis]-farPoint[bAxis]);
+
+				points[b][aAxis] += diff/ray.direction[aAxis]*ray.direction[bAxis];
+				points[b][bAxis] = farPoint[bAxis];
+			}
+		}
+		else
+		{
+			points[b][axis] = points[a][axis];
+		}
+	}
+
+	for( int i=0; i<6; i++)
+	{
+		glColor3f( 1-i%2, i%2, 0 );
+		glBegin( GL_TRIANGLES );
+			glVertex3f( points[i].x()-0.01, points[i].y()+0.01, points[i].z()      );
+			glVertex3f( points[i].x()     , points[i].y()-0.01, points[i].z()+0.01 );
+			glVertex3f( points[i].x()+0.01, points[i].y()     , points[i].z()-0.01 );
+		glEnd();
+
+
+		int j = i+1;
+			
+		if( j>= 6 )
+			j -=6;
+
+		glBegin( GL_LINES );
+			glVertex3f( points[i].x(), points[i].y() , points[i].z() );
+			glVertex3f( points[j].x(), points[j].y() , points[j].z() );
+		glEnd();
+	}
+
+	glColor3f( 0, 1, 1 );
+	glBegin( GL_LINES );
+		glVertex3f( closePoint.x(), closePoint.y(), closePoint.z() );
+		glVertex3f( closePoint.x() + ray.direction.x()*10, 
+					closePoint.y() + ray.direction.y()*10,
+					closePoint.z() + ray.direction.z()*10 );
+	glEnd();
+
+	}
+	/*
+	for(int i=0; i<10; i++)
+	{
+		point1.x()+= 1/ray.direction.x() * 0.02 *i;
+		point2.y()+= 1/ray.direction.y() * 0.02 *i;
+		point3.z()+= 1/ray.direction.z() * 0.02 *i;
+
+		Eigen::Vector3f point1b = point1;
+		Eigen::Vector3f point2b = point2;
+		Eigen::Vector3f point3b = point3;
+
+		if( point1.x() > farPoint.x() )
+		{
+			float diff = point1.x() - farPoint.x();
+
+			point1.x() = farPoint.x();
+			point1.y() = diff*ray.direction.y();
+
+			point1b.x() = farPoint.x();
+			point1b.z() = diff*ray.direction.z();
+		};
+
+		if( point2.y() > farPoint.y() )
+		{
+			float diff = point1.y() - farPoint.y();
+
+			point2.y() = farPoint.y();
+			point2.z() = diff*ray.direction.z();
+
+			point2b.y() = farPoint.y();
+			point2b.x() = diff*ray.direction.x();
+		};
+
+		if( point3.z() > farPoint.z() )
+		{
+			float diff = point3.z() - farPoint.z();
+
+			point3.z() = farPoint.z();
+			point3.x() = diff*ray.direction.x();
+
+			point3b.z() = farPoint.z();
+			point3b.y() = diff*ray.direction.y();
+		};
+
+		glBegin( GL_LINES );
+			glVertex3f( point1.x(), point1.y(), point1.z() );
+			glVertex3f( point1b.x(), point1b.y(), point1b.z() );
+
+			glVertex3f( point1b.x(), point1b.y(), point1b.z() );
+			glVertex3f( point2.x(), point2.y(), point2.z() );
+
+			glVertex3f( point2.x(), point2.y(), point2.z() );
+			glVertex3f( point2b.x(), point2b.y(), point2b.z() );
+
+			glVertex3f( point2b.x(), point2b.y(), point2b.z() );
+			glVertex3f( point3.x(), point3.y(), point3.z() );
+
+			glVertex3f( point3.x(), point3.y(), point3.z() );
+			glVertex3f( point3b.x(), point3b.y(), point3b.z() );
+
+			glVertex3f( point3b.x(), point3b.y(), point3b.z() );
+			glVertex3f( point1.x(), point1.y(), point1.z() );
+		glEnd();
+	}
+	*/
+
+	glColor3f( 1, 1, 1 );
 }
 
 
@@ -147,36 +300,6 @@ int main(int argc, char* args[])
 		// For rotation animation
 		float angle = 0;
 
-
-		std::vector<AABB> subBoxes;
-		int numBoxes = 3;
-
-		// And some fictional voxels
-		{	
-			Eigen::Vector3f sbSize = (aabb.max - aabb.min)/numBoxes;
-
-			for( int z = 0; z< numBoxes; z++)
-			{
-				for( int y = 0; y< numBoxes; y++)
-				{
-					for( int x = 0; x< numBoxes; x++)
-					{
-						AABB subBox;
-						subBox.min.x() = sbSize.x() * x			+ aabb.min.x();
-						subBox.max.x() = sbSize.x() * (x+1)		+ aabb.min.x();
-
-						subBox.min.y() = sbSize.y() * y			+ aabb.min.y();
-						subBox.max.y() = sbSize.y() * (y+1)		+ aabb.min.y();
-
-						subBox.min.z() = sbSize.z() * z			+ aabb.min.z();
-						subBox.max.z() = sbSize.z() * (z+1)		+ aabb.min.z();
-						subBoxes.push_back(subBox);
-					}
-				}
-			}
-		}
-
-
 		
 		while( theWindow.isOpen() )
 		{
@@ -202,7 +325,7 @@ int main(int argc, char* args[])
 
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
-			angle += 0.1;
+			angle += 0.01;
 			glTranslatef( 0, 0, -5 );
 			glRotatef( 30 , 1.0, 0.0, 0.0);
 			glRotatef( angle*2 , 0.0, 1.0, 0.0);
@@ -213,20 +336,10 @@ int main(int argc, char* args[])
 			glDrawAABB( aabb );
 
 
-			for( int i=0; i< subBoxes.size(); i++ )
-			{
-			//	glDrawAABB( subBoxes[i] );
-			}
-
-
-
-			ray.origin		<< angle/700 - 0.5f,    0,    0;
-			ray.direction	<<    1,    0.4,	  0.2;
+			//ray.origin		<< 0 - 0.5f,    0,    0;
+			ray.direction	<<  angle/700,    0.4,	  0.2;
 
 			ray.direction.normalize();
-
-
-			traverseAndDrawBoxes( ray, aabb, numBoxes );
 
 			float t1, t2;
 
@@ -238,6 +351,9 @@ int main(int argc, char* args[])
 			{
 				glDrawRay( ray );
 			}
+
+
+			glDrawSlices( ray, aabb );
 
 
 			// Flip buffers
