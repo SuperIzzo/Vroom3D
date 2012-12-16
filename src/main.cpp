@@ -165,7 +165,7 @@ void glDrawSlices( Ray &ray, AABB &aabb )
 
 			if( abs(points[a][axis]-closePoint[axis]) > abs(farPoint[axis]-closePoint[axis]) )
 			{
-				float diff = abs(points[a][axis]-farPoint[axis]);
+				float diff = points[a][axis]-farPoint[axis];
 
 				int bAxis = (axis + 1)%3;
 				int aAxis = (axis + 2)%3;
@@ -176,7 +176,7 @@ void glDrawSlices( Ray &ray, AABB &aabb )
 
 				if( abs(points[a][aAxis]-closePoint[aAxis]) > abs(farPoint[aAxis]-closePoint[aAxis]) )
 				{
-					float diff = abs(points[a][aAxis]-farPoint[aAxis]);
+					float diff = points[a][aAxis]-farPoint[aAxis];
 
 					points[a][bAxis] += diff/ray.direction[bAxis]*ray.direction[aAxis];
 					points[a][aAxis] = farPoint[aAxis];
@@ -184,7 +184,7 @@ void glDrawSlices( Ray &ray, AABB &aabb )
 
 				if( abs(points[b][bAxis]-closePoint[bAxis]) > abs(farPoint[bAxis]-closePoint[bAxis]) )
 				{
-					float diff = abs(points[b][bAxis]-farPoint[bAxis]);
+					float diff = points[b][bAxis]-farPoint[bAxis];
 
 					points[b][aAxis] += diff/ray.direction[aAxis]*ray.direction[bAxis];
 					points[b][bAxis] = farPoint[bAxis];
