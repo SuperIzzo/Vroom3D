@@ -105,7 +105,27 @@ void GetCloseAndFarAABBPointForRay( Eigen::Vector3f &dir, AABB &aabb,
 }
 
 
-int t = 800;
+
+/* Here is where we slice the cube (and render it afterwards)
+ * This is not a final optimized solution, more like a proof of a concept
+ * here is the basic idea:
+ * First we determine the AABB vertex that is closest to the ray origin
+ * (the one that is furthest would be the exactly its opposite)
+ * Then we slice the cube on each of the three edges connected directly to the
+ * closest point (i.e. we project that ray), when the projected point exceeds the edge
+ * (goes outside the cube) we clip it back to the cube by splitting the point in two
+ * each of those two points now being projected onto one of the other two axes.
+ * We can have up to 6 points defining a slice within a cube, so use an array of 6
+ * points and don't care about duplicates for now, we'll just have all 6... 
+ * NOTE: after the points split they merge with other points, which means we can optimise this to have as
+ * litle vertices as possible
+ * NOTE: it is quite sensitive to directions and breaks easily when the ray rotates... it will take a bit
+ * of testing to get right, but the basics idea is there :)
+ *
+ * The idea was explained in a paper I can't remember the name of from the top of my head, 
+ * where the authors used the same principle (or at least something very similar) to implement
+ * volume slicing with vertex shaders.
+ */
 void glDrawSlices( Ray &ray, AABB &aabb )
 {
 	float maxT = (aabb.max - aabb.min).norm();
@@ -191,71 +211,6 @@ void glDrawSlices( Ray &ray, AABB &aabb )
 	glEnd();
 
 	}
-	/*
-	for(int i=0; i<10; i++)
-	{
-		point1.x()+= 1/ray.direction.x() * 0.02 *i;
-		point2.y()+= 1/ray.direction.y() * 0.02 *i;
-		point3.z()+= 1/ray.direction.z() * 0.02 *i;
-
-		Eigen::Vector3f point1b = point1;
-		Eigen::Vector3f point2b = point2;
-		Eigen::Vector3f point3b = point3;
-
-		if( point1.x() > farPoint.x() )
-		{
-			float diff = point1.x() - farPoint.x();
-
-			point1.x() = farPoint.x();
-			point1.y() = diff*ray.direction.y();
-
-			point1b.x() = farPoint.x();
-			point1b.z() = diff*ray.direction.z();
-		};
-
-		if( point2.y() > farPoint.y() )
-		{
-			float diff = point1.y() - farPoint.y();
-
-			point2.y() = farPoint.y();
-			point2.z() = diff*ray.direction.z();
-
-			point2b.y() = farPoint.y();
-			point2b.x() = diff*ray.direction.x();
-		};
-
-		if( point3.z() > farPoint.z() )
-		{
-			float diff = point3.z() - farPoint.z();
-
-			point3.z() = farPoint.z();
-			point3.x() = diff*ray.direction.x();
-
-			point3b.z() = farPoint.z();
-			point3b.y() = diff*ray.direction.y();
-		};
-
-		glBegin( GL_LINES );
-			glVertex3f( point1.x(), point1.y(), point1.z() );
-			glVertex3f( point1b.x(), point1b.y(), point1b.z() );
-
-			glVertex3f( point1b.x(), point1b.y(), point1b.z() );
-			glVertex3f( point2.x(), point2.y(), point2.z() );
-
-			glVertex3f( point2.x(), point2.y(), point2.z() );
-			glVertex3f( point2b.x(), point2b.y(), point2b.z() );
-
-			glVertex3f( point2b.x(), point2b.y(), point2b.z() );
-			glVertex3f( point3.x(), point3.y(), point3.z() );
-
-			glVertex3f( point3.x(), point3.y(), point3.z() );
-			glVertex3f( point3b.x(), point3b.y(), point3b.z() );
-
-			glVertex3f( point3b.x(), point3b.y(), point3b.z() );
-			glVertex3f( point1.x(), point1.y(), point1.z() );
-		glEnd();
-	}
-	*/
 
 	glColor3f( 1, 1, 1 );
 }
