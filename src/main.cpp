@@ -104,7 +104,10 @@ void GetCloseAndFarAABBPointForRay( Eigen::Vector3f &dir, AABB &aabb,
 	}
 }
 
-
+inline float min(float a, float b)
+{
+	return (a > b)? a : b;
+}
 
 /* Here is where we slice the cube (and render it afterwards)
  * This is not a final optimized solution, more like a proof of a concept
@@ -130,85 +133,97 @@ void glDrawSlices( Ray &ray, AABB &aabb )
 {
 	float maxT = (aabb.max - aabb.min).norm();
 	printf( "maxT %f\n", maxT );
-	for( float t=0; t< 0.6; t+=0.04 )
-	{
+
+	Eigen::Vector3f points[6];
+	
 	Eigen::Vector3f closePoint;
 	Eigen::Vector3f farPoint;
 
 	GetCloseAndFarAABBPointForRay( ray.direction, aabb,  closePoint, farPoint );
 
-	Eigen::Vector3f points[6];
-	
-	for(int axis= 0; axis< 3; axis++)
+	points[0] = closePoint;
+	points[1] = closePoint;
+	points[2] = closePoint;
+	points[3] = closePoint;
+	points[4] = closePoint;
+	points[5] = closePoint;
+
+
+	float numSlices = 5;
+	float len = ray.direction.dot( farPoint - closePoint );
+	float step = len / numSlices;
+
+	for( int t=0; t<numSlices; t++ )
 	{
-		int a = axis*2; 
-		int b = a+1;
-		points[a] = closePoint;
-		points[b] = closePoint;
 
-		points[a][axis] += t/ray.direction[axis];
-
-		if( abs(points[a][axis]-closePoint[axis]) > abs(farPoint[axis]-closePoint[axis]) )
+		for(int axis= 0; axis< 3; axis++)
 		{
-			float diff = abs(points[a][axis]-farPoint[axis]);
+			int a = axis*2; 
+			int b = a+1;
 
-			int bAxis = (axis + 1)%3;
-			int aAxis = (axis + 2)%3;
-			points[a][aAxis] += diff/ray.direction[aAxis]*ray.direction[axis];
-			points[b][bAxis] += diff/ray.direction[bAxis]*ray.direction[axis];
-			points[a][axis] = farPoint[axis];
-			points[b][axis] = farPoint[axis];
+			points[a][axis] += step/ray.direction[axis];
 
-			if( abs(points[a][aAxis]-closePoint[aAxis]) > abs(farPoint[aAxis]-closePoint[aAxis]) )
+			if( abs(points[a][axis]-closePoint[axis]) > abs(farPoint[axis]-closePoint[axis]) )
 			{
-				float diff = abs(points[a][aAxis]-farPoint[aAxis]);
+				float diff = abs(points[a][axis]-farPoint[axis]);
 
-				points[a][bAxis] += diff/ray.direction[bAxis]*ray.direction[aAxis];
-				points[a][aAxis] = farPoint[aAxis];
+				int bAxis = (axis + 1)%3;
+				int aAxis = (axis + 2)%3;
+				points[a][aAxis] += diff/ray.direction[aAxis]*ray.direction[axis];
+				points[b][bAxis] += diff/ray.direction[bAxis]*ray.direction[axis];
+				points[a][axis] = farPoint[axis];
+				points[b][axis] = farPoint[axis];
+
+				if( abs(points[a][aAxis]-closePoint[aAxis]) > abs(farPoint[aAxis]-closePoint[aAxis]) )
+				{
+					float diff = abs(points[a][aAxis]-farPoint[aAxis]);
+
+					points[a][bAxis] += diff/ray.direction[bAxis]*ray.direction[aAxis];
+					points[a][aAxis] = farPoint[aAxis];
+				}
+
+				if( abs(points[b][bAxis]-closePoint[bAxis]) > abs(farPoint[bAxis]-closePoint[bAxis]) )
+				{
+					float diff = abs(points[b][bAxis]-farPoint[bAxis]);
+
+					points[b][aAxis] += diff/ray.direction[aAxis]*ray.direction[bAxis];
+					points[b][bAxis] = farPoint[bAxis];
+				}
 			}
-
-			if( abs(points[b][bAxis]-closePoint[bAxis]) > abs(farPoint[bAxis]-closePoint[bAxis]) )
+			else
 			{
-				float diff = abs(points[b][bAxis]-farPoint[bAxis]);
-
-				points[b][aAxis] += diff/ray.direction[aAxis]*ray.direction[bAxis];
-				points[b][bAxis] = farPoint[bAxis];
+				points[b][axis] = points[a][axis];
 			}
 		}
-		else
+
+		for( int i=0; i<6; i++)
 		{
-			points[b][axis] = points[a][axis];
-		}
-	}
-
-	for( int i=0; i<6; i++)
-	{
-		glColor3f( 1-i%2, i%2, 0 );
-		glBegin( GL_TRIANGLES );
-			glVertex3f( points[i].x()-0.01, points[i].y()+0.01, points[i].z()      );
-			glVertex3f( points[i].x()     , points[i].y()-0.01, points[i].z()+0.01 );
-			glVertex3f( points[i].x()+0.01, points[i].y()     , points[i].z()-0.01 );
-		glEnd();
+			glColor3f( 1-i%2, i%2, 0 );
+			glBegin( GL_TRIANGLES );
+				glVertex3f( points[i].x()-0.01, points[i].y()+0.01, points[i].z()      );
+				glVertex3f( points[i].x()     , points[i].y()-0.01, points[i].z()+0.01 );
+				glVertex3f( points[i].x()+0.01, points[i].y()     , points[i].z()-0.01 );
+			glEnd();
 
 
-		int j = i+1;
+			int j = i+1;
 			
-		if( j>= 6 )
-			j -=6;
+			if( j>= 6 )
+				j -=6;
 
+			glBegin( GL_LINES );
+				glVertex3f( points[i].x(), points[i].y() , points[i].z() );
+				glVertex3f( points[j].x(), points[j].y() , points[j].z() );
+			glEnd();
+		}
+
+		glColor3f( 0, 1, 1 );
 		glBegin( GL_LINES );
-			glVertex3f( points[i].x(), points[i].y() , points[i].z() );
-			glVertex3f( points[j].x(), points[j].y() , points[j].z() );
+			glVertex3f( closePoint.x(), closePoint.y(), closePoint.z() );
+			glVertex3f( closePoint.x() + ray.direction.x()*10, 
+						closePoint.y() + ray.direction.y()*10,
+						closePoint.z() + ray.direction.z()*10 );
 		glEnd();
-	}
-
-	glColor3f( 0, 1, 1 );
-	glBegin( GL_LINES );
-		glVertex3f( closePoint.x(), closePoint.y(), closePoint.z() );
-		glVertex3f( closePoint.x() + ray.direction.x()*10, 
-					closePoint.y() + ray.direction.y()*10,
-					closePoint.z() + ray.direction.z()*10 );
-	glEnd();
 
 	}
 
@@ -292,7 +307,7 @@ int main(int argc, char* args[])
 
 
 			//ray.origin		<< 0 - 0.5f,    0,    0;
-			ray.direction	<<  angle/700,    0.4,	  0.2;
+			ray.direction	<<  sin(angle/100),   cos(angle/100),	  0.2;
 
 			ray.direction.normalize();
 
