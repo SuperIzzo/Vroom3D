@@ -104,10 +104,6 @@ void GetCloseAndFarAABBPointForRay( Eigen::Vector3f &dir, AABB &aabb,
 	}
 }
 
-inline float min(float a, float b)
-{
-	return (a > b)? a : b;
-}
 
 /* Here is where we slice the cube (and render it afterwards)
  * This is not a final optimized solution, more like a proof of a concept
@@ -130,17 +126,13 @@ inline float min(float a, float b)
  * volume slicing with vertex shaders.
  */
 void glDrawSlices( Ray &ray, AABB &aabb )
-{
-	float maxT = (aabb.max - aabb.min).norm();
-	printf( "maxT %f\n", maxT );
-
-	Eigen::Vector3f points[6];
-	
+{	
 	Eigen::Vector3f closePoint;
 	Eigen::Vector3f farPoint;
 
 	GetCloseAndFarAABBPointForRay( ray.direction, aabb,  closePoint, farPoint );
 
+	Eigen::Vector3f points[6];
 	points[0] = closePoint;
 	points[1] = closePoint;
 	points[2] = closePoint;
