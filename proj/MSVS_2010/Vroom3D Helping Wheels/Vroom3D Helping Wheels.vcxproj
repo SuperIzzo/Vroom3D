@@ -19,6 +19,7 @@
     <ClCompile Include="..\..\..\test\TestVolume.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\AABB.h" />
     <ClInclude Include="..\..\..\include\Color.h" />
     <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h" />
     <ClInclude Include="..\..\..\include\Platform.h" />
