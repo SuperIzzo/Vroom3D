@@ -3,5 +3,5 @@
 class TestingDataGenerator
 {
 public:
-	static void		GenerateCheckBoardPattern( Volume &vol );
+	static void		GenerateCheckBoardPattern( Vroom::Volume &vol );
 };

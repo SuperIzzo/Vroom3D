@@ -5,6 +5,8 @@
 #include <IndexOutOfBoundsException.h>
 
 
+using namespace Vroom;
+
 
 SUITE( Volume )
 {

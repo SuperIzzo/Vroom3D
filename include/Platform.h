@@ -2,8 +2,15 @@
 #define __VROOM_PLATFORM_H__
 
 
+//=================================================================
+// Define namespace maros
+//---------------------------------------
+#define VROOM_BEGIN		namespace Vroom {
+#define VROOM_END		};
+#define Vroom			Vroom
 
 
+VROOM_BEGIN
 
 //=================================================================
 // Ineger Types
@@ -17,8 +24,7 @@ typedef signed int					SInt32;
 typedef unsigned long long int		UInt64;
 typedef signed long long int		SInt64;
 
-
-
+VROOM_END
 
 
 #endif

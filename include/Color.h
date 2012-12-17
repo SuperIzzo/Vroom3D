@@ -11,7 +11,7 @@
 #include <Platform.h>
 
 
-
+VROOM_BEGIN
 
 
 //=================================================================
@@ -30,7 +30,7 @@ struct Color
 };
 
 
-
+VROOM_END
 
 
 #endif

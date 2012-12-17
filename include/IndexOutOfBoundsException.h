@@ -6,6 +6,15 @@
 
 
 //=================================================================
+//	Inlude
+//---------------------------------------
+#include <Platform.h>
+
+
+VROOM_BEGIN
+
+
+//=================================================================
 //	struct IndexOutOfBoundsException
 //---------------------------------------
 struct IndexOutOfBoundsException
@@ -13,7 +22,7 @@ struct IndexOutOfBoundsException
 };
 
 
-
+VROOM_END
 
 
 #endif

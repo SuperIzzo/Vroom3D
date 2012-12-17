@@ -5,7 +5,7 @@
 #include "IndexOutOfBoundsException.h"
 
 
-
+VROOM_BEGIN
 
 
 //=================================================================
@@ -151,3 +151,6 @@ void Volume::CheckInRange(UInt32 x, UInt32 y, UInt32 z) const
 		throw IndexOutOfBoundsException();
 	}
 }
+
+
+VROOM_END

@@ -1,5 +1,9 @@
 #include "TestingDataGenerator.h"
 
+
+using namespace Vroom;
+
+
 void TestingDataGenerator::GenerateCheckBoardPattern( Volume &vol )
 {
 	vol.Create( 32, 32, 32 );

@@ -11,7 +11,7 @@
 #include <Volume.h>
 
 
-
+VROOM_BEGIN
 
 
 //=================================================================
@@ -22,7 +22,7 @@ class TexMapVolumeRenderer
 }
 
 
-
+VROOM_END
 
 
 #endif
