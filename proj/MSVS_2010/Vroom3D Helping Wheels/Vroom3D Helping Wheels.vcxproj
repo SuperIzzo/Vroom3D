@@ -11,9 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\src\AABB.cpp" />
     <ClCompile Include="..\..\..\src\Color.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
     <ClCompile Include="..\..\..\src\Volume.cpp" />
+    <ClCompile Include="..\..\..\test\TestAABB.cpp" />
     <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp" />
     <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\test\TestVolume.cpp" />
@@ -22,6 +24,7 @@
     <ClInclude Include="..\..\..\include\AABB.h" />
     <ClInclude Include="..\..\..\include\Color.h" />
     <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h" />
+    <ClInclude Include="..\..\..\include\MathCommon.h" />
     <ClInclude Include="..\..\..\include\Platform.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h" />
     <ClInclude Include="..\..\..\include\Volume.h" />

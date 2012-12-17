@@ -8,7 +8,7 @@
 //=================================================================
 //	Inlude
 //---------------------------------------
-#include <Platform.h>
+#include <MathCommon.h>
 
 
 VROOM_BEGIN
@@ -16,6 +16,16 @@ VROOM_BEGIN
 
 class AABB
 {
+public:
+							AABB(	const Vector3 &point1 = Vector3(0,0,0),
+									const Vector3 &point2 = Vector3(0,0,0) );
+							
+	const Vector3		  &	GetMinPoint();
+	const Vector3		  &	GetMaxPoint();
+
+private:
+	Vector3					mMinPoint;
+	Vector3					mMaxPoint;
 };
 
 

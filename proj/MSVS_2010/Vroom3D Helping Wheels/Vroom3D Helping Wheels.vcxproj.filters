@@ -19,6 +19,9 @@
     <Filter Include="include\Math">
       <UniqueIdentifier>{5569f5b9-c902-426c-b346-9497d736b7f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Math">
+      <UniqueIdentifier>{f895a2ca-7a3f-4b59-ab0f-02c8f06b3780}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\main.cpp">
@@ -38,6 +41,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\Color.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestAABB.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\AABB.cpp">
+      <Filter>src\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,6 +78,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\AABB.h">
+      <Filter>include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\MathCommon.h">
       <Filter>include\Math</Filter>
     </ClInclude>
   </ItemGroup>
