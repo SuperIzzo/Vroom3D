@@ -62,12 +62,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++</IncludePath>
+    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
