@@ -22,6 +22,12 @@
     <Filter Include="src\Math">
       <UniqueIdentifier>{f895a2ca-7a3f-4b59-ab0f-02c8f06b3780}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Renderer">
+      <UniqueIdentifier>{24730de3-a5bc-47c5-82b3-37bdaecdc421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Renderer\Texture Mapping">
+      <UniqueIdentifier>{105db148-5ca8-4457-b379-b0dbeaf1d596}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\main.cpp">
@@ -65,9 +71,6 @@
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreUnitTest++.h">
       <Filter>test\MoreUnitTest++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\test\TestingDataGenerator.h">
       <Filter>test\DataGen</Filter>
     </ClInclude>
@@ -82,6 +85,18 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\MathCommon.h">
       <Filter>include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\TexMapVolumeRendererNode.h">
+      <Filter>include\Renderer\Texture Mapping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h">
+      <Filter>include\Renderer\Texture Mapping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\VolumeRenderer.h">
+      <Filter>include\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Node.h">
+      <Filter>include\Renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

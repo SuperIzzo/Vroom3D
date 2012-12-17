@@ -1,5 +1,5 @@
-#ifndef __VROOM_TEXMAP_VOLUME_RENDERER_H__
-#define __VROOM_TEXMAP_VOLUME_RENDERER_H__
+#ifndef __VROOM_TEXMAP_VOLUME_RENDERER_NODE_H__
+#define __VROOM_TEXMAP_VOLUME_RENDERER_NODE_H__
 
 
 
@@ -8,17 +8,16 @@
 //=================================================================
 //	Inlude
 //---------------------------------------
-#include <VolumeRenderer.h>
-#include <Volume.h>
+#include <Node.h>
 
 
 VROOM_BEGIN
 
 
 //=================================================================
-//	Class TexMapVolumeRenderer
+//	Class TexMapVolumeRendererNode
 //---------------------------------------
-class TexMapVolumeRenderer : public VolumeRenderer
+class TexMapVolumeRendererNode : public Node
 {
 };
 

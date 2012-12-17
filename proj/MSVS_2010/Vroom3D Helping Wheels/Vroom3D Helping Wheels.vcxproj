@@ -25,9 +25,12 @@
     <ClInclude Include="..\..\..\include\Color.h" />
     <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h" />
     <ClInclude Include="..\..\..\include\MathCommon.h" />
+    <ClInclude Include="..\..\..\include\Node.h" />
     <ClInclude Include="..\..\..\include\Platform.h" />
+    <ClInclude Include="..\..\..\include\TexMapVolumeRendererNode.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h" />
     <ClInclude Include="..\..\..\include\Volume.h" />
+    <ClInclude Include="..\..\..\include\VolumeRenderer.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreChecks.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreCheckMacros.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreUnitTest++.h" />
