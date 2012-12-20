@@ -28,6 +28,12 @@
     <Filter Include="include\Renderer\Texture Mapping">
       <UniqueIdentifier>{105db148-5ca8-4457-b379-b0dbeaf1d596}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Renderer">
+      <UniqueIdentifier>{aa56c83e-57b4-440a-8ea3-d76d8e77d0be}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Renderer\Texture Mapping">
+      <UniqueIdentifier>{a6dab4ab-4614-4ed5-bcd8-86d1f096d4cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\main.cpp">
@@ -53,6 +59,12 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\AABB.cpp">
       <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TexMapVolumeRenderer.cpp">
+      <Filter>src\Renderer\Texture Mapping</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\TexMapVolumeRendererNode.cpp">
+      <Filter>src\Renderer\Texture Mapping</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

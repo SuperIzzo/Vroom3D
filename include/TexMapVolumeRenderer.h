@@ -20,6 +20,8 @@ VROOM_BEGIN
 //---------------------------------------
 class TexMapVolumeRenderer : public VolumeRenderer
 {
+public:
+	virtual Node *			CreateNode();
 };
 
 

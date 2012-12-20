@@ -14,6 +14,8 @@
     <ClCompile Include="..\..\..\src\AABB.cpp" />
     <ClCompile Include="..\..\..\src\Color.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
+    <ClCompile Include="..\..\..\src\TexMapVolumeRenderer.cpp" />
+    <ClCompile Include="..\..\..\src\TexMapVolumeRendererNode.cpp" />
     <ClCompile Include="..\..\..\src\Volume.cpp" />
     <ClCompile Include="..\..\..\test\TestAABB.cpp" />
     <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp" />
