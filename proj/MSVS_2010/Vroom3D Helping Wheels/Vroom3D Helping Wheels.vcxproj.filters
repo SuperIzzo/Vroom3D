@@ -10,67 +10,82 @@
     <Filter Include="src">
       <UniqueIdentifier>{428cee08-71ee-4eb2-a190-3a4b93f61ef5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="test\MoreUnitTest++">
-      <UniqueIdentifier>{f225514f-8db6-405a-a84e-631d03abf1a2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="test\DataGen">
-      <UniqueIdentifier>{a96bb1e3-e3fd-4783-8793-215f772146d2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="include\Math">
       <UniqueIdentifier>{5569f5b9-c902-426c-b346-9497d736b7f0}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Math">
       <UniqueIdentifier>{f895a2ca-7a3f-4b59-ab0f-02c8f06b3780}</UniqueIdentifier>
     </Filter>
-    <Filter Include="include\Renderer">
-      <UniqueIdentifier>{24730de3-a5bc-47c5-82b3-37bdaecdc421}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="include\Renderer\Texture Mapping">
-      <UniqueIdentifier>{105db148-5ca8-4457-b379-b0dbeaf1d596}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Renderer">
+    <Filter Include="src\Graphics">
       <UniqueIdentifier>{aa56c83e-57b4-440a-8ea3-d76d8e77d0be}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Renderer\Texture Mapping">
+    <Filter Include="src\Graphics\Texture Mapping">
       <UniqueIdentifier>{a6dab4ab-4614-4ed5-bcd8-86d1f096d4cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics">
+      <UniqueIdentifier>{24730de3-a5bc-47c5-82b3-37bdaecdc421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\Graphics\Texture Mapping">
+      <UniqueIdentifier>{105db148-5ca8-4457-b379-b0dbeaf1d596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\Math">
+      <UniqueIdentifier>{7f978c54-26c2-49df-bc38-d68528e32c36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\Graphics">
+      <UniqueIdentifier>{5014a337-0fca-4b5f-b430-2d5956a36850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\MoreUnitTest++">
+      <UniqueIdentifier>{f225514f-8db6-405a-a84e-631d03abf1a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test\DataGen">
+      <UniqueIdentifier>{a96bb1e3-e3fd-4783-8793-215f772146d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\TestVolume.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\Volume.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp">
-      <Filter>test</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp">
       <Filter>test\DataGen</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\src\Color.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\test\TestAABB.cpp">
-      <Filter>test</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\AABB.cpp">
       <Filter>src\Math</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\TexMapVolumeRenderer.cpp">
-      <Filter>src\Renderer\Texture Mapping</Filter>
+      <Filter>src\Graphics\Texture Mapping</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\TexMapVolumeRendererNode.cpp">
-      <Filter>src\Renderer\Texture Mapping</Filter>
+      <Filter>src\Graphics\Texture Mapping</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Polygon.cpp">
+      <Filter>src\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Color.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Volume.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestVolume.cpp">
+      <Filter>test\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp">
+      <Filter>test\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestAABB.cpp">
+      <Filter>test\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestPolygon.cpp">
+      <Filter>test\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestNode.cpp">
+      <Filter>test\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Node.cpp">
+      <Filter>src\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\Volume.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\Platform.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -86,9 +101,6 @@
     <ClInclude Include="..\..\..\test\TestingDataGenerator.h">
       <Filter>test\DataGen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\Color.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h">
       <Filter>include</Filter>
     </ClInclude>
@@ -99,16 +111,25 @@
       <Filter>include\Math</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\TexMapVolumeRendererNode.h">
-      <Filter>include\Renderer\Texture Mapping</Filter>
+      <Filter>include\Graphics\Texture Mapping</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h">
-      <Filter>include\Renderer\Texture Mapping</Filter>
+      <Filter>include\Graphics\Texture Mapping</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\VolumeRenderer.h">
-      <Filter>include\Renderer</Filter>
+      <Filter>include\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\Node.h">
-      <Filter>include\Renderer</Filter>
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Polygon.h">
+      <Filter>include\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Color.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Volume.h">
+      <Filter>include\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -8,7 +8,8 @@
 //=================================================================
 //	Inlude
 //---------------------------------------
-#include <Platform.h>
+#include <AABB.h>
+#include <Volume.h>
 
 
 VROOM_BEGIN
@@ -20,7 +21,13 @@ VROOM_BEGIN
 class Node
 {
 public:
-	virtual UInt32			GetTypeID() = 0;
+							Node();
+
+	virtual void			SetVolume( Volume *volume );
+	virtual Volume		  *	GetVolume();
+
+private:
+	Volume				  * mVolume;
 };
 
 

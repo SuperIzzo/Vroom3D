@@ -17,6 +17,7 @@ SUITE( TexMapVolumeRenderer )
 		CHECK_NOT_NULL( node );
 	}
 
+
 	TEST( TEST_volume_data_can_be_attached_to_texmap_node )
 	{
 

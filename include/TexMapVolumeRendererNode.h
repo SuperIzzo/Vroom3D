@@ -9,6 +9,8 @@
 //	Inlude
 //---------------------------------------
 #include <Node.h>
+#include <Polygon.h>
+#include <vector>
 
 
 VROOM_BEGIN
@@ -20,7 +22,9 @@ VROOM_BEGIN
 class TexMapVolumeRendererNode : public Node
 {
 public:
-	virtual UInt32			GetTypeID();
+
+private:
+	std::vector<Polygon>	mSlices;
 };
 
 
