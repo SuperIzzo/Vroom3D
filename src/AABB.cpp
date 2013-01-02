@@ -91,17 +91,20 @@ Polygon AABB::SliceByPercentage( Vector3 planeDir, Real percent )
 
 		for(int axis= 0; axis< 3; axis++)
 		{
-			// We have 6 vertices, main vertices and split Verices
+			// We have 6 vertices, main vertices (vertexA) and split Verices (vertexB)
 			int vertexA = axis*2; 
 			int vertexB = vertexA+1;
 
 			points[vertexA][axis] += step/planeDir[axis];
 
+			// If the point grows beyond it's initial axis segment 
 			if( abs(points[vertexA][axis]-closeBoxVertex[axis]) >= aabbSize[axis] )
 			{
 				int nextAxis = (axis + 1)%3;
 				int prevAxis = (axis + 2)%3;				
 
+				// Then split the two vertices and bend their trajectories
+				// to the other two axes
 				if( planeDir[axis] != 0 )
 				{
 					float diff = points[vertexA][axis]-farBoxVertex[axis];
@@ -161,7 +164,6 @@ Polygon AABB::SliceByPercentage( Vector3 planeDir, Real percent )
 		}
 
 
-		int actualVerts =0;
 		for( int i=0; i< 6; i++)
 		{
 			int j = i+1;
