@@ -2,6 +2,18 @@
 #define __VROOM_PLATFORM_H__
 
 
+
+
+
+//=================================================================
+// Include
+//---------------------------------------
+#include <string>
+
+
+
+
+
 //=================================================================
 // Define namespace maros
 //---------------------------------------
@@ -25,6 +37,7 @@ typedef unsigned long long int		UInt64;
 typedef signed long long int		SInt64;
 
 typedef float						Real;
+typedef std::string					String;
 
 VROOM_END
 
