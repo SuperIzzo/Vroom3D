@@ -104,4 +104,23 @@ SUITE( XMLDocument )
 		CHECK_EQUAL( 1,			children.size()		  );
 		CHECK_EQUAL( "height",	children[0].GetName() );
 	}
+
+
+	TEST( TEST_XML_Node_int_value )
+	{
+		XMLDocument doc;
+
+		XMLNode root = doc.GetRootNode();
+		CHECK_EQUAL( 0,		root.GetIntValue() );
+
+		doc.ParseString( testXML1 );
+
+		root = doc.GetRootNode();
+		XMLNodeList children = root.GetChildren();
+
+		CHECK_EQUAL( 1,		children[0].GetIntValue() );
+		CHECK_EQUAL( 2,		children[1].GetIntValue() );
+		CHECK_EQUAL( 0,		children[2].GetIntValue() );
+		CHECK_EQUAL( 0,		children[3].GetIntValue() );
+	}
 }

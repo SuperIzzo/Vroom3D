@@ -37,6 +37,7 @@ public:
 	bool				IsValid();
 	String				GetName();
 	String				GetValue();
+	SInt32				GetIntValue();
 
 	XMLNodeList			GetChildren( String name="" );
 

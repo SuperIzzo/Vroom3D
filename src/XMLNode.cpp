@@ -1,4 +1,5 @@
 #include <XMLNode.h>
+#include <sstream>
 
 
 VROOM_BEGIN
@@ -60,6 +61,20 @@ String XMLNode::GetValue()
 	{
 		return "";
 	}
+}
+
+
+
+
+
+//=================================================================
+//	XMLNode::GetIntValue
+//---------------------------------------
+SInt32 XMLNode::GetIntValue()
+{
+	SInt32 theResult = 0;
+	std::istringstream( GetValue() ) >> theResult;
+	return theResult;
 }
 
 	
