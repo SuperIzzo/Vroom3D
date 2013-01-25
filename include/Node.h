@@ -22,6 +22,7 @@ class Node
 {
 public:
 							Node();
+	virtual					~Node();
 
 	virtual void			SetVolume( Volume *volume );
 	virtual Volume		  *	GetVolume();
