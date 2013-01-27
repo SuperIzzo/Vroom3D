@@ -30,6 +30,7 @@ public:
 
 	// Getters
 	UInt8				  *	GetData();
+	const UInt8			  *	GetData()		const;
 	UInt32					GetDataSize()	const;
 	UInt32					GetWidth()		const;
 	UInt32					GetHeight()		const;
