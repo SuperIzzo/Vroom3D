@@ -7,5 +7,12 @@
 VROOM_BEGIN
 
 
+//=================================================================
+//	TexMapVolumeRendererNode::TexMapVolumeRendererNode
+//---------------------------------------
+TexMapVolumeRendererNode::TexMapVolumeRendererNode()
+{
+}
+
 
 VROOM_END

@@ -22,8 +22,12 @@ VROOM_BEGIN
 class TexMapVolumeRendererNode : public Node
 {
 public:
+	friend class TexMapVolumeRenderer;
 
-private:
+protected:
+							TexMapVolumeRendererNode();
+
+private: 
 	std::vector<Polygon>	mSlices;
 };
 
