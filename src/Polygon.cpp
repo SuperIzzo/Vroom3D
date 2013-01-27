@@ -42,7 +42,7 @@ void Polygon::RemoveVertex( UInt32 index )
 //=================================================================
 //	Polygon::GetVertexCount
 //---------------------------------------
-UInt32 Polygon::GetVertexCount()
+UInt32 Polygon::GetVertexCount() const
 {
 	return mVertices.size();
 }
@@ -54,7 +54,7 @@ UInt32 Polygon::GetVertexCount()
 //=================================================================
 //	Polygon::GetVertex
 //---------------------------------------
-Vector3 Polygon::GetVertex( UInt32 index )
+Vector3 Polygon::GetVertex( UInt32 index ) const
 {
 	return mVertices.at(index);
 }

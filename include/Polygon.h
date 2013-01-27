@@ -23,8 +23,8 @@ public:
 	void					AddVertex( Vector3 &vert );
 	void					RemoveVertex( UInt32 index );
 
-	UInt32					GetVertexCount();
-	Vector3					GetVertex( UInt32 index );
+	UInt32					GetVertexCount() const;
+	Vector3					GetVertex( UInt32 index ) const;
 
 private:
 	std::vector<Vector3>	mVertices;
