@@ -37,6 +37,8 @@ public:
 	UInt32					GetDepth()		const;
 
 	void					SetVoxel( UInt32 x, UInt32 y, UInt32 z, Color &col );
+	Color&					GetVoxel( UInt32 x, UInt32 y, UInt32 z);
+	Color					GetVoxel( UInt32 x, UInt32 y, UInt32 z) const;
 
 	void					Create( UInt32 inWidth, UInt32 inHeight, UInt32 inDepth );
 
