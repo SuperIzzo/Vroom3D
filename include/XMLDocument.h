@@ -20,14 +20,14 @@ public:
 								XMLDocument();
 								~XMLDocument();
 
-	void						ParseFile(const char *fname);
-	void						ParseString(const char *text);
+	void						ParseFile(const String &fname);
+	void						ParseString(const String &text);
 
 	XMLNode						GetRootNode();
 
 private:
 	void						Parse();
-	void						LoadFromFile(const char *fname);
+	void						LoadFromFile(const String &fname);
 	void						CopyXMLString(const char *text);
 	void						ClearData();
 
