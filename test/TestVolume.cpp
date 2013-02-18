@@ -57,6 +57,18 @@ SUITE( Volume )
 
 
 
+	TEST_FIXTURE( FIXTURE_EmptyVolume,	TEST_created_volume_has_clear_0_data )
+	{		
+		for( int attempt=0; attempt <20; attempt++ )
+		{
+			UInt32 byteIdx = (UInt32) rand() % volume.GetDataSize();
+
+			CHECK_EQUAL( 0,		voxelData[byteIdx]	);
+		}
+	}
+
+
+
 	TEST_FIXTURE( FIXTURE_EmptyVolume,	TEST_created_volume_reports_correct_size )
 	{
 		const UInt32 expectedDataSize = 32*64*16 * 4;

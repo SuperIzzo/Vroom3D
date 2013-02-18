@@ -135,6 +135,40 @@ void Volume::SetVoxel( UInt32 x, UInt32 y, UInt32 z, Color &col )
 
 
 //=================================================================
+//	Volume::GetVoxel
+//---------------------------------------
+Color& Volume::GetVoxel( UInt32 x, UInt32 y, UInt32 z )
+{
+	CheckInRange(x,y,z);
+
+	Color *colorData	= (Color*)mData;
+	UInt32 voxelIdx		= x + (y + z*mHeight)*mWidth;
+
+	return colorData[ voxelIdx ];
+}
+
+
+
+
+
+//=================================================================
+//	Volume::GetVoxel
+//---------------------------------------
+Color Volume::GetVoxel( UInt32 x, UInt32 y, UInt32 z ) const
+{
+	CheckInRange(x,y,z);
+
+	Color *colorData	= (Color*)mData;
+	UInt32 voxelIdx		= x + (y + z*mHeight)*mWidth;
+
+	return colorData[ voxelIdx ];
+}
+
+
+
+
+
+//=================================================================
 //	Volume::Create
 //---------------------------------------
 void Volume::Create( UInt32 inWidth, UInt32 inHeight, UInt32 inDepth )
@@ -147,6 +181,7 @@ void Volume::Create( UInt32 inWidth, UInt32 inHeight, UInt32 inDepth )
 
 	UInt32 dataSize = GetDataSize();
 	mData = new UInt8[ dataSize ];
+	memset( mData, 0, dataSize*sizeof(UInt8) );
 }
 
 
