@@ -33,7 +33,7 @@ XMLDocument::~XMLDocument()
 //=================================================================
 //	XMLDocument::ParseFile
 //---------------------------------------
-void XMLDocument::ParseFile(const char *fname)
+void XMLDocument::ParseFile(const String &fname)
 {
 	LoadFromFile( fname );
 	Parse();
@@ -46,9 +46,9 @@ void XMLDocument::ParseFile(const char *fname)
 //=================================================================
 //	XMLDocument::ParseString
 //---------------------------------------
-void XMLDocument::ParseString(const char *text)
+void XMLDocument::ParseString(const String &text)
 {
-	CopyXMLString( text );
+	CopyXMLString( text.c_str() );
 	Parse();
 }
 
@@ -71,7 +71,7 @@ void XMLDocument::Parse()
 //=================================================================
 //	XMLDocument::LoadFromFile
 //---------------------------------------
-void XMLDocument::LoadFromFile(const char *fname)
+void XMLDocument::LoadFromFile( const String &fname )
 {
 	std::ifstream fileIn;
 	std::string line, docContent;
@@ -95,7 +95,7 @@ void XMLDocument::LoadFromFile(const char *fname)
 //=================================================================
 //	XMLDocument::CopyXMLString
 //---------------------------------------
-void XMLDocument::CopyXMLString(const char *text)
+void XMLDocument::CopyXMLString( const char *text)
 {
 	UInt32 length = strlen(text);
 	mXMLString = new char[ length+1 ];
