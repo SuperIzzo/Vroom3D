@@ -49,6 +49,9 @@
     <Filter Include="test\DataGen">
       <UniqueIdentifier>{a96bb1e3-e3fd-4783-8793-215f772146d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="docs">
+      <UniqueIdentifier>{b643c0bd-fd67-47b3-9fd0-977b784814c4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\main.cpp">
@@ -101,6 +104,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\src\XMLNode.cpp">
       <Filter>src\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Texture3D.cpp">
+      <Filter>src\Graphics\Texture Mapping</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,5 +161,25 @@
     <ClInclude Include="..\..\..\include\XMLNode.h">
       <Filter>include\Util</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\Texture3D.h">
+      <Filter>include\Graphics\Texture Mapping</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Camera.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\src\Shaders.shd">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\docs\design\Discussion - 3D Texture Volumes.txt">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="..\..\..\docs\design\Discussion - Transforms and Cameras.txt">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="..\..\..\docs\design\Discussion - What exactly is the project.txt">
+      <Filter>docs</Filter>
+    </None>
   </ItemGroup>
 </Project>

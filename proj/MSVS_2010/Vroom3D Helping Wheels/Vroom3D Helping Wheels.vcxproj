@@ -18,6 +18,7 @@
     <ClCompile Include="..\..\..\src\Polygon.cpp" />
     <ClCompile Include="..\..\..\src\TexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\src\TexMapVolumeRendererNode.cpp" />
+    <ClCompile Include="..\..\..\src\Texture3D.cpp" />
     <ClCompile Include="..\..\..\src\Volume.cpp" />
     <ClCompile Include="..\..\..\src\XMLDocument.cpp" />
     <ClCompile Include="..\..\..\src\XMLNode.cpp" />
@@ -31,6 +32,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\AABB.h" />
+    <ClInclude Include="..\..\..\include\Camera.h" />
     <ClInclude Include="..\..\..\include\Color.h" />
     <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h" />
     <ClInclude Include="..\..\..\include\MathCommon.h" />
@@ -39,6 +41,7 @@
     <ClInclude Include="..\..\..\include\Polygon.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRendererNode.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h" />
+    <ClInclude Include="..\..\..\include\Texture3D.h" />
     <ClInclude Include="..\..\..\include\Volume.h" />
     <ClInclude Include="..\..\..\include\VolumeRenderer.h" />
     <ClInclude Include="..\..\..\include\XMLDocument.h" />
@@ -47,6 +50,14 @@
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreCheckMacros.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreUnitTest++.h" />
     <ClInclude Include="..\..\..\test\TestingDataGenerator.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\docs\design\Discussion - 3D Texture Volumes.txt" />
+    <None Include="..\..\..\docs\design\Discussion - Transforms and Cameras.txt" />
+    <None Include="..\..\..\docs\design\Discussion - What exactly is the project.txt" />
+    <ClInclude Include="..\..\..\src\Shaders.shd">
+      <FileType>Document</FileType>
+    </ClInclude>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4BC5426A-60DE-452D-8434-FE42EC8D23AF}</ProjectGuid>
@@ -80,14 +91,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(ProjectSub)\rapidxml-1.13;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectSub)\SFML-2.0-rc\lib;$(ProjectLIB)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(ProjectSub)\OpenGL;$(ProjectSub)\rapidxml-1.13;$(ProjectSub)\glew-1.9.0-win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectSub)\SFML-2.0-rc\lib;$(ProjectLIB)\$(Configuration);$(ProjectSub)\glew-1.9.0-win32\lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(ProjectSub)\glew-1.9.0-win32\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(ProjectSub)\rapidxml-1.13;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectSub)\SFML-2.0-rc\lib;$(ProjectLIB)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(ProjectSub)\OpenGL;$(ProjectSub)\rapidxml-1.13;$(ProjectSub)\glew-1.9.0-win32\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectSub)\SFML-2.0-rc\lib;$(ProjectLIB)\$(Configuration);$(ProjectSub)\glew-1.9.0-win32\lib;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(ProjectSub)\glew-1.9.0-win32\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,7 +111,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>UnitTest++.lib;sfml-system-s-d.lib;sfml-window-s-d.lib;sfml-graphics-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UnitTest++.lib;sfml-system-s-d.lib;sfml-window-s-d.lib;sfml-graphics-s-d.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(TargetPath)" -test</Command>

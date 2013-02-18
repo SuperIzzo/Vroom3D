@@ -30,7 +30,7 @@ class VolumeRenderer
 public:
 	virtual					~VolumeRenderer() {};
 
-	virtual Node *			CreateNode() = 0;
+	virtual Node *			GetRootNode() = 0;
 	virtual void			Render() = 0;
 };
 

@@ -8,24 +8,19 @@ using namespace Vroom;
 
 SUITE( TexMapVolumeRenderer )
 {
-	TEST( TEST_texmap_renderer_can_create_a_rendering_node )
+	TEST( TEST_texmap_renderer_returns_the_root_rendering_node )
 	{
 		TexMapVolumeRenderer renderer;
 
-		Node *node = renderer.CreateNode();
+		Node *node1 = renderer.GetRootNode();
+		Node *node2 = renderer.GetRootNode();
 
-		CHECK_NOT_NULL( node );
+		CHECK_NOT_NULL( node1 );
+		CHECK_EQUAL( node1, node2 );
 	}
 
 
 	TEST( TEST_volume_data_can_be_attached_to_texmap_node )
-	{
-
-	}
-
-
-
-	TEST( TEST_renderer_can_render_opaque_objects_correctly )
 	{
 
 	}

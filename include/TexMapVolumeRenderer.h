@@ -10,9 +10,19 @@
 //---------------------------------------
 #include <VolumeRenderer.h>
 #include <Volume.h>
+#include <list>
 
 
 VROOM_BEGIN
+
+
+//=================================================================
+//	Forward Declarations
+//---------------------------------------
+class TexMapVolumeRendererNode;
+
+
+
 
 
 //=================================================================
@@ -21,7 +31,19 @@ VROOM_BEGIN
 class TexMapVolumeRenderer : public VolumeRenderer
 {
 public:
-	virtual Node *			CreateNode();
+							TexMapVolumeRenderer();
+	virtual					~TexMapVolumeRenderer();
+
+	virtual Node *			GetRootNode();
+	virtual void			Render();
+
+private:
+	void					SetupRenderingState();
+
+private:
+	typedef TexMapVolumeRendererNode NodeType;
+
+	NodeType			  * mRootNode;
 };
 
 

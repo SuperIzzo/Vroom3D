@@ -10,6 +10,8 @@
 //---------------------------------------
 #include <AABB.h>
 #include <Volume.h>
+#include <Eigen/Dense>
+
 
 
 VROOM_BEGIN
@@ -21,14 +23,26 @@ VROOM_BEGIN
 class Node
 {
 public:
-							Node();
-	virtual					~Node();
+	typedef Eigen::Matrix<Real,4,4>	TransformType;
 
-	virtual void			SetVolume( Volume *volume );
-	virtual Volume		  *	GetVolume();
+public:
+									Node();
+	virtual							~Node();
+
+	virtual void					SetVolume( Volume *volume );
+	virtual Volume				  *	GetVolume();
+
+	TransformType					GetTransform() const;
+	void							SetTransform( const TransformType &transf);
+
+	// Eigen alignment operator
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 private:
-	Volume				  * mVolume;
+	TransformType					mTransform;
+
+	Node						  * mParent;
+	Volume						  * mVolume; 
 };
 
 
