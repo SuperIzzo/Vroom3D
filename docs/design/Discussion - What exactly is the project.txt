@@ -1,0 +1,65 @@
+I have tried multiple times and failed to define the scope of the 
+project, what exactly is the project going to do and exactly will it be?
+
+On the surface the answer seems simple - Vroom is a volume rendering
+engine. It allows developers to load 3D images and render them on the
+screen? But that pretty much runs it dry.
+
+When I started the project I was keen on making it a ray-tracer volume
+renderer, simple times, but half-way trough I decided to change it to
+texture based instead. I had decided that I want to make it generic 
+enough to support both modes of rendering, but that made the idea 
+pretty abstract and hard to nail down to specific application.
+
+I was able to render a volume both ways using OpenGL, however openGL is
+not the only implementation available, there is also DirectX and my
+favourite - Ogre3D which abstracts both... 
+I would love to be able to make my project usable from Ogre3D 
+OpenGL is also cool (I don't really care much about DirectX), at some point
+though I have to hit the specifics and implement a coherent glue to
+at least one of the systems. I did so for OpenGL, now I want Ogre3D
+what's more I want it done in such a way that it can be used
+transparently.
+
+Let's once again summarise the two abstractions
+1. Render technique independence - common usage interface
+2. Rendering system independence - rendering API abstraction layer
+
+And the problem I'm facing now is that rendering techniques
+implementations actually depend directly on the rendering system.
+
+For instance 3D slice requires 3D textures, which in turn can only
+be accessed trough an API. Raytracing requires surfaces pixel buffers
+which may be RAM based, but in the end has to be rendered by the system
+to spare the abstraction to the user.
+
+XP so far seems to be leading me in the wrong direction, and because
+of its minimalist approach I have not done a proper job at designing the
+system. However I've come to realize most in the process of developing
+the software, so I can now see the question emerging and a better 
+definition of the problem
+
+
+Texture based volume rendering
+----------------------------------
+For openGL it has:
+one input -> a volume object
+two outputs -> GL_TEXTURE3D object and a GL mesh
+
+For Ogre it has:
+one input -> a volume object
+two outputs -> Ogre texture and an Ogre mesh
+
+The common factor is the input, which is our abstract API,
+the differences in the outputs however need to be handled appropriatelly
+One way to think about it is, if you're developing with the kit
+and you use either one of the APIs you would expect to access the 
+appropriate output and use it.
+
+However
+Ray-traced based volume rendering
+------------------------------------
+For openGL it has:
+one input -> volume object
+one output -> raster image (render) GL surface
+

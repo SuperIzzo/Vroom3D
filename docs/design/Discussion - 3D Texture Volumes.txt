@@ -1,0 +1,79 @@
+A volume is expressed by a 3D raster...
+We already have that, the next thing is that it has to be loaded
+to the graphics memory, this will be done by a special class
+called Texture3D. or something like that
+It is a a class that is responsible for dealing with the video memory
+so it will do various things. In essense it is a wrapper to 
+a Texture3D object in OpenGL
+
+We want to keep Volume implementation independent, it will be a generic
+volume representation in memory which can be modified, however
+to implement a slice based renderer we need to bind the volume to
+a memory in the GFX card,
+
+We have 
+
+[Volume] <---- [Node]
+
+And we bind a volume to the node, this is true for every renderer
+for Tex3D we need to transfer the volume to the GFX card, but also
+but we also need to keep it in sync with changes in Volume and 
+hide those specifics so that a system does not rely on them.
+
+Now where does the actual binding happen then :/
+Node3D is the implementation of Node, it will keep a pointer to
+Volume obviously and may also construct the 3D texture
+
+[Volume] <---- [NodeTex3D] ----> [Tex3D]
+
+This makes things a little more difficult to manage however,
+because changes to the Volume memory will not be detected automatically
+and the Tex3D may become outdated (and out of sync).
+
+A simple solution is to request the users to explicitly state when
+they wish to update, however some rendering system implementations
+may not need to keep two different places in memory in sync
+therefore developing for one of them will result in incorrect
+assumptions and errors in another.
+
+An alternative may be to "lock" and "unlock" volumes, and thus
+detect potential changes, the 3D texture will then be updated
+by the system before it is displayed.
+
+Tex3D has to deal with padding and sanity checks
+each volume has to be a power of 2
+later on we may even cluster volume data, in pools but for now we
+can just use single object per volume.
+When padding though it should also report the correct new
+dimensions as OGL binds as 0..1 adding extra bits will scale down
+the original dimensions.
+There should be something else that wraps around meshes 
+to produce the actual rendering artifacts.
+
+
+Texture3D
+* Wrapper to OGL texture object
+* Deals with automatic padding
+* Binds RAM to GFX memory
+* Accessors for that memory
+
+Volume
+* Lock/unlock
+* Keep change flag
+
+
+Log 29.01.2013
+
+Currently Texture3D is a separate class, and deal with all the calls to
+OpenGL, what currently remains is the automatic padding
+
+Volume has not been modified yet... 
+
+
+Texture repeat bug
+---------------------
+There is a bug, something to do with the dimensions, apparently openGL
+doesn't like different numbers for all three dimensions, and acts odd
+duplicating voxels (repeating texture) on lower numbers, the grass 
+example 8x4x8 is duplicated twice on the y axis, the fence 8x8x2 is
+duplicated 4 times on the z... on actuallity I map only 0..1

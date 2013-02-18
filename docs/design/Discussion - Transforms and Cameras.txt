@@ -1,0 +1,8 @@
+In the current setup we have a node tree, which will be part of a scene
+graph, but for the time being it is just that, a node tree.
+
+Each Node has 0 or more children.
+A node will also have a parent, if I imitate Ogre3D design completely
+there is one root note which doesn't have a parent and all other nodes
+are created as children of other nodes
+Transformation is multiplied backwards...
