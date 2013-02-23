@@ -114,11 +114,7 @@ static void DrawPolygonFill( const Polygon &poly )
 		{
 			Vector3 point = poly.GetVertex( i );
 
-			//glTexCoord3f( point.x(), point.y(),	point.z() );
-			glMultiTexCoord3fARB(GL_TEXTURE0_ARB, 
-				point.x(), point.y(),	point.z() );
-			glMultiTexCoord3fARB(GL_TEXTURE1_ARB, 
-				point.x(), point.y(),	point.z() );
+			glTexCoord3f( point.x(), point.y(),	point.z() );
 			glVertex3f(   point.x(), point.y(),	point.z() );
 		}
 
@@ -242,11 +238,6 @@ void TexMapVolumeRendererNode::BindTexture()
 	if( mTexture )
 	{
 		mTexture->Bind(0);
-	}
-
-	if( mLighting && mNormalMap )
-	{
-		mNormalMap->Bind(0);
 	}
 }
 
@@ -400,8 +391,11 @@ void TexMapVolumeRendererNode::SetLightingMode()
 
 		if( mNormalMap )
 		{
+			mNormalMap->Bind(1);
+
 			extern GLuint myShader;
-			
+			glUseProgram( myShader );
+
 			GLint loc = glGetUniformLocation(myShader, "texture1");
 			if (loc != -1)
 				glUniform1i(loc, 0);
@@ -412,12 +406,7 @@ void TexMapVolumeRendererNode::SetLightingMode()
 			if (loc != -1)
 				glUniform1i(loc, 1);
 			else
-				std::cout << "Waaaaa2" << std::endl;
-
-			//mTexture->Bind(0);
-			//mNormalMap->Bind(1);
-
-			glUseProgram( myShader );
+				std::cout << "Waaaaa2" << std::endl;			
 		}
 	}
 }
@@ -433,9 +422,7 @@ void TexMapVolumeRendererNode::UnsetLightingMode()
 {
 	if( mLighting )
 	{
-		glActiveTextureARB(GL_TEXTURE1_ARB);
-		glBindTexture(GL_TEXTURE_3D, 0 );
-		glActiveTextureARB(GL_TEXTURE0_ARB);
+		mNormalMap->Unbind(1);
 
 		glUseProgram( 0 );
 	}
@@ -463,6 +450,9 @@ void TexMapVolumeRendererNode::Draw(const Vector3 &cameraDir)
 		DrawBox( minP, maxP );
 	}
 
+	BindTexture();
+	SetLightingMode();
+
 	for( int i= mNumSlices; i > 0; i-- )
 	{
 		Real perc = (Real) i/(mNumSlices+1);
@@ -475,16 +465,13 @@ void TexMapVolumeRendererNode::Draw(const Vector3 &cameraDir)
 		if( mDebugFlags & DBG_DRAW_SLICES )
 		{
 			DrawPolygon( poly );
-		}
-
-		BindTexture();
-		SetLightingMode();
+		}		
 
 		DrawPolygonFill( poly );
-
-		UnsetLightingMode();
-		glBindTexture(GL_TEXTURE_3D, 0 );
 	}
+
+	UnsetLightingMode();
+	mTexture->Unbind();
 
 	UnsetTransformMatrix();
 }
