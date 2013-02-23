@@ -36,6 +36,7 @@ public:
 	void					SetScalingFilter( ScalingFilter magFilter, ScalingFilter minFilter );
 
 	bool					Bind( UInt8 unit = 0 );
+	bool					Unbind( UInt8 unit = 0 );
 
 private:
 	void					SetWrapFunction( int func );

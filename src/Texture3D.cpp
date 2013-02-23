@@ -7,12 +7,11 @@
 #include <gl/glew.h>
 #include <gl/GL.h>
 #include <gl/GLU.h>
-//#include <GLX/glext.h>
 
 
 VROOM_BEGIN
 
-GLint TexUnit[4] = {GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3};
+GLint TexUnits[4] = {GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3};
 
 
 //=================================================================
@@ -185,10 +184,29 @@ void Texture3D::CreateFromVolume( const Volume &volume )
 //---------------------------------------
 bool Texture3D::Bind( UInt8 unit )
 {
-	glActiveTexture( TexUnit[unit] );
+	GLenum theTextureUnit = TexUnits[unit];
+
+	glActiveTexture( theTextureUnit );
 	glBindTexture(GL_TEXTURE_3D, mTextureID);
 
 	return( mTextureID>0 );
+}
+
+
+
+
+
+//=================================================================
+//	Texture3D::Unbind
+//---------------------------------------
+bool Texture3D::Unbind( UInt8 unit )
+{
+	GLenum theTextureUnit = TexUnits[unit];
+
+	glActiveTexture( theTextureUnit );
+	glBindTexture(GL_TEXTURE_3D, 0);
+
+	return true;
 }
 
 
