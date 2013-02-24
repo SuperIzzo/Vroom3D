@@ -32,9 +32,9 @@ Node::~Node()
 
 
 //=================================================================
-//	Node::GetVolume
+//	Node::GetVolumeData
 //---------------------------------------
-Volume * Node::GetVolume()
+VolumeData * Node::GetVolumeData()
 {
 	return mVolume;
 }
@@ -44,9 +44,9 @@ Volume * Node::GetVolume()
 
 
 //=================================================================
-//	Node::SetVolume
+//	Node::SetVolumeData
 //---------------------------------------
-void Node::SetVolume( Volume *volume )
+void Node::SetVolumeData( VolumeData *volume )
 {
 	mVolume = volume;
 }

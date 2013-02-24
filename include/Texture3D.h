@@ -6,7 +6,7 @@
 //=================================================================
 //	Inlude
 //---------------------------------------
-#include <Volume.h>
+#include <VolumeData.h>
 
 
 VROOM_BEGIN
@@ -26,9 +26,9 @@ public:
 
 public:
 							Texture3D();
-							Texture3D( const Volume &volume );
+							Texture3D( const VolumeData &volume );
 
-	void					CreateFromVolume( const Volume &volume );
+	void					CreateFromVolume( const VolumeData &volume );
 
 	void					Destroy();
 
@@ -37,6 +37,8 @@ public:
 
 	bool					Bind( UInt8 unit = 0 );
 	bool					Unbind( UInt8 unit = 0 );
+
+	bool					IsValid();
 
 private:
 	void					SetWrapFunction( int func );

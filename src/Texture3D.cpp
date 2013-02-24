@@ -49,7 +49,7 @@ Texture3D::Texture3D() :
 //=================================================================
 //	Texture3D::Texture3D
 //---------------------------------------
-Texture3D::Texture3D( const Volume &volume ) :
+Texture3D::Texture3D( const VolumeData &volume ) :
 	mTextureID( 0 )
 {
 	CreateFromVolume(volume);
@@ -135,7 +135,7 @@ void Texture3D::Destroy()
 //=================================================================
 //	Texture3D::CreateFromVolume
 //---------------------------------------
-void Texture3D::CreateFromVolume( const Volume &volume )
+void Texture3D::CreateFromVolume( const VolumeData &volume )
 {
 	const GLsizei NUMBER_OF_TEXTURES = 1;
 	const GLint   MIP_MAP_LEVEL_0	 = 0;
@@ -189,7 +189,7 @@ bool Texture3D::Bind( UInt8 unit )
 	glActiveTexture( theTextureUnit );
 	glBindTexture(GL_TEXTURE_3D, mTextureID);
 
-	return( mTextureID>0 );
+	return IsValid();
 }
 
 
@@ -207,6 +207,18 @@ bool Texture3D::Unbind( UInt8 unit )
 	glBindTexture(GL_TEXTURE_3D, 0);
 
 	return true;
+}
+
+
+
+
+
+//=================================================================
+//	Texture3D::IsValid
+//---------------------------------------
+bool Texture3D::IsValid()
+{
+	return( mTextureID>0 );
 }
 
 

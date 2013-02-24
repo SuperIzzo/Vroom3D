@@ -12,7 +12,7 @@ SUITE( Node )
 	{
 		Node node;
 
-		CHECK_NULL( node.GetVolume() );
+		CHECK_NULL( node.GetVolumeData() );
 	}
 
 
@@ -20,13 +20,13 @@ SUITE( Node )
 	{
 		Node node;
 
-		Volume volume;
-		node.SetVolume( &volume );
+		VolumeData volume;
+		node.SetVolumeData( &volume );
 
-		CHECK_NOT_NULL( node.GetVolume() );
+		CHECK_NOT_NULL( node.GetVolumeData() );
 
-		node.SetVolume( 0 );
+		node.SetVolumeData( 0 );
 
-		CHECK_NULL( node.GetVolume() );
+		CHECK_NULL( node.GetVolumeData() );
 	}
 }

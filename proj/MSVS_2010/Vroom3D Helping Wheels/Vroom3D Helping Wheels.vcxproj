@@ -19,9 +19,12 @@
     <ClCompile Include="..\..\..\src\TexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\src\TexMapVolumeRendererNode.cpp" />
     <ClCompile Include="..\..\..\src\Texture3D.cpp" />
-    <ClCompile Include="..\..\..\src\Volume.cpp" />
+    <ClCompile Include="..\..\..\src\VolumeData.cpp" />
     <ClCompile Include="..\..\..\src\XMLDocument.cpp" />
     <ClCompile Include="..\..\..\src\XMLNode.cpp" />
+    <ClCompile Include="..\..\..\test\MultitextureExperiment.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="..\..\..\test\TestAABB.cpp" />
     <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp" />
     <ClCompile Include="..\..\..\test\TestNode.cpp" />
@@ -39,10 +42,11 @@
     <ClInclude Include="..\..\..\include\Node.h" />
     <ClInclude Include="..\..\..\include\Platform.h" />
     <ClInclude Include="..\..\..\include\Polygon.h" />
+    <ClInclude Include="..\..\..\include\Shader.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRendererNode.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h" />
     <ClInclude Include="..\..\..\include\Texture3D.h" />
-    <ClInclude Include="..\..\..\include\Volume.h" />
+    <ClInclude Include="..\..\..\include\VolumeData.h" />
     <ClInclude Include="..\..\..\include\VolumeRenderer.h" />
     <ClInclude Include="..\..\..\include\XMLDocument.h" />
     <ClInclude Include="..\..\..\include\XMLNode.h" />

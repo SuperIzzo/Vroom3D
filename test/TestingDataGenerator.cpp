@@ -4,7 +4,7 @@
 using namespace Vroom;
 
 
-void TestingDataGenerator::GenerateCheckBoardPattern( Volume &vol )
+void TestingDataGenerator::GenerateCheckBoardPattern( VolumeData &vol )
 {
 	vol.Create( 32, 32, 32 );
 

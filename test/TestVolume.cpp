@@ -1,6 +1,6 @@
 #include <UnitTest++.h>
 #include <MoreUnitTest++.h>
-#include <Volume.h>
+#include <VolumeData.h>
 
 #include <IndexOutOfBoundsException.h>
 
@@ -20,7 +20,7 @@ SUITE( Volume )
 			voxelColorData = (Color*) voxelData;
 		}
 
-		Volume volume;
+		VolumeData volume;
 		UInt8 *voxelData;
 		Color *voxelColorData;
 	};
@@ -29,7 +29,7 @@ SUITE( Volume )
 
 	TEST( TEST_default_volume_has_no_data_and_zeroed_dimensions )
 	{
-		Volume volume;
+		VolumeData volume;
 
 		CHECK_NULL( volume.GetData() );
 		CHECK_EQUAL( 0,		volume.GetWidth()	);
@@ -41,7 +41,7 @@ SUITE( Volume )
 
 	TEST( TEST_default_volume_reports_zero_size )
 	{
-		Volume volume;
+		VolumeData volume;
 
 		CHECK_EQUAL( 0,		volume.GetDataSize()	);
 	}

@@ -9,7 +9,6 @@
 //	Inlude
 //---------------------------------------
 #include <VolumeRenderer.h>
-#include <Volume.h>
 #include <list>
 
 

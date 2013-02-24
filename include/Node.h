@@ -9,7 +9,7 @@
 //	Inlude
 //---------------------------------------
 #include <AABB.h>
-#include <Volume.h>
+#include <VolumeData.h>
 #include <Eigen/Dense>
 
 
@@ -29,8 +29,8 @@ public:
 									Node();
 	virtual							~Node();
 
-	virtual void					SetVolume( Volume *volume );
-	virtual Volume				  *	GetVolume();
+	virtual void					SetVolumeData( VolumeData *volume );
+	virtual VolumeData			  *	GetVolumeData();
 
 	TransformType					GetTransform() const;
 	void							SetTransform( const TransformType &transf);
@@ -42,7 +42,7 @@ private:
 	TransformType					mTransform;
 
 	Node						  * mParent;
-	Volume						  * mVolume; 
+	VolumeData					  * mVolume; 
 };
 
 

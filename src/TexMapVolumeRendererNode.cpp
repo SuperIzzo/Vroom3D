@@ -3,6 +3,7 @@
 //---------------------------------------
 #include "TexMapVolumeRendererNode.h"
 #include "Texture3D.h"
+#include "VolumeData.h"
 
 #include <Windows.h>
 #include <gl/glew.h>
@@ -129,7 +130,7 @@ static void DrawPolygonFill( const Polygon &poly )
 //=================================================================
 //	NormalMapKernel : utility function generate normal of a voxel
 //---------------------------------------
-static Vector3 NormalMapKernel(const Volume &vol, UInt32 x, UInt32 y, UInt32 z)
+static Vector3 NormalMapKernel(const VolumeData &vol, UInt32 x, UInt32 y, UInt32 z)
 {
 	const UInt8 alphaTeshold = 60;
 	Vector3 direction(0,0,0);
@@ -175,7 +176,7 @@ static Vector3 NormalMapKernel(const Volume &vol, UInt32 x, UInt32 y, UInt32 z)
 //=================================================================
 //	GenerateNormalMap : utility function generate normal map
 //---------------------------------------
-static void GenerateNormalMap( const Volume &vol, Volume &normMap )
+static void GenerateNormalMap( const VolumeData &vol, VolumeData &normMap )
 {
 	normMap.Create( vol.GetWidth(), vol.GetHeight(), vol.GetDepth());
 
@@ -227,7 +228,7 @@ void TexMapVolumeRendererNode::BindTexture()
 {
 	if( !mTexture )
 	{
-		Volume * theVolume = GetVolume();
+		VolumeData * theVolume = GetVolumeData();
 
 		if( theVolume )
 		{
@@ -378,11 +379,11 @@ void TexMapVolumeRendererNode::SetLightingMode()
 	{
 		if( !mNormalMap )
 		{
-			Volume * theVolume = GetVolume();			
+			VolumeData * theVolume = GetVolumeData();			
 
 			if( theVolume )
 			{
-				Volume normMapVol;
+				VolumeData normMapVol;
 				GenerateNormalMap( *theVolume, normMapVol );
 
 				mNormalMap = new Texture3D( normMapVol );
