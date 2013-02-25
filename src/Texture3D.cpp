@@ -2,6 +2,7 @@
 //	Inlude
 //---------------------------------------
 #include "Texture3D.h"
+#include "GraphicsHardwareException.h"
 
 #include <Windows.h>
 #include <gl/glew.h>
@@ -181,7 +182,7 @@ void Texture3D::CreateFromVolume( const VolumeData &volume )
 	}
 	else
 	{
-		//throw GraphicsHardwareException( "Unable to obtain glTexImage3D." );
+		throw GraphicsHardwareException( "Unable to obtain glTexImage3D." );
 	}
 }
 
