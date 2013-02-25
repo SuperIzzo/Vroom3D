@@ -7,6 +7,7 @@
 //	Inlude
 //---------------------------------------
 #include <VolumeData.h>
+#include <SharedPointer.h>
 
 
 VROOM_BEGIN
@@ -38,6 +39,15 @@ private:
 private:
 	UInt32					mTextureID;
 };
+
+
+
+
+
+//=================================================================
+//	Type Texture3DPtr
+//---------------------------------------
+typedef SharedPointer<Texture3D>::Type		Texture3DPtr;
 
 
 VROOM_END

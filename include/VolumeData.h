@@ -10,6 +10,7 @@
 //---------------------------------------
 #include <Platform.h>
 #include <Color.h>
+#include <SharedPointer.h>
 
 
 VROOM_BEGIN
@@ -52,6 +53,15 @@ private:
 
 	UInt8				  *	mData;
 };
+
+
+
+
+
+//=================================================================
+//	Type VolumeDataPtr
+//---------------------------------------
+typedef SharedPointer<VolumeData>::Type			VolumeDataPtr;
 
 
 VROOM_END

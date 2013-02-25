@@ -7,6 +7,7 @@
 //	Inlude
 //---------------------------------------
 #include <Platform.h>
+#include <SharedPointer.h>
 
 
 VROOM_BEGIN
@@ -45,6 +46,15 @@ private:
 private:
 	UInt32					mShader;
 };
+
+
+
+
+
+//=================================================================
+//	Type ShaderPtr
+//---------------------------------------
+typedef SharedPointer<Shader>::Type			ShaderPtr;
 
 
 VROOM_END
