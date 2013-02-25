@@ -46,6 +46,7 @@
     <ClInclude Include="..\..\..\include\Platform.h" />
     <ClInclude Include="..\..\..\include\Polygon.h" />
     <ClInclude Include="..\..\..\include\Shader.h" />
+    <ClInclude Include="..\..\..\include\SharedPointer.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRendererNode.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h" />
     <ClInclude Include="..\..\..\include\Texture3D.h" />
@@ -98,7 +99,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(ProjectSub)\OpenGL;$(ProjectSub)\rapidxml-1.13;$(ProjectSub)\glew-1.9.0-win32\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(ProjectSub)\OpenGL;$(ProjectSub)\rapidxml-1.13;$(ProjectSub)\glew-1.9.0-win32\include;$(ProjectSub)\yasper;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectSub)\SFML-2.0-rc\lib;$(ProjectLIB)\$(Configuration);$(ProjectSub)\glew-1.9.0-win32\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectSub)\glew-1.9.0-win32\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>

@@ -188,6 +188,9 @@
     <ClInclude Include="..\..\..\include\GraphicsHardwareException.h">
       <Filter>include\Exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\SharedPointer.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\docs\design\Discussion - 3D Texture Volumes.txt">
