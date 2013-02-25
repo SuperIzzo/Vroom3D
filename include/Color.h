@@ -25,8 +25,8 @@ struct Color
 	UInt8				alpha;
 
 	// Constructors
-						Color();
-						Color(UInt8 r, UInt8 g, UInt8 b, UInt8 a=255);
+	Color();
+	Color(UInt8 r, UInt8 g, UInt8 b, UInt8 a=255);
 };
 
 
