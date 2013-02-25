@@ -20,7 +20,7 @@ using namespace Vroom;
 
 
 
-void LoadVolumeFromFile( Volume &vol, const char *fname )
+void LoadVolumeFromFile( VolumeData &vol, const char *fname )
 {	
 	sf::Image the3DImage;
 	the3DImage.loadFromFile( fname );
@@ -57,7 +57,7 @@ void LoadVolumeFromFile( Volume &vol, const char *fname )
 
 
 
-void LoadHead( Volume &vol )
+void LoadHead( VolumeData &vol )
 {
 	vol.Create(128, 128, 128);
 
@@ -175,6 +175,27 @@ const GLcharARB * VertShaderSrc =
 "   gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
 "} ";
 
+/*
+const GLcharARB * FragShaderSrc = 
+"varying vec4 vTexCoord;"
+"varying vec4 position;"
+"uniform sampler3D texture1;"
+"uniform sampler3D texture2;"
+" "
+"void main (void)"
+"{"
+"	vec3 texCoord = vTexCoord.xyz;"
+"	vec4 tex1 = texture3D(texture1, texCoord);"
+"	vec4 tex2 = texture3D(texture2, texCoord);"
+"	vec4 finalCol;"
+"	finalCol.r= tex1.r*0.7 + tex2.r*0.3;"
+"	finalCol.g= tex1.g*0.7 + tex2.g*0.3;"
+"	finalCol.b= tex1.b*0.7 + tex2.b*0.3;"
+"	finalCol.a= tex1.a*0.7 + tex2.a*0.3;"
+
+"	gl_FragColor = finalCol; "
+"}";
+/*/
 const GLcharARB * FragShaderSrc = 
 "varying vec4 vTexCoord;"
 "varying vec4 position;"
@@ -199,6 +220,7 @@ const GLcharARB * FragShaderSrc =
 
 "	gl_FragColor = finalCol; "
 "}";
+//*/
 
 
 GLuint myShader = 0;
@@ -206,8 +228,8 @@ GLuint myShader = 0;
 void ShaderTest()
 {		
 	GLint compiled;
-	GLuint vertShader = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragShader = glCreateShader(GL_FRAGMENT_SHADER);
+	GLuint vertShader = glCreateShader( GL_VERTEX_SHADER );
+	GLuint fragShader = glCreateShader( GL_FRAGMENT_SHADER );
 
 	GLint vshadlen = strlen(VertShaderSrc);
 	GLint fshadlen = strlen(FragShaderSrc);
@@ -264,6 +286,52 @@ void ShaderTest()
 }
 
 
+
+
+
+void GenerateBricks( VolumeData &vol )
+{
+	const UInt32 FILL_INSET = 2;
+	vol.Create( 32, 32, 32 );
+
+	Color brickColor( 180, 0, 0 );
+	Color fillColor( 120, 120, 120 );
+
+	for( UInt32 x = 0; x < vol.GetWidth(); x++ )
+	{
+		for( UInt32 y = 0; y < vol.GetHeight(); y++ )
+		{
+			for( UInt32 z = 0; z < vol.GetDepth(); z++ )
+			{
+				Color &col = vol.GetVoxel(x,y,z);
+
+				int inset = (y/4 % 2 ^ z/4 % 2)*4;
+
+				srand( (x-inset)/8 + y/4*vol.GetWidth() + z/4*vol.GetWidth()*vol.GetHeight() );
+				brickColor = Color( 120 + rand()%30, rand()%70, rand()%20 );
+				
+				if( x % 8 == inset || y % 4 == 0 || z % 4 == 0 )
+				{
+					col = fillColor;
+
+					if(		x<FILL_INSET || x>=vol.GetWidth()-FILL_INSET 
+						||	y<FILL_INSET || y>=vol.GetHeight()-FILL_INSET 
+						||	z<FILL_INSET || z>=vol.GetDepth()-FILL_INSET )
+						col.alpha = 0;					
+				}
+				else
+				{
+					col = brickColor;
+					col.red+= (5 - rand()%10)*2;
+					col.green+= rand()%10;
+					col.blue+= rand()%10;
+				}
+			}
+		}
+	}
+}
+
+
 int main(int argc, char* args[])
 {
 	if ( argc > 1   &&   strcmp("-test", args[1])==0 )
@@ -288,9 +356,10 @@ int main(int argc, char* args[])
 
 		ShaderTest();
 
-		Volume vol;
+		VolumeData vol;
 
-		LoadVolumeFromFile(vol, "../../data/test.png");
+		GenerateBricks( vol );
+		//LoadVolumeFromFile(vol, "../../data/test.png");
 		//LoadHead( vol );
 
 		Node * volumeNode = renderer->GetRootNode();
@@ -298,7 +367,7 @@ int main(int argc, char* args[])
 		TexMapVolumeRendererNode* texNode = 
 			(TexMapVolumeRendererNode*) volumeNode;
 
-		volumeNode->SetVolume( &vol );
+		volumeNode->SetVolumeData( &vol );
 
 		//texNode->SetLighting( true );
 
