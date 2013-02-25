@@ -16,6 +16,7 @@
     <ClCompile Include="..\..\..\src\main.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
     <ClCompile Include="..\..\..\src\Polygon.cpp" />
+    <ClCompile Include="..\..\..\src\Shader.cpp" />
     <ClCompile Include="..\..\..\src\TexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\src\TexMapVolumeRendererNode.cpp" />
     <ClCompile Include="..\..\..\src\Texture3D.cpp" />
@@ -29,6 +30,7 @@
     <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp" />
     <ClCompile Include="..\..\..\test\TestNode.cpp" />
     <ClCompile Include="..\..\..\test\TestPolygon.cpp" />
+    <ClCompile Include="..\..\..\test\TestSharedObject.cpp" />
     <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\test\TestVolume.cpp" />
     <ClCompile Include="..\..\..\test\TestXMLDocument.cpp" />

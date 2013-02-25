@@ -102,13 +102,19 @@
     <ClCompile Include="..\..\..\src\XMLNode.cpp">
       <Filter>src\Util</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\Texture3D.cpp">
-      <Filter>src\Graphics\Texture Mapping</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\test\MultitextureExperiment.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\VolumeData.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestSharedObject.cpp">
+      <Filter>test\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Shader.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\Texture3D.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,19 +167,19 @@
     <ClInclude Include="..\..\..\include\XMLNode.h">
       <Filter>include\Util</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\Texture3D.h">
-      <Filter>include\Graphics\Texture Mapping</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\Camera.h">
       <Filter>include\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\src\Shaders.shd">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\Shader.h">
-      <Filter>include\Graphics\Texture Mapping</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\VolumeData.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Shader.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\Texture3D.h">
       <Filter>include\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
