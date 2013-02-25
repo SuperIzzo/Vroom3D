@@ -39,6 +39,7 @@
     <ClInclude Include="..\..\..\include\AABB.h" />
     <ClInclude Include="..\..\..\include\Camera.h" />
     <ClInclude Include="..\..\..\include\Color.h" />
+    <ClInclude Include="..\..\..\include\GraphicsHardwareException.h" />
     <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h" />
     <ClInclude Include="..\..\..\include\MathCommon.h" />
     <ClInclude Include="..\..\..\include\Node.h" />

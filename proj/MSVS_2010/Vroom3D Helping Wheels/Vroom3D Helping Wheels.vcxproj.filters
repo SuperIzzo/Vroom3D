@@ -52,6 +52,9 @@
     <Filter Include="docs">
       <UniqueIdentifier>{b643c0bd-fd67-47b3-9fd0-977b784814c4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="include\Exceptions">
+      <UniqueIdentifier>{e289f82f-e5ae-482f-b3e0-1db8c6acbce2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\main.cpp">
@@ -134,9 +137,6 @@
     <ClInclude Include="..\..\..\test\TestingDataGenerator.h">
       <Filter>test\DataGen</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h">
-      <Filter>include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\AABB.h">
       <Filter>include\Math</Filter>
     </ClInclude>
@@ -181,6 +181,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\Texture3D.h">
       <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h">
+      <Filter>include\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\GraphicsHardwareException.h">
+      <Filter>include\Exceptions</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
