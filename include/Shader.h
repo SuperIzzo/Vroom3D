@@ -18,24 +18,32 @@ VROOM_BEGIN
 class Shader
 {
 public:
+	//-------------------------------------------------------------
+	// Enum ShaderType
+	//-----------------------------------
 	enum ShaderType
 	{
 		ST_VERTEX = 0,
 		ST_FRAGMENT,
-
 		ST_SIZE
 	};
 
+
 public:
-	bool	CompileString( ShaderType st, String src );
+							Shader();
+							~Shader();
 
-	bool	IsValid() const;
+	void					CompileString( ShaderType shaderType, String source );
+	void					Destroy();
+
+	String					GetInfoLog() const;
+	bool					IsValid() const;
 
 private:
-	bool	CreateShader(ShaderType st);
+	void					CreateShader(ShaderType st);
 
 private:
-	UInt32 mShader;
+	UInt32					mShader;
 };
 
 

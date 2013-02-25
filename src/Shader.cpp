@@ -2,6 +2,7 @@
 //	Inlude
 //---------------------------------------
 #include "Shader.h"
+#include "GraphicsHardwareException.h"
 
 #include <Windows.h>
 #include <gl/glew.h>
@@ -22,7 +23,6 @@ static GLenum GLShaderTypes( Shader::ShaderType st )
 
 	if( !init )
 	{
-		// One time initialization
 		init = true;
 
 		ShaderType[Shader::ST_VERTEX]	= GL_VERTEX_SHADER;
@@ -37,16 +37,114 @@ static GLenum GLShaderTypes( Shader::ShaderType st )
 
 
 //=================================================================
+//	Shader::Shader
+//---------------------------------------
+Shader::Shader() :
+	mShader(0)
+{
+}
+
+
+
+
+
+//=================================================================
+//	Shader::~Shader
+//---------------------------------------
+Shader::~Shader()
+{
+	Destroy();
+}
+
+
+
+
+
+//=================================================================
 //	Shader::CreateShader
 //---------------------------------------
-bool Shader::CreateShader(ShaderType st)
+void Shader::CreateShader(ShaderType st)
 {
-	GLenum glShaderType = GLShaderTypes(st);
+	Destroy();
 
+	GLenum glShaderType = GLShaderTypes(st);
 	mShader = glCreateShader( glShaderType );
 
-	return IsValid();
+	if( !IsValid() )
+	{
+		throw GraphicsHardwareException( "Unable to create shader." );
+	}
 };
+
+
+
+
+
+//=================================================================
+//	Shader::Destroy
+//---------------------------------------
+void Shader::Destroy()
+{
+	glDeleteShader( mShader );
+	mShader = 0;
+}
+
+
+
+
+
+//=================================================================
+//	Shader::CompileString
+//---------------------------------------
+void Shader::CompileString(ShaderType shaderType, String text)
+{
+	GLint compiled			= 0;
+	GLint sourceLength		= text.length() + 1;
+	GLcharARB *sourceText	= (GLcharARB*) text.c_str();
+
+	CreateShader(shaderType);
+
+	glShaderSourceARB(mShader, 1, (const GLcharARB**) &sourceText, &sourceLength );
+	glCompileShaderARB(mShader);
+
+	glGetObjectParameterivARB(mShader, GL_COMPILE_STATUS, &compiled);
+
+	if( !compiled )
+	{
+		String errorMsg;
+		
+		errorMsg  = "Failed to compile shader.\n";
+		errorMsg +=	GetInfoLog();		
+
+		throw GraphicsHardwareException(errorMsg);
+	}
+}
+
+
+
+
+
+//=================================================================
+//	Shader::GetInfoLog
+//---------------------------------------
+String Shader::GetInfoLog() const
+{
+	String theResult = "";
+	GLint maxLogLength = 0;
+
+	glGetShaderiv(mShader, GL_INFO_LOG_LENGTH , &maxLogLength);
+	if( maxLogLength )
+	{
+		GLchar* logString = new GLchar[maxLogLength];
+
+		glGetInfoLogARB(mShader, maxLogLength, 0, logString);
+		theResult = logString;
+
+		delete[] logString;
+	}
+
+	return theResult;
+}
 
 
 
