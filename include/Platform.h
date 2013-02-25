@@ -25,6 +25,7 @@
 
 VROOM_BEGIN
 
+
 //=================================================================
 // Types
 //---------------------------------------
@@ -37,9 +38,9 @@ typedef signed int					SInt32;
 typedef unsigned long long int		UInt64;
 typedef signed long long int		SInt64;
 
-
 typedef float						Real;
 typedef std::string					String;
+
 
 VROOM_END
 
