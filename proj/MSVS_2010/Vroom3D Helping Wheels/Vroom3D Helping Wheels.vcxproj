@@ -46,6 +46,7 @@
     <ClInclude Include="..\..\..\include\Platform.h" />
     <ClInclude Include="..\..\..\include\Polygon.h" />
     <ClInclude Include="..\..\..\include\Shader.h" />
+    <ClInclude Include="..\..\..\include\ShaderProgram.h" />
     <ClInclude Include="..\..\..\include\SharedPointer.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRendererNode.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h" />

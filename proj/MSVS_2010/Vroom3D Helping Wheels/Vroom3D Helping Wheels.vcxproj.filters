@@ -191,6 +191,9 @@
     <ClInclude Include="..\..\..\include\SharedPointer.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\ShaderProgram.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\docs\design\Discussion - 3D Texture Volumes.txt">

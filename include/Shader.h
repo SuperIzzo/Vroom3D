@@ -14,6 +14,15 @@ VROOM_BEGIN
 
 
 //=================================================================
+//	Forward Declarations
+//---------------------------------------
+class ShaderProgram;
+
+
+
+
+
+//=================================================================
 //	Class Shader
 //---------------------------------------
 class Shader
@@ -29,6 +38,7 @@ public:
 		ST_SIZE
 	};
 
+	friend class ShaderProgram;
 
 public:
 							Shader();
