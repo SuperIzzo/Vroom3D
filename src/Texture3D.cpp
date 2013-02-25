@@ -11,7 +11,17 @@
 
 VROOM_BEGIN
 
-GLint TexUnits[4] = {GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3};
+
+//=================================================================
+//	TexUnits: GL_TEXTURE remap
+//---------------------------------------
+GLint TexUnits[4] = 
+{
+	GL_TEXTURE0, GL_TEXTURE1, GL_TEXTURE2, GL_TEXTURE3
+};
+
+
+
 
 
 //=================================================================
@@ -60,11 +70,24 @@ Texture3D::Texture3D( const VolumeData &volume ) :
 
 
 //=================================================================
-//	Texture3D::SetScalingFilter
+//	Texture3D::SetSmooth
 //---------------------------------------
-void Texture3D::SetScalingFilter( ScalingFilter filter )
+void Texture3D::SetSmooth( bool smooth )
 {
-	SetScalingFilter( filter, filter );
+	if( Bind() )
+	{
+		GLint glMagFilter = GL_NEAREST;
+		GLint glMinFilter = GL_NEAREST;
+
+		if( smooth ) 
+		{
+			glMagFilter = GL_LINEAR;
+			glMinFilter = GL_LINEAR;
+		}
+
+		glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, glMagFilter );
+		glTexParameteri( GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, glMinFilter );
+	}
 }
 
 
@@ -72,28 +95,15 @@ void Texture3D::SetScalingFilter( ScalingFilter filter )
 
 
 //=================================================================
-//	Texture3D::SetScalingFilter
+//	Texture3D::IsSmooth
 //---------------------------------------
-void Texture3D::SetScalingFilter( ScalingFilter mag, ScalingFilter min )
+bool Texture3D::IsSmooth() const
 {
-	if( Bind() )
-	{
-		GLint glMagFilter = GL_NEAREST;
-		GLint glMinFilter = GL_NEAREST;
+	GLint glMagFilter;
 
-		if( mag == SF_LINEAR )
-		{
-			glMagFilter = GL_LINEAR;
-		}
+	glGetTexParameteriv( GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, &glMagFilter );
 
-		if( min == SF_LINEAR )
-		{
-			glMinFilter = GL_LINEAR;
-		}
-
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, glMagFilter );
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, glMinFilter );
-	}
+	return (glMagFilter != GL_NEAREST);
 }
 
 
@@ -150,7 +160,7 @@ void Texture3D::CreateFromVolume( const VolumeData &volume )
 	{
 		glGenTextures(NUMBER_OF_TEXTURES, &mTextureID);		
 		
-		SetScalingFilter( SF_LINEAR );
+		SetSmooth( true );
 		SetWrapFunction( GL_CLAMP );		
 				
 		glTexImage3D(
@@ -216,7 +226,7 @@ bool Texture3D::Unbind( UInt8 unit )
 //=================================================================
 //	Texture3D::IsValid
 //---------------------------------------
-bool Texture3D::IsValid()
+bool Texture3D::IsValid() const
 {
 	return( mTextureID>0 );
 }
