@@ -44,7 +44,7 @@ public:
 							Shader();
 							~Shader();
 
-	void					CompileString( ShaderType shaderType, String source );
+	bool					CompileString( ShaderType shaderType, String source );
 	void					Destroy();
 
 	String					GetInfoLog() const;

@@ -63,12 +63,12 @@ Shader::~Shader()
 //=================================================================
 //	Shader::CreateShader
 //---------------------------------------
-void Shader::CreateShader(ShaderType st)
+void Shader::CreateShader(ShaderType shaderType)
 {
-	Destroy();
+	GLenum	glShaderType = GLShaderTypes( shaderType );
 
-	GLenum glShaderType = GLShaderTypes(st);
-	mShader = glCreateShader( glShaderType );
+	Destroy();
+	mShader	= glCreateShader( glShaderType );
 
 	if( !IsValid() )
 	{
@@ -96,28 +96,20 @@ void Shader::Destroy()
 //=================================================================
 //	Shader::CompileString
 //---------------------------------------
-void Shader::CompileString(ShaderType shaderType, String text)
+bool Shader::CompileString(ShaderType shaderType, String text)
 {
-	GLint compiled			= 0;
+	GLint compiled			= false;
 	GLint sourceLength		= text.length() + 1;
 	GLcharARB *sourceText	= (GLcharARB*) text.c_str();
 
-	CreateShader(shaderType);
+	CreateShader( shaderType );
 
-	glShaderSourceARB(mShader, 1, (const GLcharARB**) &sourceText, &sourceLength );
-	glCompileShaderARB(mShader);
+	glShaderSourceARB( mShader, 1, (const GLcharARB**) &sourceText, &sourceLength );
+	glCompileShaderARB( mShader );
 
-	glGetObjectParameterivARB(mShader, GL_COMPILE_STATUS, &compiled);
+	glGetObjectParameterivARB( mShader, GL_COMPILE_STATUS, &compiled );
 
-	if( !compiled )
-	{
-		String errorMsg;
-		
-		errorMsg  = "Failed to compile shader.\n";
-		errorMsg +=	GetInfoLog();		
-
-		throw GraphicsHardwareException(errorMsg);
-	}
+	return compiled;
 }
 
 
@@ -132,12 +124,12 @@ String Shader::GetInfoLog() const
 	String theResult = "";
 	GLint maxLogLength = 0;
 
-	glGetShaderiv(mShader, GL_INFO_LOG_LENGTH , &maxLogLength);
+	glGetShaderiv( mShader, GL_INFO_LOG_LENGTH , &maxLogLength );
 	if( maxLogLength )
 	{
 		GLchar* logString = new GLchar[maxLogLength];
 
-		glGetInfoLogARB(mShader, maxLogLength, 0, logString);
+		glGetInfoLogARB( mShader, maxLogLength, 0, logString );
 		theResult = logString;
 
 		delete[] logString;
