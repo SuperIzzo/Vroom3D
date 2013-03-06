@@ -57,6 +57,7 @@ private:
 
 private:
 	UInt32					mShader;
+	bool					mCompiled;
 };
 
 
