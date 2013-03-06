@@ -5,6 +5,19 @@
 #include <CheckMacros.h>
 #include <MoreChecks.h>
 
+#define CHECK_NOT(value) \
+    do \
+    { \
+        try { \
+            if (UnitTest::Check(value)) \
+                UnitTest::CurrentTest::Results()->OnTestFailure(UnitTest::TestDetails(*UnitTest::CurrentTest::Details(), __LINE__), #value); \
+        } \
+        catch (...) { \
+            UnitTest::CurrentTest::Results()->OnTestFailure(UnitTest::TestDetails(*UnitTest::CurrentTest::Details(), __LINE__), \
+                    "Unhandled exception in CHECK_NOT(" #value ")"); \
+        } \
+    } while (0)
+
 #define CHECK_NULL(pointer) \
     do \
     { \
