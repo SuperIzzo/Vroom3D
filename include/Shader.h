@@ -48,7 +48,7 @@ public:
 	void					Destroy();
 
 	String					GetInfoLog() const;
-	bool					IsValid() const;
+	bool					IsCompiled() const;
 
 	static bool				IsSupported( ShaderType shaderType );
 
@@ -57,7 +57,6 @@ private:
 
 private:
 	UInt32					mShader;
-	bool					mCompiled;
 };
 
 

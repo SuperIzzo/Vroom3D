@@ -37,7 +37,7 @@ SUITE( Shader )
 	{
 		Shader theShader;
 
-		CHECK_NOT( theShader.IsValid() );
+		CHECK_NOT( theShader.IsCompiled() );
 	}
 
 
@@ -52,7 +52,7 @@ SUITE( Shader )
 			compiles = theShader.CompileString( Shader::ST_VERTEX, WORKING_VertexShader );
 
 			CHECK( compiles );
-			CHECK( theShader.IsValid() );
+			CHECK( theShader.IsCompiled() );
 		}
 		else
 		{			
@@ -68,7 +68,7 @@ SUITE( Shader )
 			compiles = theShader.CompileString( Shader::ST_FRAGMENT, WORKING_FragmentShader );
 
 			CHECK( compiles );
-			CHECK( theShader.IsValid() );
+			CHECK( theShader.IsCompiled() );
 		}
 		else
 		{			
@@ -88,7 +88,7 @@ SUITE( Shader )
 			compiles = theShader.CompileString( Shader::ST_VERTEX, BROKEN_VertexShader );
 
 			CHECK_NOT( compiles );
-			CHECK_NOT( theShader.IsValid() );
+			CHECK_NOT( theShader.IsCompiled() );
 		}
 		else
 		{			
@@ -104,7 +104,7 @@ SUITE( Shader )
 			compiles = theShader.CompileString( Shader::ST_FRAGMENT, BROKEN_FragmentShader );
 
 			CHECK_NOT( compiles );
-			CHECK_NOT( theShader.IsValid() );
+			CHECK_NOT( theShader.IsCompiled() );
 		}
 		else
 		{			
@@ -125,7 +125,7 @@ SUITE( Shader )
 			theShader.Destroy();
 
 			CHECK( compiles );
-			CHECK_NOT( theShader.IsValid() );
+			CHECK_NOT( theShader.IsCompiled() );
 		}
 		else
 		{			
@@ -142,7 +142,7 @@ SUITE( Shader )
 			theShader.Destroy();
 
 			CHECK( compiles );
-			CHECK_NOT( theShader.IsValid() );
+			CHECK_NOT( theShader.IsCompiled() );
 		}
 		else
 		{			

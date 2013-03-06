@@ -42,8 +42,7 @@ static GLenum GLShaderTypes( Shader::ShaderType shaderType )
 //	Shader::Shader
 //---------------------------------------
 Shader::Shader() :
-	mShader(0),
-	mCompiled(0)
+	mShader(0)
 {
 	InitGraphicsCoreOnce();
 }
@@ -96,7 +95,6 @@ void Shader::Destroy()
 {
 	glDeleteShader( mShader );
 	mShader = 0;
-	mCompiled = 0;
 }
 
 
@@ -104,11 +102,18 @@ void Shader::Destroy()
 
 
 //=================================================================
-//	Shader::IsValid
+//	Shader::IsCompiled
 //---------------------------------------
-bool Shader::IsValid() const
+bool Shader::IsCompiled() const
 {
-	return( mShader && mCompiled );
+	GLint compiled = false;
+
+	if( mShader )
+	{
+		glGetObjectParameterivARB( mShader, GL_COMPILE_STATUS, &compiled );
+	}
+	
+	return compiled;
 }
 
 
@@ -130,12 +135,7 @@ bool Shader::CompileString(ShaderType shaderType, String text)
 	glShaderSourceARB( mShader, 1, (const GLcharARB**) &sourceText, &sourceLength );
 	glCompileShaderARB( mShader );
 
-	// Check status
-	GLint compiled = false;
-	glGetObjectParameterivARB( mShader, GL_COMPILE_STATUS, &compiled );
-	mCompiled = compiled;
-
-	return mCompiled;
+	return IsCompiled();
 }
 
 
