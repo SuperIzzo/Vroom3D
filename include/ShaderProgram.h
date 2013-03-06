@@ -9,25 +9,40 @@
 #include <Platform.h>
 #include <SharedPointer.h>
 #include <Shader.h>
+#include <list>
 
 
 VROOM_BEGIN
 
 
 //=================================================================
-//	Class ShaderProram
+//	Class ShaderProgram
 //---------------------------------------
-class ShaderProram
+class ShaderProgram
 {
 public:
-							ShaderProram();
-							~ShaderProram();
+							ShaderProgram();
+							~ShaderProgram();
 
-	void					AttachShader( ShaderPtr shader );
+	// Shader program
 	void					Link();
+	void					Destroy();
+	bool					IsValid() const;
+
+	// Shaders
+	bool					IsAttached( ShaderPtr shader );
+	void					AttachShader( ShaderPtr shader );
+	void					DetachShader( ShaderPtr shader );
 
 private:
-	UInt32					mShaderProgram;
+	typedef std::list<ShaderPtr> ShaderList;
+
+	void					CreateProgram();
+	ShaderList::iterator	FindShader( ShaderPtr shader );
+
+private:
+	ShaderList				mShaders;
+	UInt32					mProgram;
 };
 
 
