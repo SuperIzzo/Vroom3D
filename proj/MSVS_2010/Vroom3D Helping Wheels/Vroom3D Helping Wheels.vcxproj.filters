@@ -111,14 +111,23 @@
     <ClCompile Include="..\..\..\src\VolumeData.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\TestSharedObject.cpp">
-      <Filter>test\Util</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\src\Shader.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\src\Texture3D.cpp">
       <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\ShaderProgram.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\TestShader.cpp">
+      <Filter>test\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\GraphicsCommon.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\test\GraphicsFixture.cpp">
+      <Filter>test\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -188,11 +197,20 @@
     <ClInclude Include="..\..\..\include\GraphicsHardwareException.h">
       <Filter>include\Exceptions</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\ShaderProgram.h">
+      <Filter>include\Graphics</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\..\include\SharedPointer.h">
       <Filter>include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\ShaderProgram.h">
+    <ClInclude Include="..\..\..\include\GraphicsCommon.h">
       <Filter>include\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\InvalidArgumentException.h">
+      <Filter>include\Exceptions</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\test\GraphicsFixture.h">
+      <Filter>test\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

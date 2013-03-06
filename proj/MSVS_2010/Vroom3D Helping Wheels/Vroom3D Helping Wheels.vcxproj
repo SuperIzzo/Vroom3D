@@ -13,10 +13,12 @@
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AABB.cpp" />
     <ClCompile Include="..\..\..\src\Color.cpp" />
+    <ClCompile Include="..\..\..\src\GraphicsCommon.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
     <ClCompile Include="..\..\..\src\Polygon.cpp" />
     <ClCompile Include="..\..\..\src\Shader.cpp" />
+    <ClCompile Include="..\..\..\src\ShaderProgram.cpp" />
     <ClCompile Include="..\..\..\src\TexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\src\TexMapVolumeRendererNode.cpp" />
     <ClCompile Include="..\..\..\src\Texture3D.cpp" />
@@ -27,10 +29,11 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="..\..\..\test\TestAABB.cpp" />
+    <ClCompile Include="..\..\..\test\GraphicsFixture.cpp" />
     <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp" />
     <ClCompile Include="..\..\..\test\TestNode.cpp" />
     <ClCompile Include="..\..\..\test\TestPolygon.cpp" />
-    <ClCompile Include="..\..\..\test\TestSharedObject.cpp" />
+    <ClCompile Include="..\..\..\test\TestShader.cpp" />
     <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\test\TestVolume.cpp" />
     <ClCompile Include="..\..\..\test\TestXMLDocument.cpp" />
@@ -39,8 +42,10 @@
     <ClInclude Include="..\..\..\include\AABB.h" />
     <ClInclude Include="..\..\..\include\Camera.h" />
     <ClInclude Include="..\..\..\include\Color.h" />
+    <ClInclude Include="..\..\..\include\GraphicsCommon.h" />
     <ClInclude Include="..\..\..\include\GraphicsHardwareException.h" />
     <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h" />
+    <ClInclude Include="..\..\..\include\InvalidArgumentException.h" />
     <ClInclude Include="..\..\..\include\MathCommon.h" />
     <ClInclude Include="..\..\..\include\Node.h" />
     <ClInclude Include="..\..\..\include\Platform.h" />
@@ -58,6 +63,7 @@
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreChecks.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreCheckMacros.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreUnitTest++.h" />
+    <ClInclude Include="..\..\..\test\GraphicsFixture.h" />
     <ClInclude Include="..\..\..\test\TestingDataGenerator.h" />
   </ItemGroup>
   <ItemGroup>
