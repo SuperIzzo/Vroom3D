@@ -2,12 +2,8 @@
 //	Inlude
 //---------------------------------------
 #include "Texture3D.h"
+#include "GraphicsCommon.h"
 #include "GraphicsHardwareException.h"
-
-#include <Windows.h>
-#include <gl/glew.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
 
 
 VROOM_BEGIN
@@ -51,6 +47,7 @@ static PFNGLTEXIMAGE3DPROC GetTex3DFunction()
 Texture3D::Texture3D() :
 	mTextureID( 0 )
 {
+	InitGraphicsCoreOnce();
 };
 
 

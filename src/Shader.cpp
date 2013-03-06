@@ -2,12 +2,9 @@
 //	Inlude
 //---------------------------------------
 #include "Shader.h"
+#include "GraphicsCommon.h"
 #include "GraphicsHardwareException.h"
-
-#include <Windows.h>
-#include <gl/glew.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#include "InvalidArgumentException.h"
 
 
 VROOM_BEGIN
@@ -16,20 +13,25 @@ VROOM_BEGIN
 //=================================================================
 //	GLShaderTypes : Converts ShaderType enum to OpenGL constants
 //---------------------------------------
-static GLenum GLShaderTypes( Shader::ShaderType st )
+static GLenum GLShaderTypes( Shader::ShaderType shaderType )
 {
-	static bool		init = false;
-	static GLenum	ShaderType[Shader::ST_SIZE];
+	GLenum glShaderType;
 
-	if( !init )
+	switch( shaderType )
 	{
-		init = true;
+		case Shader::ST_VERTEX: 
+			glShaderType = GL_VERTEX_SHADER;
+			break;
 
-		ShaderType[Shader::ST_VERTEX]	= GL_VERTEX_SHADER;
-		ShaderType[Shader::ST_FRAGMENT] = GL_FRAGMENT_SHADER;
+		case Shader::ST_FRAGMENT: 
+			glShaderType = GL_FRAGMENT_SHADER;
+			break;
+
+		default:
+			throw InvalidArgumentException();
 	}
-
-	return ShaderType[st];
+	
+	return glShaderType;
 }
 
 
@@ -42,6 +44,7 @@ static GLenum GLShaderTypes( Shader::ShaderType st )
 Shader::Shader() :
 	mShader(0)
 {
+	InitGraphicsCoreOnce();
 }
 
 
@@ -68,7 +71,12 @@ void Shader::CreateShader(ShaderType shaderType)
 	GLenum	glShaderType = GLShaderTypes( shaderType );
 
 	Destroy();
-	mShader	= glCreateShader( glShaderType );
+
+	// Make sure we have a poiner to glCreateShader
+	if( glCreateShader ) 
+	{
+		mShader	= glCreateShader( glShaderType );
+	}
 
 	if( !IsValid() )
 	{
@@ -87,6 +95,18 @@ void Shader::Destroy()
 {
 	glDeleteShader( mShader );
 	mShader = 0;
+}
+
+
+
+
+
+//=================================================================
+//	Shader::IsValid
+//---------------------------------------
+bool Shader::IsValid() const
+{
+	return( mShader>0 );
 }
 
 
@@ -143,11 +163,27 @@ String Shader::GetInfoLog() const
 
 
 //=================================================================
-//	Shader::IsValid
+//	Shader::IsSupported
 //---------------------------------------
-bool Shader::IsValid() const
+bool Shader::IsSupported( ShaderType shaderType )
 {
-	return( mShader>0 );
+	bool theResult;
+
+	switch( shaderType )
+	{
+		case ST_VERTEX: 
+			theResult = GLEW_ARB_vertex_program;
+			break;
+
+		case ST_FRAGMENT: 
+			theResult = GLEW_ARB_fragment_program;
+			break;
+
+		default:
+			throw InvalidArgumentException();
+	}
+
+	return theResult;
 }
 
 

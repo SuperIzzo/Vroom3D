@@ -50,6 +50,8 @@ public:
 	String					GetInfoLog() const;
 	bool					IsValid() const;
 
+	static bool				IsSupported( ShaderType shaderType );
+
 private:
 	void					CreateShader(ShaderType st);
 
