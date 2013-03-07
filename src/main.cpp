@@ -266,7 +266,7 @@ void ShaderTest()
 		GLint blen = 0;	
 		GLsizei slen = 0;
 
-		glGetShaderiv(fragShader, GL_INFO_LOG_LENGTH , &blen);       
+		glGetShaderiv(fragShader, GL_INFO_LOG_LENGTH , &blen);
 		if (blen > 1)
 		{
 			GLchar* compiler_log = (GLchar*)malloc(blen);
