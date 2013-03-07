@@ -34,6 +34,7 @@
     <ClCompile Include="..\..\..\test\TestNode.cpp" />
     <ClCompile Include="..\..\..\test\TestPolygon.cpp" />
     <ClCompile Include="..\..\..\test\TestShader.cpp" />
+    <ClCompile Include="..\..\..\test\TestShaderProgram.cpp" />
     <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\test\TestVolume.cpp" />
     <ClCompile Include="..\..\..\test\TestXMLDocument.cpp" />

@@ -129,6 +129,9 @@
     <ClCompile Include="..\..\..\test\GraphicsFixture.cpp">
       <Filter>test\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\test\TestShaderProgram.cpp">
+      <Filter>test\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\Platform.h">
