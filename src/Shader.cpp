@@ -72,11 +72,7 @@ void Shader::CreateShader(ShaderType shaderType)
 
 	Destroy();
 
-	// Make sure we have a poiner to glCreateShader
-	if( glCreateShader ) 
-	{
-		mShader	= glCreateShader( glShaderType );
-	}
+	mShader	= glCreateShader( glShaderType );
 
 	if( !mShader )
 	{
