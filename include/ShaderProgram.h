@@ -28,6 +28,7 @@ public:
 	// Shader program
 	void					Link();
 	bool					IsLinked() const;
+	void					Use();
 	void					Destroy();
 
 	// Shaders
