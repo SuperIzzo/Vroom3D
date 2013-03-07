@@ -9,6 +9,7 @@
 #include <Platform.h>
 #include <SharedPointer.h>
 #include <Shader.h>
+#include <ShaderUniform.h>
 #include <list>
 
 
@@ -26,13 +27,16 @@ public:
 
 	// Shader program
 	void					Link();
+	bool					IsLinked() const;
 	void					Destroy();
-	bool					IsValid() const;
 
 	// Shaders
 	bool					IsAttached( ShaderPtr shader );
 	void					AttachShader( ShaderPtr shader );
 	void					DetachShader( ShaderPtr shader );
+
+	// Uniform variables
+	ShaderUniform			GetUniform( String name );
 
 private:
 	typedef std::list<ShaderPtr> ShaderList;

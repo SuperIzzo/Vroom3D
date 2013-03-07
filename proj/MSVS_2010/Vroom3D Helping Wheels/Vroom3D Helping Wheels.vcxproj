@@ -19,6 +19,7 @@
     <ClCompile Include="..\..\..\src\Polygon.cpp" />
     <ClCompile Include="..\..\..\src\Shader.cpp" />
     <ClCompile Include="..\..\..\src\ShaderProgram.cpp" />
+    <ClCompile Include="..\..\..\src\ShaderUniform.cpp" />
     <ClCompile Include="..\..\..\src\TexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\src\TexMapVolumeRendererNode.cpp" />
     <ClCompile Include="..\..\..\src\Texture3D.cpp" />
@@ -53,6 +54,7 @@
     <ClInclude Include="..\..\..\include\Polygon.h" />
     <ClInclude Include="..\..\..\include\Shader.h" />
     <ClInclude Include="..\..\..\include\ShaderProgram.h" />
+    <ClInclude Include="..\..\..\include\ShaderUniform.h" />
     <ClInclude Include="..\..\..\include\SharedPointer.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRendererNode.h" />
     <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h" />

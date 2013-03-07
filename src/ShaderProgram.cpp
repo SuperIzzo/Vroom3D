@@ -69,11 +69,19 @@ void ShaderProgram::CreateProgram()
 
 
 //=================================================================
-//	ShaderProgram::IsValid
+//	ShaderProgram::IsLinked
 //---------------------------------------
-bool ShaderProgram::IsValid() const
+bool ShaderProgram::IsLinked() const
 {
-	return( mProgram>0 );
+	GLint linked = false;
+
+	if( mProgram )
+	{
+		glGetObjectParameterivARB( mProgram, GL_LINK_STATUS, &linked );
+		
+	}
+
+	return( linked!=0 );
 }
 
 
@@ -116,12 +124,12 @@ bool ShaderProgram::IsAttached( ShaderPtr shader )
 //---------------------------------------
 void ShaderProgram::AttachShader( ShaderPtr shader )
 {
-	if( !IsValid() )
+	if( !mProgram )
 	{
 		CreateProgram();
 	}
 
-	if( IsValid() )
+	if( mProgram )
 	{
 		if( IsAttached(shader) )
 		{
@@ -156,6 +164,20 @@ void ShaderProgram::DetachShader( ShaderPtr shader )
 
 		mShaders.erase( shaderIter );
 	}
+}
+
+
+
+
+
+//=================================================================
+//	ShaderProgram::GetUniformVar
+//---------------------------------------
+ShaderUniform ShaderProgram::GetUniform( String name )
+{
+	GLint location = glGetUniformLocation( mProgram, name.c_str() );
+
+	return ShaderUniform( location );
 }
 
 

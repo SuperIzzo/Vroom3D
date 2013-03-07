@@ -109,7 +109,7 @@ bool Shader::IsCompiled() const
 		glGetObjectParameterivARB( mShader, GL_COMPILE_STATUS, &compiled );
 	}
 	
-	return compiled;
+	return( compiled!=0 );
 }
 
 
@@ -174,11 +174,11 @@ bool Shader::IsSupported( ShaderType shaderType )
 	switch( shaderType )
 	{
 		case ST_VERTEX: 
-			theResult = GLEW_ARB_vertex_program;
+			theResult =		GLEW_ARB_vertex_program != 0;
 			break;
 
 		case ST_FRAGMENT: 
-			theResult = GLEW_ARB_fragment_program;
+			theResult =		GLEW_ARB_fragment_program != 0;
 			break;
 
 		default:

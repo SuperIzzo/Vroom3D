@@ -132,6 +132,9 @@
     <ClCompile Include="..\..\..\test\TestShaderProgram.cpp">
       <Filter>test\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\ShaderUniform.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\Platform.h">
@@ -214,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\test\GraphicsFixture.h">
       <Filter>test\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ShaderUniform.h">
+      <Filter>include\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
