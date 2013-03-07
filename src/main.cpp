@@ -4,6 +4,7 @@
 #include <TexMapVolumeRenderer.h>
 #include <TexMapVolumeRendererNode.h>
 #include <Node.h>
+#include <ShaderProgram.h>
 
 #include <gl/glew.h>
 #include <SFML/Graphics.hpp>
@@ -164,7 +165,7 @@ void printGLStats()
 
 //#include "Shaders.shd"
 
-const GLcharARB * VertShaderSrc = 
+String VertShaderSrc = 
 "varying vec4 vTexCoord;"
 "varying vec4 position;"
 
@@ -196,7 +197,7 @@ const GLcharARB * FragShaderSrc =
 "	gl_FragColor = finalCol; "
 "}";
 /*/
-const GLcharARB * FragShaderSrc = 
+String FragShaderSrc = 
 "varying vec4 vTexCoord;"
 "varying vec4 position;"
 "uniform sampler3D texture1;"
@@ -223,66 +224,20 @@ const GLcharARB * FragShaderSrc =
 //*/
 
 
-GLuint myShader = 0;
+ShaderProgram myShader;
 
 void ShaderTest()
 {		
-	GLint compiled;
-	GLuint vertShader = glCreateShader( GL_VERTEX_SHADER );
-	GLuint fragShader = glCreateShader( GL_FRAGMENT_SHADER );
+	ShaderPtr vertShader	= new Shader();
+	ShaderPtr fragShader	= new Shader();
 
-	GLint vshadlen = strlen(VertShaderSrc);
-	GLint fshadlen = strlen(FragShaderSrc);
+	vertShader->CompileString( Shader::ST_VERTEX,		VertShaderSrc );
+	fragShader->CompileString( Shader::ST_FRAGMENT,	FragShaderSrc );
 
-	glShaderSourceARB(vertShader, 1, &VertShaderSrc, &vshadlen );
-	glShaderSourceARB(fragShader, 1, &FragShaderSrc, &fshadlen );
+	myShader.AttachShader( vertShader );
+	myShader.AttachShader( fragShader );
 
-	glCompileShaderARB(vertShader);
-	glCompileShaderARB(fragShader);
-
-	glGetObjectParameterivARB(vertShader, GL_COMPILE_STATUS, &compiled);
-	if(! compiled)
-	{
-		std::cout << "Failed to compile vert shader." << std::endl;
-		
-		GLint blen = 0;	
-		GLsizei slen = 0;
-
-		glGetShaderiv(vertShader, GL_INFO_LOG_LENGTH , &blen);       
-		if (blen > 1)
-		{
-			GLchar* compiler_log = (GLchar*)malloc(blen);
-			glGetInfoLogARB(vertShader, blen, &slen, compiler_log);
-			std::cout << "compiler_log:\n" << compiler_log;
-			free (compiler_log);
-		}
-	}
-
-	glGetObjectParameterivARB(fragShader, GL_COMPILE_STATUS, &compiled);
-	if(! compiled)
-	{
-		std::cout << "Failed to compile frag shader." << std::endl;
-
-		GLint blen = 0;	
-		GLsizei slen = 0;
-
-		glGetShaderiv(fragShader, GL_INFO_LOG_LENGTH , &blen);
-		if (blen > 1)
-		{
-			GLchar* compiler_log = (GLchar*)malloc(blen);
-			glGetInfoLogARB(fragShader, blen, &slen, compiler_log);
-			std::cout << "compiler_log:\n" << compiler_log;
-			free (compiler_log);
-		}
-	}
-
-
-	myShader = glCreateProgram();
-
-	glAttachShader(myShader, vertShader);
-	glAttachShader(myShader, fragShader);
-
-	glLinkProgram(myShader);
+	myShader.Link();
 }
 
 

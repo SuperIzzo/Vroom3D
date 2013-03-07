@@ -4,6 +4,7 @@
 #include "TexMapVolumeRendererNode.h"
 #include "Texture3D.h"
 #include "VolumeData.h"
+#include "ShaderProgram.h"
 
 #include <Windows.h>
 #include <gl/glew.h>
@@ -394,20 +395,23 @@ void TexMapVolumeRendererNode::SetLightingMode()
 		{
 			mNormalMap->Bind(1);
 
-			extern GLuint myShader;
-			glUseProgram( myShader );
+			extern ShaderProgram myShader;
+			
+			myShader.Use();
 
-			GLint loc = glGetUniformLocation(myShader, "texture1");
-			if (loc != -1)
-				glUniform1i(loc, 0);
+			ShaderUniform tex1 = myShader.GetUniform( "texture1" );
+
+			if( tex1.IsValid() )
+				tex1.SetInt( 0 );
 			else
 				std::cout << "Waaaaa1" << std::endl;
 
-			loc = glGetUniformLocation(myShader, "texture2");
-			if (loc != -1)
-				glUniform1i(loc, 1);
+			ShaderUniform tex2 = myShader.GetUniform( "texture2" );
+
+			if( tex2.IsValid() )
+				tex2.SetInt( 1 );
 			else
-				std::cout << "Waaaaa2" << std::endl;			
+				std::cout << "Waaaaa2" << std::endl;		
 		}
 	}
 }
