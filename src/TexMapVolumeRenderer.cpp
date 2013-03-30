@@ -143,11 +143,6 @@ void TexMapVolumeRenderer::Render()
 	Translate(0,0,0);
 	// Draw nodes
 	mRootNode->Draw(cameraDir);
-
-
-	Translate(0.2,0, -1);
-	// Draw nodes
-	mRootNode->Draw(cameraDir);
 }
 
 
