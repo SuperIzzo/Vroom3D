@@ -122,7 +122,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(ProjectBIN)\$(Configuration)\</OutDir>
-    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(ProjectSub)\OpenGL;$(ProjectSub)\rapidxml-1.13;$(ProjectSub)\glew-1.9.0-win32\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectSub)\UnitTest++\src;$(ProjectRoot)\test\MoreUnitTest++;$(ProjectSub)\Eigen-3.1.1;$(ProjectSub)\SFML-2.0-rc\include;$(ProjectSub)\OpenGL;$(ProjectSub)\rapidxml-1.13;$(ProjectSub)\glew-1.9.0-win32\include;$(ProjectSub)\yasper;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectSub)\SFML-2.0-rc\lib;$(ProjectLIB)\$(Configuration);$(ProjectSub)\glew-1.9.0-win32\lib;$(LibraryPath)</LibraryPath>
     <ExecutablePath>$(ProjectSub)\glew-1.9.0-win32\bin;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
@@ -147,14 +147,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>SFML_STATIC;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>UnitTest++.lib;sfml-graphics-s-d.lib;sfml-window-s-d.lib;sfml-system-s-d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>UnitTest++.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>"$(TargetPath)" -test</Command>
