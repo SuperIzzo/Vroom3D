@@ -28,6 +28,7 @@ class ShaderUniform
 {
 public:
 	void					SetInt( SInt32 value );
+	void					SetVec3Float( float x, float y, float z );
 	bool					IsValid();
 
 private:

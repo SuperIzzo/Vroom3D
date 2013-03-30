@@ -41,4 +41,19 @@ void ShaderUniform::SetInt( SInt32 value )
 }
 
 
+
+
+
+//=================================================================
+//	ShaderProgram::SetVec3Float
+//---------------------------------------
+void ShaderUniform::SetVec3Float( float x, float y, float z )
+{
+	if( IsValid() )
+	{
+		glUniform3f( mLocation, x,y,z );
+	}
+}
+
+
 VROOM_END
