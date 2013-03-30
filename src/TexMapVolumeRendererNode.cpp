@@ -368,13 +368,13 @@ void TexMapVolumeRendererNode::UnsetLightingMode()
 
 void TexMapVolumeRendererNode::SetVolumeData( VolumeData *volume )
 {
-	Node::SetVolumeData( volume );
+	Node::SetVolumeData( volume );	
 
 	delete mTexture;
 	mTexture = 0;
 
 	//delete mNormalMap;
-	mNormalMap = (Texture3D*)0;
+	mNormalMap = 0L;
 }
 
 
