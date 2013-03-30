@@ -3,7 +3,6 @@
 //---------------------------------------
 #include "GraphicsFixture.h"
 
-#include <GraphicsCommon.h>
 #include <SFML/Window/Context.hpp>
 
 
