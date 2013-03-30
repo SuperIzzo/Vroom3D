@@ -27,6 +27,10 @@ struct Color
 	// Constructors
 	Color();
 	Color(UInt8 r, UInt8 g, UInt8 b, UInt8 a=255);
+
+	// Operators
+	bool operator== (const Color &other) const;
+	bool operator!= (const Color &other) const;
 };
 
 
