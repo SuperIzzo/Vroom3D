@@ -16,6 +16,7 @@
     <ClCompile Include="..\..\..\src\GraphicsCommon.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
     <ClCompile Include="..\..\..\src\Node.cpp" />
+    <ClCompile Include="..\..\..\src\NormalMapGenerator.cpp" />
     <ClCompile Include="..\..\..\src\Polygon.cpp" />
     <ClCompile Include="..\..\..\src\Shader.cpp" />
     <ClCompile Include="..\..\..\src\ShaderProgram.cpp" />
@@ -26,9 +27,6 @@
     <ClCompile Include="..\..\..\src\VolumeData.cpp" />
     <ClCompile Include="..\..\..\src\XMLDocument.cpp" />
     <ClCompile Include="..\..\..\src\XMLNode.cpp" />
-    <ClCompile Include="..\..\..\test\MultitextureExperiment.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="..\..\..\test\TestAABB.cpp" />
     <ClCompile Include="..\..\..\test\GraphicsFixture.cpp" />
     <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp" />
@@ -37,6 +35,7 @@
     <ClCompile Include="..\..\..\test\TestShader.cpp" />
     <ClCompile Include="..\..\..\test\TestShaderProgram.cpp" />
     <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp" />
+    <ClCompile Include="..\..\..\test\TestTexture3D.cpp" />
     <ClCompile Include="..\..\..\test\TestVolume.cpp" />
     <ClCompile Include="..\..\..\test\TestXMLDocument.cpp" />
   </ItemGroup>
@@ -48,8 +47,10 @@
     <ClInclude Include="..\..\..\include\GraphicsHardwareException.h" />
     <ClInclude Include="..\..\..\include\IndexOutOfBoundsException.h" />
     <ClInclude Include="..\..\..\include\InvalidArgumentException.h" />
+    <ClInclude Include="..\..\..\include\InvalidStateException.h" />
     <ClInclude Include="..\..\..\include\MathCommon.h" />
     <ClInclude Include="..\..\..\include\Node.h" />
+    <ClInclude Include="..\..\..\include\NormalMapGenerator.h" />
     <ClInclude Include="..\..\..\include\Platform.h" />
     <ClInclude Include="..\..\..\include\Polygon.h" />
     <ClInclude Include="..\..\..\include\Shader.h" />
@@ -70,6 +71,11 @@
     <ClInclude Include="..\..\..\test\TestingDataGenerator.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\data\Lighting.frag">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="..\..\..\data\Lighting.vert" />
+    <None Include="..\..\..\data\Normal.frag" />
     <None Include="..\..\..\docs\design\Discussion - 3D Texture Volumes.txt" />
     <None Include="..\..\..\docs\design\Discussion - Transforms and Cameras.txt" />
     <None Include="..\..\..\docs\design\Discussion - What exactly is the project.txt" />
