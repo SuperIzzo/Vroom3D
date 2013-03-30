@@ -37,7 +37,7 @@ public:
 	UInt32					GetHeight()		const;
 	UInt32					GetDepth()		const;
 
-	void					SetVoxel( UInt32 x, UInt32 y, UInt32 z, Color &col );
+	void					SetVoxel( UInt32 x, UInt32 y, UInt32 z, const Color &col );
 	Color&					GetVoxel( UInt32 x, UInt32 y, UInt32 z);
 	Color					GetVoxel( UInt32 x, UInt32 y, UInt32 z) const;
 
@@ -45,6 +45,7 @@ public:
 
 private:
 	void					CheckInRange(UInt32 x, UInt32 y, UInt32 z) const;
+	void					Destroy();
 
 private:
 	UInt32					mWidth;

@@ -37,8 +37,7 @@ VolumeData::VolumeData() :
 //---------------------------------------
 VolumeData::~VolumeData()
 {
-	delete[] mData;
-	mData = 0;
+	Destroy();
 }
 
 
@@ -120,7 +119,7 @@ UInt32 VolumeData::GetDepth()	const
 //=================================================================
 //	VolumeData::SetVoxel
 //---------------------------------------
-void VolumeData::SetVoxel( UInt32 x, UInt32 y, UInt32 z, Color &col )
+void VolumeData::SetVoxel( UInt32 x, UInt32 y, UInt32 z, const Color &col )
 {
 	CheckInRange(x,y,z);
 
@@ -173,7 +172,7 @@ Color VolumeData::GetVoxel( UInt32 x, UInt32 y, UInt32 z ) const
 //---------------------------------------
 void VolumeData::Create( UInt32 inWidth, UInt32 inHeight, UInt32 inDepth )
 {
-	delete[] mData;
+	Destroy();
 
 	mWidth	= inWidth;
 	mHeight = inHeight;
@@ -181,7 +180,26 @@ void VolumeData::Create( UInt32 inWidth, UInt32 inHeight, UInt32 inDepth )
 
 	UInt32 dataSize = GetDataSize();
 	mData = new UInt8[ dataSize ];
+
+	// Clear the memory
 	memset( mData, 0, dataSize*sizeof(UInt8) );
+}
+
+
+
+
+
+//=================================================================
+//	VolumeData::Destroy
+//---------------------------------------
+void VolumeData::Destroy()
+{
+	delete[] mData;
+	mData = 0;
+
+	mWidth	= 0;
+	mHeight	= 0;
+	mDepth	= 0;
 }
 
 
