@@ -5,6 +5,7 @@
 #include "Texture3D.h"
 #include "VolumeData.h"
 #include "ShaderProgram.h"
+#include "NormalMapGenerator.h"
 
 #include <Windows.h>
 #include <gl/glew.h>
@@ -106,6 +107,12 @@ static void DrawPolygon( const Polygon &poly )
 //---------------------------------------
 static void DrawPolygonFill( const Polygon &poly )
 {
+	// The following paramenters are added to reduce the bleeding effect
+	// when the interpolation mode is set to linear 
+	// these inset the texture, so that it the border interp does not occur
+	const float BORDER_INSET = 0.01;
+	const float CONTENT_SCALE = 1-BORDER_INSET*2;
+
 	int vertCount = poly.GetVertexCount();
 
 	if( vertCount > 0 )
@@ -116,88 +123,14 @@ static void DrawPolygonFill( const Polygon &poly )
 		{
 			Vector3 point = poly.GetVertex( i );
 
-			glTexCoord3f( point.x(), point.y(),	point.z() );
+			glTexCoord3f( 
+				point.x()*CONTENT_SCALE + BORDER_INSET,
+				point.y()*CONTENT_SCALE + BORDER_INSET,	
+				point.z()*CONTENT_SCALE + BORDER_INSET );
 			glVertex3f(   point.x(), point.y(),	point.z() );
 		}
 
 		glEnd();
-	}
-}
-
-
-
-
-
-//=================================================================
-//	NormalMapKernel : utility function generate normal of a voxel
-//---------------------------------------
-static Vector3 NormalMapKernel(const VolumeData &vol, UInt32 x, UInt32 y, UInt32 z)
-{
-	const UInt8 alphaTeshold = 60;
-	Vector3 direction(0,0,0);
-
-	Color vox = vol.GetVoxel( x, y, z );
-
-	if( vox.alpha < alphaTeshold )
-		return direction;
-
-	for(int xx= x-1; xx<=x+1; xx++)
-	if( xx >= 0 && xx < vol.GetWidth() )
-	{
-		for(int yy=y-1; yy<=y+1; yy++)
-		if( yy >= 0 && yy < vol.GetHeight() )
-		{
-			for(int zz=z-1; zz<=z+1; zz++)
-			if( zz >= 0 && zz < vol.GetDepth() )
-			{
-				vox = vol.GetVoxel( xx, yy, zz );
-				if( vox.alpha > alphaTeshold )
-				{
-					Vector3 voxDir( xx-(int)x, yy-(int)y, zz-(int)z );
-
-					float norm = voxDir.norm();
-					if( norm > 0.8 )
-						voxDir/= norm;
-
-					direction += voxDir;
-				}
-			}
-		}
-	}
-	if( direction.nonZeros() )
-		direction.normalize();
-
-	return -direction;
-}
-
-
-
-
-
-//=================================================================
-//	GenerateNormalMap : utility function generate normal map
-//---------------------------------------
-static void GenerateNormalMap( const VolumeData &vol, VolumeData &normMap )
-{
-	normMap.Create( vol.GetWidth(), vol.GetHeight(), vol.GetDepth());
-
-	for( UInt32 x = 0; x< vol.GetWidth(); x++)
-	{
-		for( UInt32 y = 0; y< vol.GetHeight(); y++)
-		{
-			for( UInt32 z = 0; z< vol.GetDepth(); z++)
-			{
-				Vector3 dir = NormalMapKernel( vol, x,y,z );
-
-				Color col;
-				col.red =	(UInt8) (dir.x()*127) + 127;
-				col.green =	(UInt8) (dir.y()*127) + 127;
-				col.blue =	(UInt8) (dir.z()*127) + 127;
-				col.alpha = vol.GetVoxel(x,y,z).alpha;
-
-				normMap.SetVoxel(x,y,z, col);
-			}
-		}
 	}
 }
 
@@ -229,7 +162,7 @@ void TexMapVolumeRendererNode::BindTexture()
 {
 	if( !mTexture )
 	{
-		VolumeData * theVolume = GetVolumeData();
+		VolumeData *theVolume = GetVolumeData();
 
 		if( theVolume )
 		{
@@ -335,7 +268,7 @@ void TexMapVolumeRendererNode::SetLighting( bool enable )
 //=================================================================
 //	TexMapVolumeRendererNode::GetLighting
 //---------------------------------------
-bool TexMapVolumeRendererNode::GetLighting( )
+bool TexMapVolumeRendererNode::GetLighting()
 {
 	return mLighting;
 }
@@ -369,8 +302,6 @@ void TexMapVolumeRendererNode::UnsetTransformMatrix()
 
 
 
-
-
 //=================================================================
 //	TexMapVolumeRendererNode::SetLightingMode
 //---------------------------------------
@@ -380,15 +311,7 @@ void TexMapVolumeRendererNode::SetLightingMode()
 	{
 		if( !mNormalMap )
 		{
-			VolumeData * theVolume = GetVolumeData();			
-
-			if( theVolume )
-			{
-				VolumeData normMapVol;
-				GenerateNormalMap( *theVolume, normMapVol );
-
-				mNormalMap = new Texture3D( normMapVol );
-			}
+			mNormalMap = NormalMapGenerator::Generate( *mTexture, NM_HARDWARE );
 		}
 
 		if( mNormalMap )
@@ -412,6 +335,14 @@ void TexMapVolumeRendererNode::SetLightingMode()
 				tex2.SetInt( 1 );
 			else
 				std::cout << "Waaaaa2" << std::endl;		
+
+			ShaderUniform lm = myShader.GetUniform( "lightModel" );
+			lm.SetInt(mLighting);
+
+			extern Eigen::Vector4f lightPos;
+			ShaderUniform l = myShader.GetUniform( "l" );
+			l.SetVec3Float( lightPos.x(), lightPos.y(), lightPos.z() );
+
 		}
 	}
 }
@@ -435,8 +366,21 @@ void TexMapVolumeRendererNode::UnsetLightingMode()
 
 
 
+void TexMapVolumeRendererNode::SetVolumeData( VolumeData *volume )
+{
+	Node::SetVolumeData( volume );
+
+	delete mTexture;
+	mTexture = 0;
+
+	//delete mNormalMap;
+	mNormalMap = (Texture3D*)0;
+}
 
 
+
+
+//*
 //=================================================================
 //	TexMapVolumeRendererNode::Draw
 //---------------------------------------
@@ -450,6 +394,9 @@ void TexMapVolumeRendererNode::Draw(const Vector3 &cameraDir)
 	// Tranformation matrix
 	SetTransformMatrix();
 
+	glUseProgram( 0 );
+	glBindTexture( GL_TEXTURE_3D, 0 );
+
 	if( mDebugFlags & DBG_DRAW_BBOX )
 	{
 		DrawBox( minP, maxP );
@@ -457,6 +404,23 @@ void TexMapVolumeRendererNode::Draw(const Vector3 &cameraDir)
 
 	BindTexture();
 	SetLightingMode();
+
+	if( showNorm%3 == 1 && mNormalMap)
+	{
+		mNormalMap->Bind();
+	}
+
+	if( showNorm%3 == 2 )
+	{
+		extern ShaderProgram myNormalShader;
+		myNormalShader.Use();
+		myNormalShader.GetUniform("texture1").SetInt(0);
+		myNormalShader.GetUniform("res").SetVec3Float(
+			1.0f/mTexture->GetWidth(),
+			1.0f/mTexture->GetHeight(),
+			1.0f/mTexture->GetDepth()
+		);
+	}
 
 	for( int i= mNumSlices; i > 0; i-- )
 	{

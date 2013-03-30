@@ -9,18 +9,10 @@
 #include <Node.h>
 #include <Polygon.h>
 #include <vector>
+#include <Texture3D.h>
 
 
 VROOM_BEGIN
-
-
-//=================================================================
-//	Forward Declaration
-//---------------------------------------
-class Texture3D;
-
-
-
 
 
 //=================================================================
@@ -49,6 +41,10 @@ public:
 	void					SetLighting( bool enable );
 	bool					GetLighting();
 
+	void					SetVolumeData( VolumeData *volume );
+
+	char					showNorm;
+
 protected:
 							TexMapVolumeRendererNode();
 	void					Draw(const Vector3 &cameraDir);
@@ -65,7 +61,7 @@ private:
 private:
 	UInt32					mDebugFlags;
 	Texture3D			  *	mTexture;
-	Texture3D			  *	mNormalMap;
+	Texture3DPtr			mNormalMap;
 
 	UInt32					mNumSlices;
 	Real					mSpacingExponent;

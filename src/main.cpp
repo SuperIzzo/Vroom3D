@@ -163,82 +163,77 @@ void printGLStats()
 }
 
 
-//#include "Shaders.shd"
 
-String VertShaderSrc = 
-"varying vec4 vTexCoord;"
-"varying vec4 position;"
 
-"void main(void)"
-"{"
-"	position = gl_Vertex;"
-"	vTexCoord = gl_MultiTexCoord0;"
-"   gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
-"} ";
+String ReadFile( String fname )
+{
+	String			theResult = "";
+	std::ifstream	theFile;
+	
+	theFile.open(fname);	
+	if( theFile.is_open() ) 
+	{
+		while( !theFile.eof() ) 
+		{
+			std::string line;
+			std::getline(theFile, line);
 
-/*
-const GLcharARB * FragShaderSrc = 
-"varying vec4 vTexCoord;"
-"varying vec4 position;"
-"uniform sampler3D texture1;"
-"uniform sampler3D texture2;"
-" "
-"void main (void)"
-"{"
-"	vec3 texCoord = vTexCoord.xyz;"
-"	vec4 tex1 = texture3D(texture1, texCoord);"
-"	vec4 tex2 = texture3D(texture2, texCoord);"
-"	vec4 finalCol;"
-"	finalCol.r= tex1.r*0.7 + tex2.r*0.3;"
-"	finalCol.g= tex1.g*0.7 + tex2.g*0.3;"
-"	finalCol.b= tex1.b*0.7 + tex2.b*0.3;"
-"	finalCol.a= tex1.a*0.7 + tex2.a*0.3;"
+			theResult += line + "\n";
+		}
+	}
+	theFile.close();
 
-"	gl_FragColor = finalCol; "
-"}";
-/*/
-String FragShaderSrc = 
-"varying vec4 vTexCoord;"
-"varying vec4 position;"
-"uniform sampler3D texture1;"
-"uniform sampler3D texture2;"
-" "
-"void main (void)"
-"{"
-"	vec3 texCoord = vTexCoord.xyz;"
-"	vec4 tex = texture3D(texture1, texCoord);"
+	return theResult;
+}
 
-"	vec4 n = (texture3D(texture2, texCoord) - vec4(0.5, 0.5, 0.5, 0.0));"
-"	vec3 v = vec3( position );"
-"   vec3 Lp = vec3( gl_ModelViewMatrix * vec4(5, 10,-10, 1) );"
-"	vec3 l = normalize( Lp - v );"
 
-"	float lDot = l.x*n.x + l.y*n.y + l.z*n.z;"
-"		  lDot = lDot * 2.2 + 0.2;"
 
-"   vec4 finalCol = vec4( lDot * tex.r, lDot * tex.g, lDot * tex.b, tex.a);"
-"	finalCol = clamp(finalCol, 0.0, 1.0);"
-
-"	gl_FragColor = finalCol; "
-"}";
-//*/
 
 
 ShaderProgram myShader;
-
 void ShaderTest()
 {		
 	ShaderPtr vertShader	= new Shader();
 	ShaderPtr fragShader	= new Shader();
 
-	vertShader->CompileString( Shader::ST_VERTEX,		VertShaderSrc );
-	fragShader->CompileString( Shader::ST_FRAGMENT,	FragShaderSrc );
+	String vertShaderSrc = ReadFile( "../../data/Lighting.vert");
+	String fragShaderSrc = ReadFile( "../../data/Lighting.frag");
+
+	vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc );
+	fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc );
 
 	myShader.AttachShader( vertShader );
 	myShader.AttachShader( fragShader );
 
 	myShader.Link();
 }
+
+ShaderProgram myNormalShader;
+void NormalTest()
+{		
+	ShaderPtr vertShader	= new Shader();
+	ShaderPtr fragShader	= new Shader();
+
+	String vertShaderSrc = ReadFile( "../../data/Lighting.vert");
+	String fragShaderSrc = ReadFile( "../../data/Normal.frag");
+
+	if( !vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc ) )
+	{
+		std::cout << vertShader->GetInfoLog() << std::endl;
+	}
+
+	if( !fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc ) )
+	{
+		std::cout << fragShader->GetInfoLog() << std::endl;
+	};
+
+
+	myNormalShader.AttachShader( vertShader );
+	myNormalShader.AttachShader( fragShader );
+
+	myNormalShader.Link();
+}
+
 
 
 
@@ -287,6 +282,9 @@ void GenerateBricks( VolumeData &vol )
 }
 
 
+Eigen::Vector4f lightPos;
+
+
 int main(int argc, char* args[])
 {
 	if ( argc > 1   &&   strcmp("-test", args[1])==0 )
@@ -310,10 +308,16 @@ int main(int argc, char* args[])
 		printGLStats();
 
 		ShaderTest();
+		NormalTest();
 
-		VolumeData vol;
+		VolumeData vol[3];
 
-		GenerateBricks( vol );
+		GenerateBricks( vol[0] );
+		LoadVolumeFromFile(vol[1], "../../data/test.png");
+		LoadHead( vol[2] );
+		int modelId = 0;
+
+		//GenerateBricks( vol );
 		//LoadVolumeFromFile(vol, "../../data/test.png");
 		//LoadHead( vol );
 
@@ -322,7 +326,10 @@ int main(int argc, char* args[])
 		TexMapVolumeRendererNode* texNode = 
 			(TexMapVolumeRendererNode*) volumeNode;
 
-		volumeNode->SetVolumeData( &vol );
+		volumeNode->SetVolumeData( &vol[0] );
+
+
+		texNode->showNorm = 0;
 
 		//texNode->SetLighting( true );
 
@@ -363,6 +370,18 @@ int main(int argc, char* args[])
 							bool light = texNode->GetLighting();
 							texNode->SetLighting( !light );
 						}
+						if( theEvent.key.code == sf::Keyboard::M )
+						{
+							modelId++;
+							modelId%=3;
+							
+							texNode->SetVolumeData( &vol[modelId] );
+						}
+						if( theEvent.key.code == sf::Keyboard::N )
+						{
+							texNode->showNorm++;
+						}
+						
 					break;
 				}
 			}
@@ -397,10 +416,28 @@ int main(int argc, char* args[])
 			}
 
 
+
+			static float a = 0;
+			a += 0.01;
+			lightPos = Eigen::Vector4f( 100*sin(a), 180*cos(a), 34*sin(a), 0 );
+			lightPos.normalize();
+			glLightfv(GL_LIGHT0, GL_POSITION, lightPos.data() );
+
+
+
 			// Clear the screen
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+			/*
 			//glUseProgram( myShader );
+			myNormalShader.Use();
+			myNormalShader.GetUniform("texture1").SetInt(0);
+			myNormalShader.GetUniform("res").SetVec3Float( 
+				1.0f/vol.GetWidth(), 
+				1.0f/vol.GetHeight(), 
+				1.0f/vol.GetDepth() );			
+			*/
+
 			renderer->Render();
 		
 			theWindow.display();
