@@ -77,8 +77,7 @@ bool ShaderProgram::IsLinked() const
 
 	if( mProgram )
 	{
-		glGetObjectParameterivARB( mProgram, GL_LINK_STATUS, &linked );
-		
+		glGetObjectParameterivARB( mProgram, GL_LINK_STATUS, &linked );		
 	}
 
 	return( linked!=0 );

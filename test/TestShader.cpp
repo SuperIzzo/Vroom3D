@@ -31,6 +31,8 @@ const String BROKEN_FragmentShader =
 "   }																	\n";
 
 
+
+
 SUITE( Shader )
 {
 	TEST_FIXTURE( GraphicsFixture, TEST_shader_should_initialize_to_invalid )
