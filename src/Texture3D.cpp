@@ -3,10 +3,18 @@
 //---------------------------------------
 #include "Texture3D.h"
 #include "GraphicsCommon.h"
-#include "GraphicsHardwareException.h"
 
 
 VROOM_BEGIN
+
+
+//=================================================================
+//	Local constants
+//---------------------------------------
+static const GLint   MIP_MAP_LEVEL_0	 = 0;
+
+
+
 
 
 //=================================================================
@@ -60,7 +68,7 @@ Texture3D::Texture3D() :
 Texture3D::Texture3D( const VolumeData &volume ) :
 	mTextureID( 0 )
 {
-	CreateFromVolume(volume);
+	Create(volume);
 }
 
 
@@ -141,12 +149,38 @@ void Texture3D::Destroy()
 
 
 //=================================================================
-//	Texture3D::CreateFromVolume
+//	Texture3D::Create
 //---------------------------------------
-void Texture3D::CreateFromVolume( const VolumeData &volume )
+void Texture3D::Create( const VolumeData &volume )
+{
+	CreateFromData( volume.GetWidth(),
+					volume.GetHeight(),
+					volume.GetDepth(),
+					(void*) volume.GetData() );
+}
+
+
+
+
+
+//=================================================================
+//	Texture3D::Create
+//---------------------------------------
+void Texture3D::Create( UInt32 width, UInt32 height, UInt32 depth )
+{
+	CreateFromData( width, height, depth, NULL );
+}
+
+
+
+
+
+//=================================================================
+//	Texture3D::CreateFromData
+//---------------------------------------
+void Texture3D::CreateFromData( UInt32 width, UInt32 height, UInt32 depth, void *data)
 {
 	const GLsizei NUMBER_OF_TEXTURES = 1;
-	const GLint   MIP_MAP_LEVEL_0	 = 0;
 	const GLint   BORDER_SIZE_0		 = 0;
 
 	// Reset our texture
@@ -159,22 +193,22 @@ void Texture3D::CreateFromVolume( const VolumeData &volume )
 		glGenTextures(NUMBER_OF_TEXTURES, &mTextureID);		
 		
 		SetSmooth( true );
-		SetWrapFunction( GL_CLAMP );		
+		SetWrapFunction( GL_REPEAT );		
 				
 		glTexImage3D(
 			GL_TEXTURE_3D, 
 			MIP_MAP_LEVEL_0, 
 			GL_RGBA8,
 
-			volume.GetWidth(), 
-			volume.GetHeight(),
-			volume.GetDepth(), 
+			width, 
+			height,
+			depth, 
 
 			BORDER_SIZE_0,
 
 			GL_RGBA, 
 			GL_UNSIGNED_BYTE, 
-			(GLvoid*) volume.GetData()
+			(GLvoid*) data
 		);
 	}
 	else
@@ -190,7 +224,7 @@ void Texture3D::CreateFromVolume( const VolumeData &volume )
 //=================================================================
 //	Texture3D::Bind
 //---------------------------------------
-bool Texture3D::Bind( UInt8 unit )
+bool Texture3D::Bind( UInt8 unit ) const
 {
 	GLenum theTextureUnit = TexUnits[unit];
 
@@ -207,7 +241,7 @@ bool Texture3D::Bind( UInt8 unit )
 //=================================================================
 //	Texture3D::Unbind
 //---------------------------------------
-bool Texture3D::Unbind( UInt8 unit )
+bool Texture3D::Unbind( UInt8 unit ) const
 {
 	GLenum theTextureUnit = TexUnits[unit];
 
@@ -227,6 +261,131 @@ bool Texture3D::Unbind( UInt8 unit )
 bool Texture3D::IsValid() const
 {
 	return( mTextureID>0 );
+}
+
+
+
+
+
+//=================================================================
+//	Texture3D::IsValid
+//---------------------------------------
+UInt32 Texture3D::__GetTextureID() const
+{
+	return mTextureID;
+}
+
+
+
+
+
+//=================================================================
+//	Texture3D::GetWidth
+//---------------------------------------
+UInt32 Texture3D::GetWidth() const
+{
+	GLint theWidth = 0;
+
+	if( Bind() )
+	{
+		glGetTexLevelParameteriv( 
+			GL_TEXTURE_3D, 
+			MIP_MAP_LEVEL_0, 
+			GL_TEXTURE_WIDTH, 
+			&theWidth 
+		);
+	}
+	
+	return theWidth;
+}
+
+
+
+
+
+//=================================================================
+//	Texture3D::GetHeight
+//---------------------------------------
+UInt32 Texture3D::GetHeight() const
+{
+	GLint theHeight = 0;
+
+	if( Bind() )
+	{
+		glGetTexLevelParameteriv( 
+			GL_TEXTURE_3D, 
+			MIP_MAP_LEVEL_0, 
+			GL_TEXTURE_HEIGHT, 
+			&theHeight 
+		);
+	}
+	
+	return theHeight;
+}
+
+
+
+
+
+//=================================================================
+//	Texture3D::GetDepth
+//---------------------------------------
+UInt32 Texture3D::GetDepth() const
+{
+	GLint theDepth = 0;
+
+	if( Bind() )
+	{
+		glGetTexLevelParameteriv( 
+			GL_TEXTURE_3D, 
+			MIP_MAP_LEVEL_0, 
+			GL_TEXTURE_DEPTH, 
+			&theDepth 
+		);
+	}
+	
+	return theDepth;
+}
+
+
+
+
+
+//=================================================================
+//	Texture3D::GetVolumeData
+//---------------------------------------
+void Texture3D::GetVolumeData(VolumeData &volume) const
+{
+	if( Bind() )
+	{
+		// Make sure our volume has correct data size
+		// we may have to recreate it
+		UInt32 ownWidth = GetWidth();
+		UInt32 ownHeight = GetHeight();
+		UInt32 ownDepth = GetWidth();
+
+		if( ownWidth != volume.GetWidth()
+			|| ownHeight != volume.GetHeight()
+			|| ownDepth != volume.GetDepth() )
+		{
+			volume.Create( ownWidth, ownHeight, ownDepth );
+		}
+
+
+		UInt8 *volumeData = volume.GetData();
+
+		glGetTexImage( 
+			GL_TEXTURE_3D, 
+			MIP_MAP_LEVEL_0,
+			GL_RGBA,
+			GL_UNSIGNED_BYTE,
+			(GLvoid*) volumeData 
+		);
+	}
+	else
+	{
+		throw InvalidStateException();
+	}
 }
 
 

@@ -8,6 +8,8 @@
 //---------------------------------------
 #include <VolumeData.h>
 #include <SharedPointer.h>
+#include <GraphicsHardwareException.h>
+#include <InvalidStateException.h>
 
 
 VROOM_BEGIN
@@ -22,18 +24,34 @@ public:
 							Texture3D();
 							Texture3D( const VolumeData &volume );
 
-	void					CreateFromVolume( const VolumeData &volume );
+	void					Create( const VolumeData &volume );
+	void					Create( UInt32 width, 
+									UInt32 height,
+									UInt32 depth );
 	void					Destroy();
 
-	bool					Bind( UInt8 unit = 0 );
-	bool					Unbind( UInt8 unit = 0 );
+	bool					Bind( UInt8 unit = 0 ) const;
+	bool					Unbind( UInt8 unit = 0 ) const;
 
 	bool					IsValid() const;
 
 	void					SetSmooth( bool smooth );
 	bool					IsSmooth() const;
 
+	UInt32					GetWidth() const;
+	UInt32					GetHeight() const;
+	UInt32					GetDepth() const;
+
+	void					GetVolumeData( VolumeData &volume ) const;
+
+	UInt32					__GetTextureID() const;
+
 private:
+	void					CreateFromData( UInt32 width, 
+											UInt32 height, 
+											UInt32 depth, 
+											void *data);
+
 	void					SetWrapFunction( int func );
 
 private:
