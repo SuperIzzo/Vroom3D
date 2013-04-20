@@ -13,7 +13,7 @@ VROOM_BEGIN
 Node::Node() :
 	mVolume( 0 )
 {
-	mTransform =  TransformType::Identity();
+	mTransform =  Matrix4::Identity();
 }
 
 
@@ -58,7 +58,7 @@ void Node::SetVolumeData( VolumeData *volume )
 //=================================================================
 //	Node::GetTransform
 //---------------------------------------
-Node::TransformType Node::GetTransform() const
+Matrix4 Node::GetTransform() const
 {
 	return mTransform;
 }
@@ -70,7 +70,7 @@ Node::TransformType Node::GetTransform() const
 //=================================================================
 //	Node::SetTransform
 //---------------------------------------
-void Node::SetTransform( const TransformType &transform )
+void Node::SetTransform( const Matrix4 &transform )
 {
 	mTransform = transform;
 }

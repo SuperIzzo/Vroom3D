@@ -2,8 +2,8 @@
 //	Inlude
 //---------------------------------------
 #include "TexMapVolumeRendererNode.h"
-#include "Texture3D.h"
-#include "VolumeData.h"
+
+#include "AABB.h"
 #include "ShaderProgram.h"
 #include "NormalMapGenerator.h"
 
@@ -282,10 +282,10 @@ bool TexMapVolumeRendererNode::GetLighting()
 //---------------------------------------
 void TexMapVolumeRendererNode::SetTransformMatrix()
 {
-	glPushMatrix();
+//	glPushMatrix();
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf( GetTransform().data() );
+//	glMatrixMode(GL_MODELVIEW);
+//	glLoadMatrixf( GetTransform().data() );
 }
 
 
@@ -297,7 +297,7 @@ void TexMapVolumeRendererNode::SetTransformMatrix()
 //---------------------------------------
 void TexMapVolumeRendererNode::UnsetTransformMatrix()
 {
-	glPopMatrix();
+//	glPopMatrix();
 }
 
 
@@ -305,7 +305,7 @@ void TexMapVolumeRendererNode::UnsetTransformMatrix()
 //=================================================================
 //	TexMapVolumeRendererNode::SetLightingMode
 //---------------------------------------
-void TexMapVolumeRendererNode::SetLightingMode()
+void TexMapVolumeRendererNode::SetLightingMode(const Vector3 &cameraDir)
 {
 	if( mLighting )
 	{
@@ -325,16 +325,25 @@ void TexMapVolumeRendererNode::SetLightingMode()
 			ShaderUniform tex1 = myShader.GetUniform( "texture1" );
 
 			if( tex1.IsValid() )
+			{
 				tex1.SetInt( 0 );
+			}
 			else
-				std::cout << "Waaaaa1" << std::endl;
+			{
+				std::cerr << "Shader uniform 'texture1' not found!" << std::endl;
+			}
+
 
 			ShaderUniform tex2 = myShader.GetUniform( "texture2" );
 
 			if( tex2.IsValid() )
+			{
 				tex2.SetInt( 1 );
+			}
 			else
-				std::cout << "Waaaaa2" << std::endl;		
+			{
+				std::cerr << "Shader uniform 'texture2' not found!" << std::endl;
+			}
 
 			ShaderUniform lm = myShader.GetUniform( "lightModel" );
 			lm.SetInt(mLighting);
@@ -343,6 +352,8 @@ void TexMapVolumeRendererNode::SetLightingMode()
 			ShaderUniform l = myShader.GetUniform( "l" );
 			l.SetVec3Float( lightPos.x(), lightPos.y(), lightPos.z() );
 
+			ShaderUniform h = myShader.GetUniform( "h" );
+			h.SetVec3Float( cameraDir.x(), cameraDir.y(), cameraDir.z() );
 		}
 	}
 }
@@ -380,7 +391,29 @@ void TexMapVolumeRendererNode::SetVolumeData( VolumeData *volume )
 
 
 
-//*
+
+//=================================================================
+//	TexMapVolumeRendererNode::Draw
+//---------------------------------------
+Texture3DPtr TexMapVolumeRendererNode::GetNormalMap( bool generate )
+{
+	if( generate && !mNormalMap && mTexture )
+	{
+		mNormalMap = NormalMapGenerator::Generate( *mTexture, NM_HARDWARE );
+
+		if( !mNormalMap )
+		{
+			NormalMapGenerator::Generate( *mTexture, NM_SOFTWARE );
+		}
+	}
+
+	return mNormalMap;
+}
+
+
+
+
+
 //=================================================================
 //	TexMapVolumeRendererNode::Draw
 //---------------------------------------
@@ -403,23 +436,11 @@ void TexMapVolumeRendererNode::Draw(const Vector3 &cameraDir)
 	}
 
 	BindTexture();
-	SetLightingMode();
+	SetLightingMode(cameraDir);
 
 	if( showNorm%3 == 1 && mNormalMap)
 	{
 		mNormalMap->Bind();
-	}
-
-	if( showNorm%3 == 2 )
-	{
-		extern ShaderProgram myNormalShader;
-		myNormalShader.Use();
-		myNormalShader.GetUniform("texture1").SetInt(0);
-		myNormalShader.GetUniform("res").SetVec3Float(
-			1.0f/mTexture->GetWidth(),
-			1.0f/mTexture->GetHeight(),
-			1.0f/mTexture->GetDepth()
-		);
 	}
 
 	for( int i= mNumSlices; i > 0; i-- )

@@ -6,8 +6,6 @@
 //=================================================================
 //	Inlude
 //---------------------------------------
-#include <Platform.h>
-#include <SharedPointer.h>
 #include <Shader.h>
 #include <ShaderUniform.h>
 #include <list>

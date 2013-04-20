@@ -21,6 +21,7 @@ using namespace Vroom;
 
 
 
+
 void LoadVolumeFromFile( VolumeData &vol, const char *fname )
 {	
 	sf::Image the3DImage;
@@ -214,8 +215,8 @@ void NormalTest()
 	ShaderPtr vertShader	= new Shader();
 	ShaderPtr fragShader	= new Shader();
 
-	String vertShaderSrc = ReadFile( "../../data/Lighting.vert");
-	String fragShaderSrc = ReadFile( "../../data/Normal.frag");
+	String vertShaderSrc = ReadFile( "../../data/NormalMap.vert");
+	String fragShaderSrc = ReadFile( "../../data/NormalMap.frag");
 
 	if( !vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc ) )
 	{
@@ -282,6 +283,33 @@ void GenerateBricks( VolumeData &vol )
 }
 
 
+TexMapVolumeRenderer *renderer;
+
+
+void UpdateCamera()
+{	 
+	static double angle = 0;
+	angle += 0.1;
+
+	Eigen::Transform<float,3, Eigen::Affine> transf;
+			
+	transf =	
+		(
+		Eigen::Translation3f( 0,0, -5 )
+					*
+		Eigen::AngleAxisf( (angle*0.002+30)/180.f*3.14f, Eigen::Vector3f(1,0,0) )
+					*	
+		Eigen::AngleAxisf( angle*10/180.f, Eigen::Vector3f(0,1,0) )
+					*
+		Eigen::Translation3f( -0.5, -0.5, -0.5)
+		);
+
+	renderer->GetCamera()->SetView( transf );
+}
+
+
+
+
 Eigen::Vector4f lightPos;
 
 
@@ -300,7 +328,9 @@ int main(int argc, char* args[])
 	else
 	{		
 		sf::RenderWindow theWindow( sf::VideoMode(640, 480), "Graphix Window" );
-		TexMapVolumeRenderer *renderer = new TexMapVolumeRenderer();
+		renderer = new TexMapVolumeRenderer();
+
+		renderer->GetCamera()->SetOrthographicProjection(-1, 1, -1, 1, 0, 100);
 
 		glewInit();
 
@@ -317,21 +347,19 @@ int main(int argc, char* args[])
 		LoadHead( vol[2] );
 		int modelId = 0;
 
-		//GenerateBricks( vol );
-		//LoadVolumeFromFile(vol, "../../data/test.png");
-		//LoadHead( vol );
-
 		Node * volumeNode = renderer->GetRootNode();
 
 		TexMapVolumeRendererNode* texNode = 
 			(TexMapVolumeRendererNode*) volumeNode;
 
 		volumeNode->SetVolumeData( &vol[0] );
-
+		
 
 		texNode->showNorm = 0;
 
-		//texNode->SetLighting( true );
+		
+		sf::Clock clock;
+		clock.restart();
 
 		while( theWindow.isOpen() )
 		{
@@ -428,23 +456,23 @@ int main(int argc, char* args[])
 			// Clear the screen
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			/*
-			//glUseProgram( myShader );
-			myNormalShader.Use();
-			myNormalShader.GetUniform("texture1").SetInt(0);
-			myNormalShader.GetUniform("res").SetVec3Float( 
-				1.0f/vol.GetWidth(), 
-				1.0f/vol.GetHeight(), 
-				1.0f/vol.GetDepth() );			
-			*/
+
+			UpdateCamera();
 
 			renderer->Render();
 		
 			theWindow.display();
+
+
+			// FPS stuff
+			{
+				sf::Time frameTime = clock.restart();
+				float fps = 1/frameTime.asSeconds();
+				std::cout << "FPS: " << fps << std::endl;
+			}
 		}
 
-//Undel
-//		delete renderer;
+		delete renderer;
 
 		return 0;
 	}

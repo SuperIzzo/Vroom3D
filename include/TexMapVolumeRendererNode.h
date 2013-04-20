@@ -7,9 +7,9 @@
 //	Inlude
 //---------------------------------------
 #include <Node.h>
-#include <Polygon.h>
-#include <vector>
 #include <Texture3D.h>
+
+#include <vector>
 
 
 VROOM_BEGIN
@@ -43,6 +43,8 @@ public:
 
 	void					SetVolumeData( VolumeData *volume );
 
+	Texture3DPtr			GetNormalMap( bool generate = false );
+
 	char					showNorm;
 
 protected:
@@ -55,7 +57,7 @@ private:
 	void					SetTransformMatrix();
 	void					UnsetTransformMatrix();
 
-	void					SetLightingMode();
+	void					SetLightingMode(const Vector3 &cameraDir);
 	void					UnsetLightingMode();
 
 private:

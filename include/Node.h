@@ -8,9 +8,8 @@
 //=================================================================
 //	Inlude
 //---------------------------------------
-#include <AABB.h>
 #include <VolumeData.h>
-#include <Eigen/Dense>
+#include <MathCommon.h>
 
 
 
@@ -23,7 +22,6 @@ VROOM_BEGIN
 class Node
 {
 public:
-	typedef Eigen::Matrix<Real,4,4>	TransformType;
 
 public:
 									Node();
@@ -32,14 +30,14 @@ public:
 	virtual void					SetVolumeData( VolumeData *volume );
 	virtual VolumeData			  *	GetVolumeData();
 
-	TransformType					GetTransform() const;
-	void							SetTransform( const TransformType &transf);
+	Matrix4							GetTransform() const;
+	void							SetTransform( const Matrix4 &transf);
 
 	// Eigen alignment operator
 	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 private:
-	TransformType					mTransform;
+	Matrix4							mTransform;
 
 	Node						  * mParent;
 	VolumeData					  * mVolume; 

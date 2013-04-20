@@ -148,7 +148,7 @@ SUITE( AABB )
 
 		Vector3 near;
 		Vector3 far;
-		aabb._GetNearAndFarCornersForDirection( direction, near, far );
+		aabb.__GetNearAndFarCornersForDirection( direction, near, far );
 
 		CHECK_EQUAL( Vector3( 0,5,0 ),		near );
 		CHECK_EQUAL( Vector3( 10,10,5 ),	far  );
@@ -157,7 +157,7 @@ SUITE( AABB )
 		direction << -1, 1, -1;
 		direction.normalize();
 
-		aabb._GetNearAndFarCornersForDirection( direction, near, far );
+		aabb.__GetNearAndFarCornersForDirection( direction, near, far );
 
 		CHECK_EQUAL( Vector3( 10,5,5 ),		near );
 		CHECK_EQUAL( Vector3( 0,10,0 ),		far  );
@@ -180,24 +180,6 @@ SUITE( AABB )
 		CheckPercentSlicing( planeDirectionEdge, 0 );
 		CheckPercentSlicing( planeDirectionEdge, 1 );
 	}
-
-/*
-	TEST_FIXTURE( FIXTURE_UnitBox, 
-		TEST_AABB_percentage_cut_side_0_and_1 )
-	{
-		// Cut in a direction from a side
-		Vector3 planeDirection(1,0,0);
-		planeDirection.normalize();
-
-		Polygon result = aabb.SliceByPercentage( planeDirection, 0 );
-
-		CHECK_EQUAL( 4,	result.GetVertexCount() );
-		
-		result = aabb.SliceByPercentage( planeDirection, 1 );
-
-		CHECK_EQUAL( 4,	result.GetVertexCount() );
-	}
-*/
 
 
 	TEST_FIXTURE( FIXTURE_UnitBoxPercentSlice, 

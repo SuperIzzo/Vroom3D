@@ -68,7 +68,7 @@ Polygon AABB::SliceByPercentage( Vector3 planeDir, Real percent )
 	if( percent > 0 && percent < 1 )
 	{
 		Vector3 closeBoxVertex, farBoxVertex;
-		_GetNearAndFarCornersForDirection( planeDir, closeBoxVertex, farBoxVertex );
+		__GetNearAndFarCornersForDirection( planeDir, closeBoxVertex, farBoxVertex );
 
 		Vector3 aabbSize = GetSize();
 
@@ -188,7 +188,7 @@ Polygon AABB::SliceByPercentage( Vector3 planeDir, Real percent )
 //=================================================================
 //	AABB::_GetNearAndFarDirectionCorners
 //---------------------------------------
-void AABB::_GetNearAndFarCornersForDirection(	Vector3 inDirection,
+void AABB::__GetNearAndFarCornersForDirection(	Vector3 inDirection,
 												Vector3 &outNear,
 												Vector3 &outFar )
 {

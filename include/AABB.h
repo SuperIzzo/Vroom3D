@@ -14,23 +14,30 @@
 VROOM_BEGIN
 
 
+//=================================================================
+//	Class AABB
+//---------------------------------------
 class AABB
 {
 public:
-							AABB(	const Vector3 &point1 = Vector3(0,0,0),
-									const Vector3 &point2 = Vector3(0,0,0) );
+						AABB(	const Vector3 &point1 = Vector3(0,0,0),
+								const Vector3 &point2 = Vector3(0,0,0) );
 							
-	const Vector3		  &	GetMinCorner();
-	const Vector3		  &	GetMaxCorner();
+	const Vector3	  &	GetMinCorner();
+	const Vector3	  &	GetMaxCorner();
 
-	Vector3					GetSize();
+	Vector3				GetSize();
 
-	void					_GetNearAndFarCornersForDirection( Vector3 inDirection,	Vector3 &outNear, Vector3 &outFar);
-	Polygon					SliceByPercentage( Vector3 inPlaneDir, Real inLocalPerc );
+	Polygon				SliceByPercentage( Vector3 inPlaneDir, Real inLocalPerc );
+
+	void				__GetNearAndFarCornersForDirection( 
+														Vector3 inDirection,
+														Vector3 &outNear,
+														Vector3 &outFar	);	
 
 private:
-	Vector3					mMinCorner;
-	Vector3					mMaxCorner;
+	Vector3				mMinCorner;
+	Vector3				mMaxCorner;
 };
 
 

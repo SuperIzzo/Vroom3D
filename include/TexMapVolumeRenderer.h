@@ -9,6 +9,8 @@
 //	Inlude
 //---------------------------------------
 #include <VolumeRenderer.h>
+#include <ShaderProgram.h>
+#include <Camera.h>
 #include <list>
 
 
@@ -36,13 +38,24 @@ public:
 	virtual Node *			GetRootNode();
 	virtual void			Render();
 
-private:
-	void					SetupRenderingState();
+	void					SetShaderProgram( ShaderProgramPtr shader );
+	ShaderProgramPtr		GetShaderProgram();
+
+	CameraPtr				GetCamera();					
 
 private:
 	typedef TexMapVolumeRendererNode NodeType;
 
+	void					SetupRenderingState();
+	void					SetupLighting();
+	void					SetupCamera();
+	void					RenderNode( NodeType *node );
+
+private:	
 	NodeType			  * mRootNode;
+	bool					mLightingEnabled;
+	ShaderProgramPtr		mShaderProgram;
+	CameraPtr				mCamera;
 };
 
 

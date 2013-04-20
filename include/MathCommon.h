@@ -18,7 +18,11 @@ VROOM_BEGIN
 //=================================================================
 //	Pulbic Definitions
 //---------------------------------------
-typedef Eigen::Vector3f		Vector3;
+typedef Eigen::Matrix<Real, 3,1,0,3,1>					Vector3;
+typedef Eigen::Matrix<Real, 4,1,0,4,1>					Vector4;
+typedef Eigen::Matrix<Real, 4,4,0,4,4>					Matrix4;
+typedef	Eigen::Transform<Real, 3, Eigen::Projective>	ProjectiveTransform;
+typedef	Eigen::Transform<Real, 3, Eigen::Affine>		AffineTransform;
 
 
 

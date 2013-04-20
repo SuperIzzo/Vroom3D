@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\src\AABB.cpp" />
+    <ClCompile Include="..\..\..\src\Camera.cpp" />
     <ClCompile Include="..\..\..\src\Color.cpp" />
     <ClCompile Include="..\..\..\src\GraphicsCommon.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
@@ -75,7 +76,8 @@
       <FileType>Document</FileType>
     </None>
     <None Include="..\..\..\data\Lighting.vert" />
-    <None Include="..\..\..\data\Normal.frag" />
+    <None Include="..\..\..\data\NormalMap.frag" />
+    <None Include="..\..\..\data\NormalMap.vert" />
     <None Include="..\..\..\docs\design\Discussion - 3D Texture Volumes.txt" />
     <None Include="..\..\..\docs\design\Discussion - Transforms and Cameras.txt" />
     <None Include="..\..\..\docs\design\Discussion - What exactly is the project.txt" />

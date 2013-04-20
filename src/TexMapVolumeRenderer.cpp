@@ -3,11 +3,11 @@
 //---------------------------------------
 #include "TexMapVolumeRenderer.h"
 #include "TexMapVolumeRendererNode.h"
+#include "GraphicsCommon.h"
 #include "AABB.h"
 
-#include <Windows.h>
-#include <gl/GL.h>
-#include <gl/GLU.h>
+#include <iostream>
+
 
 VROOM_BEGIN
 
@@ -16,8 +16,10 @@ VROOM_BEGIN
 //	TexMapVolumeRenderer::TexMapVolumeRenderer
 //---------------------------------------
 TexMapVolumeRenderer::TexMapVolumeRenderer() :
-	mRootNode(0)
+	mRootNode(0),
+	mLightingEnabled(0)
 {
+	mCamera = new Camera();
 }
 
 
@@ -54,6 +56,18 @@ Node * TexMapVolumeRenderer::GetRootNode()
 
 
 //=================================================================
+//	TexMapVolumeRenderer::GetCamera
+//---------------------------------------
+CameraPtr TexMapVolumeRenderer::GetCamera()
+{
+	return mCamera;
+}
+
+
+
+
+
+//=================================================================
 //	TexMapVolumeRenderer::SetupRenderingState
 //---------------------------------------
 void TexMapVolumeRenderer::SetupRenderingState()
@@ -66,68 +80,94 @@ void TexMapVolumeRenderer::SetupRenderingState()
 
 
 
-typedef Eigen::Matrix<Real, 4, 4>	Matrix4;
-Matrix4 OrthographicProjection( Real l, Real r, 
-								Real b, Real t,
-								Real n, Real f)
+
+
+
+//=================================================================
+//	TexMapVolumeRenderer::SetupLighting
+//---------------------------------------
+void TexMapVolumeRenderer::SetupLighting()
 {
-	// http://en.wikipedia.org/wiki/Orthographic_projection_(geometry)
+	if( mShaderProgram )
+	{		
+		mShaderProgram->Use();
 
-	Matrix4 mat;
-	
-	mat <<	2/(r - l), 0, 0, -(r+l)/(r-l),
-			0, 2/(t - b), 0, -(t+b)/(t-b),
-			0, 0, -2/(f - n), -(f+n)/(f-n),
-			0, 0, 0, 1;
+		ShaderUniform tex1 = mShaderProgram->GetUniform( "texture1" );
 
-	return mat;
+		if( tex1.IsValid() )
+		{
+			tex1.SetInt( 0 );
+		}
+		else
+		{
+			std::cerr << "Shader uniform 'texture1' not found!" << std::endl;
+		}
+
+
+		ShaderUniform tex2 = mShaderProgram->GetUniform( "texture2" );
+
+		if( tex2.IsValid() )
+		{
+			tex2.SetInt( 1 );
+		}
+		else
+		{
+			std::cerr << "Shader uniform 'texture2' not found!" << std::endl;
+		}
+
+		extern Eigen::Vector4f lightPos;
+
+
+		ShaderUniform l = mShaderProgram->GetUniform( "l" );
+		l.SetVec3Float( lightPos.x(), lightPos.y(), lightPos.z() );
+
+
+		Vector3 cameraDir = mCamera->GetForward();
+
+		ShaderUniform h = mShaderProgram->GetUniform( "h" );
+		h.SetVec3Float( cameraDir.x(), cameraDir.y(), cameraDir.z() );		
+	}
 }
 
 
-static Eigen::Vector3f cameraDir;
 
-void SetCamera()
+
+
+//=================================================================
+//	TexMapVolumeRenderer::SetupCamera
+//---------------------------------------
+void TexMapVolumeRenderer::SetupCamera()
 {
-	static double angle = 0;
-	angle += 0.1;
+	ProjectiveTransform proj = mCamera->GetProjection();
+	AffineTransform		view = mCamera->GetView();
 
-	Eigen::Transform<float,3, Eigen::Projective> transf;
-			
-	transf =	
-		(
-		Eigen::Translation3f( 0,0, -5 )
-					*
-		Eigen::AngleAxisf( (angle*0.002+30)/180.f*3.14f, Eigen::Vector3f(1,0,0) )
-					*	
-		Eigen::AngleAxisf( angle*10/180.f, Eigen::Vector3f(0,1,0) )
-					*
-		Eigen::Translation3f( -0.5, -0.5, -0.5)
-		);
-
-	transf = OrthographicProjection(-1, 1, -1, 1, 0, 100) * transf;
-
-	// Camera forward vector
-	Eigen::Vector4f homogenCamDir = transf.inverse() * Eigen::Vector4f(0,0, 1, 1);
-
-	cameraDir <<	homogenCamDir.x() / homogenCamDir.w(),
-					homogenCamDir.y() / homogenCamDir.w(),
-					homogenCamDir.z() / homogenCamDir.w();
 
 
 	// Do view transformations here...
 	glMatrixMode(GL_PROJECTION);
-	glLoadMatrixf( transf.data() );
-}
+	glLoadMatrixf( proj.data() );
 
 
-void Translate(float x, float y, float z)
-{
-	Eigen::Transform<float,3, Eigen::Affine> transf;
-	transf = Eigen::Translation3f( x, y, z);
-
+	// Set the view matrix
 	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf( transf.data() );
+	glLoadMatrixf( view.data() );
 }
+
+
+
+
+
+//=================================================================
+//	TexMapVolumeRenderer::RenderNode
+//---------------------------------------
+void TexMapVolumeRenderer::RenderNode( NodeType *node )
+{
+	node->Draw( mCamera->GetForward() );
+}
+
+
+
+
 
 //=================================================================
 //	TexMapVolumeRenderer::Render
@@ -138,11 +178,13 @@ void TexMapVolumeRenderer::Render()
 	SetupRenderingState();
 
 	// Setup camera
-	SetCamera();
+	SetupCamera();
 
-	Translate(0,0,0);
+	// Illuminate the scene
+	SetupLighting();
+
 	// Draw nodes
-	mRootNode->Draw(cameraDir);
+	RenderNode( mRootNode );	
 }
 
 

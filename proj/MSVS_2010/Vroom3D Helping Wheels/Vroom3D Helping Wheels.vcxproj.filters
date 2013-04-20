@@ -141,6 +141,9 @@
     <ClCompile Include="..\..\..\src\NormalMapGenerator.cpp">
       <Filter>src\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\src\Camera.cpp">
+      <Filter>src\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\Platform.h">
@@ -250,7 +253,10 @@
     <None Include="..\..\..\data\Lighting.frag">
       <Filter>src\Shaders</Filter>
     </None>
-    <None Include="..\..\..\data\Normal.frag">
+    <None Include="..\..\..\data\NormalMap.vert">
+      <Filter>src\Shaders</Filter>
+    </None>
+    <None Include="..\..\..\data\NormalMap.frag">
       <Filter>src\Shaders</Filter>
     </None>
   </ItemGroup>

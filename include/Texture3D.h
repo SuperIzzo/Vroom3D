@@ -7,7 +7,6 @@
 //	Inlude
 //---------------------------------------
 #include <VolumeData.h>
-#include <SharedPointer.h>
 #include <GraphicsHardwareException.h>
 #include <InvalidStateException.h>
 
