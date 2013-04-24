@@ -41,9 +41,11 @@ ShaderProgram::~ShaderProgram()
 //---------------------------------------
 void ShaderProgram::Destroy()
 {
-	glDeleteProgram( mProgram );
-	
-	mProgram = 0;
+	if( mProgram )
+	{
+		glDeleteProgram( mProgram );	
+		mProgram = 0;
+	}
 
 	// Detach shaders
 	mShaders.clear();

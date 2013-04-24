@@ -22,23 +22,22 @@ static Vector3 NormalMapPlusKernel(const VolumeData &vol, UInt32 x, UInt32 y, UI
 
 	if( voxel.alpha > 10 )
 	{
-		for(float i= -1.0; i<=1.0; i+= 2.0)
+		for(int i= -1; i<=1; i+= 2)
 		{
 			if( x+i > 0 &&	x+i< vol.GetWidth()-1 )
-				normalDir.x() += i * vol.GetVoxel( x+i, y, z ).alpha/255.0;
+				normalDir.x() += i * vol.GetVoxel( x+i, y, z ).alpha;
 
 			if( y+i > 0 &&	y+i< vol.GetHeight()-1 )
-				normalDir.y() += i * vol.GetVoxel( x, y+i, z ).alpha/255.0;
+				normalDir.y() += i * vol.GetVoxel( x, y+i, z ).alpha;
 
 			if( z+i > 0 &&	z+i< vol.GetWidth()-1 )
-				normalDir.x() += i * vol.GetVoxel( x, y, z+i ).alpha/255.0;
+				normalDir.z() += i * vol.GetVoxel( x, y, z+i ).alpha;
 		}
 
 		float normLen = normalDir.norm();
 		if( normLen > 0.0 )
 		{
-			normalDir /= normLen*2.0;
-			normalDir += Vector3(0.5, 0.5, 0.5);
+			normalDir /= normLen;
 		}
 	}
 
@@ -88,7 +87,7 @@ static Vector3 NormalMapCubeKernel(const VolumeData &vol, UInt32 x, UInt32 y, UI
 	if( direction.nonZeros() )
 		direction.normalize();
 
-	return -direction;
+	return direction;
 }
 
 
@@ -115,7 +114,8 @@ Texture3DPtr NormalMapGenerator::Generate( Texture3D &texture, UInt32 flags )
 			normalMapTexture = GenerateHWOpaque(texture, quality);
 		}
 	}
-	else
+
+	if( !normalMapTexture ) 
 	{
 		if( flags & NM_TRANSPARENT )
 		{
@@ -193,11 +193,18 @@ VolumeDataPtr NormalMapGenerator::GenerateSWOpaque( VolumeData &volume,
 
 
 //=================================================================
-//	NormalMapGenerator::GenerateSWOpaque
+//	NormalMapGenerator::GenerateHWOpaque
 //---------------------------------------
 Texture3DPtr NormalMapGenerator::GenerateHWOpaque(	Texture3D &texture,
 													NMQualityEnum quality )
 {
+	// Sany check - are framebuffers supported
+	if( !(glGenFramebuffers && glFramebufferTextureLayer) )
+	{
+		return 0;
+	}
+
+
 	Texture3DPtr normalMapTex = new Texture3D();
 	normalMapTex->Create(
 		texture.GetWidth(),
@@ -205,7 +212,7 @@ Texture3DPtr NormalMapGenerator::GenerateHWOpaque(	Texture3D &texture,
 		texture.GetDepth()
 	);	
 	
-	GLuint theFBO;
+	GLuint theFBO = 0;
 	glGenFramebuffers(1, &theFBO);
 
 	extern ShaderProgram myNormalShader;

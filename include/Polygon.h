@@ -15,6 +15,9 @@
 VROOM_BEGIN
 
 
+//=================================================================
+//	Class Polygon
+//---------------------------------------
 class Polygon
 {
 public:
@@ -29,6 +32,15 @@ public:
 private:
 	std::vector<Vector3>	mVertices;
 };
+
+
+
+
+
+//=================================================================
+//	Type PolygonList
+//---------------------------------------
+typedef std::vector<Polygon>	PolygonList;
 
 
 VROOM_END

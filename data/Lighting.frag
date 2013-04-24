@@ -15,12 +15,14 @@ void main (void)
 	vec4 n = (texture3D(texture2, texCoord) - vec4(0.5, 0.5, 0.5, 0.0));
 	vec3 v = vec3( position );
 
+	n = normalize(n);
+
 	float lnDot = l.x*n.x + l.y*n.y + l.z*n.z;	
 	float hnDot = h.x*n.x + h.y*n.y + h.z*n.z;
 
 	// we have to multiply the dot by 2 because n was halfsized
-	lnDot = clamp(lnDot*2.0, -1.0, 1.0);
-	hnDot = clamp(hnDot*2.0, -1.0, 1.0);	
+	lnDot = clamp(lnDot, -1.0, 1.0);
+	hnDot = clamp(hnDot, -1.0, 1.0);
 
 	float k_s = 1;
 	float I = lnDot + k_s * pow(hnDot,7)   + 0.2;

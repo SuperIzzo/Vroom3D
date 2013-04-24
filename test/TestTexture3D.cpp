@@ -1,4 +1,4 @@
-#include <Texture3D.h>
+﻿#include <Texture3D.h>
 #include "GraphicsFixture.h"
 
 #include <UnitTest++.h>
@@ -17,10 +17,16 @@ SUITE( Texture3D )
 		Texture3D texture;
 
 		CHECK_NOT( texture.IsValid() );
+		CHECK_EQUAL( 0,	glGetError() );
 
 		CHECK_EQUAL( 0,	texture.GetWidth()	);
+		CHECK_EQUAL( 0,	glGetError() );
+
 		CHECK_EQUAL( 0,	texture.GetHeight() );
+		CHECK_EQUAL( 0,	glGetError() );
+
 		CHECK_EQUAL( 0,	texture.GetDepth()	);
+		CHECK_EQUAL( 0,	glGetError() );
 	}
 
 
@@ -29,11 +35,19 @@ SUITE( Texture3D )
 		Texture3D texture;		
 
 		texture.Create( 32, 16, 8 );
+		CHECK_EQUAL( 0,	glGetError() );
 
 		CHECK( texture.IsValid() );
+		CHECK_EQUAL( 0,	glGetError() );
+
 		CHECK_EQUAL( 32,	texture.GetWidth()	);
+		CHECK_EQUAL( 0,	glGetError() );
+
 		CHECK_EQUAL( 16,	texture.GetHeight() );
+		CHECK_EQUAL( 0,	glGetError() );
+
 		CHECK_EQUAL( 8,		texture.GetDepth()	);
+		CHECK_EQUAL( 0,	glGetError() );
 	}
 
 
@@ -41,13 +55,23 @@ SUITE( Texture3D )
 	{
 		Texture3D texture;
 
-		texture.Create( 32, 16, 8 );
-		texture.Create( 128, 256, 64 );
+
+		texture.Create( 32, 16, 8 );		
+		texture.Create( 128, 32, 64 );
+		CHECK_EQUAL( 0,	glGetError() );
+
 
 		CHECK( texture.IsValid() );
+		CHECK_EQUAL( 0,	glGetError() );
+
 		CHECK_EQUAL( 128,	texture.GetWidth()	);
-		CHECK_EQUAL( 256,	texture.GetHeight() );
+		CHECK_EQUAL( 0,	glGetError() );
+
+		CHECK_EQUAL( 32,	texture.GetHeight() );
+		CHECK_EQUAL( 0,	glGetError() );
+
 		CHECK_EQUAL( 64,	texture.GetDepth()	);
+		CHECK_EQUAL( 0,	glGetError() );
 	}
 
 

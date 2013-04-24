@@ -143,7 +143,7 @@ static void DrawPolygonFill( const Polygon &poly )
 //---------------------------------------
 TexMapVolumeRendererNode::TexMapVolumeRendererNode() :
 	mTexture( 0 ),
-	mNumSlices( 100 ),
+	mNumSlices( 200 ),
 	mSpacingExponent( 1 ),
 	mDebugFlags( 0 ),
 	mNormalMap( 0 ),
@@ -311,7 +311,7 @@ void TexMapVolumeRendererNode::SetLightingMode(const Vector3 &cameraDir)
 	{
 		if( !mNormalMap )
 		{
-			mNormalMap = NormalMapGenerator::Generate( *mTexture, NM_HARDWARE );
+			mNormalMap = NormalMapGenerator::Generate( *mTexture, NM_HARDWARE | NM_QUALITY_POOR );
 		}
 
 		if( mNormalMap )
@@ -423,43 +423,54 @@ void TexMapVolumeRendererNode::Draw(const Vector3 &cameraDir)
 	Vector3		maxP(1,1,1);
 	AABB		box(minP, maxP);
 
-
 	// Tranformation matrix
 	SetTransformMatrix();
 
+	// Initialize rendering state
 	glUseProgram( 0 );
 	glBindTexture( GL_TEXTURE_3D, 0 );
 
+	// Draw the volume bounding box
 	if( mDebugFlags & DBG_DRAW_BBOX )
 	{
 		DrawBox( minP, maxP );
 	}
 
+	// Draw the polygonOutline
+	if( mDebugFlags & DBG_DRAW_SLICES )
+	{	
+		for( int slice= mNumSlices; slice > 0; slice-- )
+		{
+			Real perc = (Real) slice/(mNumSlices+1);
+			perc = pow( perc, (Real) mSpacingExponent );
+
+			Polygon poly = box.SliceByPercentage( cameraDir, perc );
+			DrawPolygon( poly );
+		}
+	}
+
+	// Setup rendering state
 	BindTexture();
 	SetLightingMode(cameraDir);
 
+	// Use normal map instead of color
 	if( showNorm%3 == 1 && mNormalMap)
 	{
 		mNormalMap->Bind();
 	}
+	
 
-	for( int i= mNumSlices; i > 0; i-- )
+	// Render Volume
+	for( int slice= mNumSlices; slice > 0; slice-- )
 	{
-		Real perc = (Real) i/(mNumSlices+1);
+		Real perc = (Real) slice/(mNumSlices+1);
 		perc = pow( perc, (Real) mSpacingExponent );
 
-
 		Polygon poly = box.SliceByPercentage( cameraDir, perc );
-
-		// Draw the polygonOutline
-		if( mDebugFlags & DBG_DRAW_SLICES )
-		{
-			DrawPolygon( poly );
-		}		
-
 		DrawPolygonFill( poly );
 	}
 
+	// Unset rendering state
 	UnsetLightingMode();
 	mTexture->Unbind();
 
