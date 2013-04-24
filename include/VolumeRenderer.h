@@ -1,5 +1,5 @@
-#ifndef __VROOM_VOLUME_RENDERER_H__
-#define __VROOM_VOLUME_RENDERER_H__
+#ifndef __VROOM_TEXMAP_VOLUME_RENDERER_H__
+#define __VROOM_TEXMAP_VOLUME_RENDERER_H__
 
 
 
@@ -8,7 +8,9 @@
 //=================================================================
 //	Inlude
 //---------------------------------------
-#include <Platform.h>
+#include <ShaderProgram.h>
+#include <Camera.h>
+#include <list>
 
 
 VROOM_BEGIN
@@ -17,7 +19,8 @@ VROOM_BEGIN
 //=================================================================
 //	Forward Declarations
 //---------------------------------------
-class Node;
+class RenderNode;
+
 
 
 
@@ -28,10 +31,28 @@ class Node;
 class VolumeRenderer
 {
 public:
-	virtual					~VolumeRenderer() {};
+							VolumeRenderer();
+	virtual					~VolumeRenderer();
 
-	virtual Node *			GetRootNode() = 0;
-	virtual void			Render() = 0;
+	virtual RenderNode *	GetRootNode();
+	virtual void			Render();
+
+	void					SetShaderProgram( ShaderProgramPtr shader );
+	ShaderProgramPtr		GetShaderProgram();
+
+	CameraPtr				GetCamera();					
+
+private:
+	void					SetupRenderingState();
+	void					SetupLighting();
+	void					SetupCamera();
+	void					DrawNode( RenderNode *node );
+
+private:	
+	RenderNode			  * mRootNode;
+	bool					mLightingEnabled;
+	ShaderProgramPtr		mShaderProgram;
+	CameraPtr				mCamera;
 };
 
 

@@ -16,14 +16,13 @@
     <ClCompile Include="..\..\..\src\Color.cpp" />
     <ClCompile Include="..\..\..\src\GraphicsCommon.cpp" />
     <ClCompile Include="..\..\..\src\main.cpp" />
-    <ClCompile Include="..\..\..\src\Node.cpp" />
     <ClCompile Include="..\..\..\src\NormalMapGenerator.cpp" />
     <ClCompile Include="..\..\..\src\Polygon.cpp" />
     <ClCompile Include="..\..\..\src\Shader.cpp" />
     <ClCompile Include="..\..\..\src\ShaderProgram.cpp" />
     <ClCompile Include="..\..\..\src\ShaderUniform.cpp" />
-    <ClCompile Include="..\..\..\src\TexMapVolumeRenderer.cpp" />
-    <ClCompile Include="..\..\..\src\TexMapVolumeRendererNode.cpp" />
+    <ClCompile Include="..\..\..\src\VolumeRenderer.cpp" />
+    <ClCompile Include="..\..\..\src\RenderNode.cpp" />
     <ClCompile Include="..\..\..\src\Texture3D.cpp" />
     <ClCompile Include="..\..\..\src\VolumeData.cpp" />
     <ClCompile Include="..\..\..\src\XMLDocument.cpp" />
@@ -31,7 +30,6 @@
     <ClCompile Include="..\..\..\test\TestAABB.cpp" />
     <ClCompile Include="..\..\..\test\GraphicsFixture.cpp" />
     <ClCompile Include="..\..\..\test\TestingDataGenerator.cpp" />
-    <ClCompile Include="..\..\..\test\TestNode.cpp" />
     <ClCompile Include="..\..\..\test\TestPolygon.cpp" />
     <ClCompile Include="..\..\..\test\TestShader.cpp" />
     <ClCompile Include="..\..\..\test\TestShaderProgram.cpp" />
@@ -50,7 +48,6 @@
     <ClInclude Include="..\..\..\include\InvalidArgumentException.h" />
     <ClInclude Include="..\..\..\include\InvalidStateException.h" />
     <ClInclude Include="..\..\..\include\MathCommon.h" />
-    <ClInclude Include="..\..\..\include\Node.h" />
     <ClInclude Include="..\..\..\include\NormalMapGenerator.h" />
     <ClInclude Include="..\..\..\include\Platform.h" />
     <ClInclude Include="..\..\..\include\Polygon.h" />
@@ -58,11 +55,10 @@
     <ClInclude Include="..\..\..\include\ShaderProgram.h" />
     <ClInclude Include="..\..\..\include\ShaderUniform.h" />
     <ClInclude Include="..\..\..\include\SharedPointer.h" />
-    <ClInclude Include="..\..\..\include\TexMapVolumeRendererNode.h" />
-    <ClInclude Include="..\..\..\include\TexMapVolumeRenderer.h" />
+    <ClInclude Include="..\..\..\include\RenderNode.h" />
+    <ClInclude Include="..\..\..\include\VolumeRenderer.h" />
     <ClInclude Include="..\..\..\include\Texture3D.h" />
     <ClInclude Include="..\..\..\include\VolumeData.h" />
-    <ClInclude Include="..\..\..\include\VolumeRenderer.h" />
     <ClInclude Include="..\..\..\include\XMLDocument.h" />
     <ClInclude Include="..\..\..\include\XMLNode.h" />
     <ClInclude Include="..\..\..\test\MoreUnitTest++\MoreChecks.h" />

@@ -1,4 +1,4 @@
-#include <TexMapVolumeRenderer.h>
+#include <VolumeRenderer.h>
 #include <UnitTest++.h>
 #include <MoreUnitTest++.h>
 
@@ -6,14 +6,14 @@
 using namespace Vroom;
 
 
-SUITE( TexMapVolumeRenderer )
+SUITE( VolumeRenderer )
 {
 	TEST( TEST_texmap_renderer_returns_the_root_rendering_node )
 	{
-		TexMapVolumeRenderer renderer;
+		VolumeRenderer renderer;
 
-		Node *node1 = renderer.GetRootNode();
-		Node *node2 = renderer.GetRootNode();
+		RenderNode *node1 = renderer.GetRootNode();
+		RenderNode *node2 = renderer.GetRootNode();
 
 		CHECK_NOT_NULL( node1 );
 		CHECK_EQUAL( node1, node2 );

@@ -6,7 +6,8 @@
 //=================================================================
 //	Inlude
 //---------------------------------------
-#include <Node.h>
+#include <VolumeData.h>
+#include <MathCommon.h>
 #include <Texture3D.h>
 
 #include <vector>
@@ -16,12 +17,12 @@ VROOM_BEGIN
 
 
 //=================================================================
-//	Class TexMapVolumeRendererNode
+//	Class RenderNode
 //---------------------------------------
-class TexMapVolumeRendererNode : public Node
+class RenderNode
 {
 public:
-	friend class TexMapVolumeRenderer;
+	friend class VolumeRenderer;
 
 	enum DebugFlags {
 			DBG_DRAW_BBOX		= 0x0001,
@@ -41,14 +42,17 @@ public:
 	void					SetLighting( bool enable );
 	bool					GetLighting();
 
-	void					SetVolumeData( VolumeData *volume );
+	void					SetVolumeData( VolumeData &volume );
 
 	Texture3DPtr			GetNormalMap( bool generate = false );
+
+	Matrix4					GetTransform() const;
+	void					SetTransform( const Matrix4 &transf);
 
 	char					showNorm;
 
 protected:
-							TexMapVolumeRendererNode();
+							RenderNode();
 	void					Draw(const Vector3 &cameraDir);
 
 private:
@@ -60,6 +64,9 @@ private:
 	void					SetLightingMode(const Vector3 &cameraDir);
 	void					UnsetLightingMode();
 
+	// Eigen alignment operator
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
 private:
 	UInt32					mDebugFlags;
 	Texture3D			  *	mTexture;
@@ -67,6 +74,7 @@ private:
 
 	UInt32					mNumSlices;
 	Real					mSpacingExponent;
+	Matrix4					mTransform;
 
 	bool					mLighting;
 };
