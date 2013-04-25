@@ -24,8 +24,8 @@ void main (void)
 	lnDot = clamp(lnDot, -1.0, 1.0);
 	hnDot = clamp(hnDot, -1.0, 1.0);
 
-	float k_s = 1;
-	float I = lnDot + k_s * pow(hnDot,7)   + 0.2;
+	float k_s = 1.0;
+	float I = lnDot + k_s * pow(hnDot,7.0)   + 0.2;
 	
 	vec4 finalCol;
 	if( lightModel == 1 ) 
