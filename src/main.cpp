@@ -1,9 +1,33 @@
+/*ZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZ*\
+Z|                                                                           |Z
+Z|  Copyright (c) 2013   Hristoz S. Stefanov                                 |Z
+Z|                                                                           |Z
+Z|  Permission is hereby granted, free of charge, to any person              |Z
+Z|  obtaining a copy of this software and associated documentation files     |Z
+Z|  (the "Software"), to deal in the Software without restriction,           |Z
+Z|  including without limitation the rights to use, copy, modify, merge,     |Z
+Z|  publish, distribute, sublicense, and/or sell copies of the Software,     |Z
+Z|  and to permit persons to whom the Software is furnished to do so,        |Z
+Z|  subject to the following conditions:                                     |Z
+Z|                                                                           |Z
+Z|  The above copyright notice and this permission notice shall be included  |Z
+Z|  in all copies or substantial portions of the Software.                   |Z
+Z|                                                                           |Z
+Z|  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS  |Z
+Z|  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF               |Z
+Z|  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.   |Z
+Z|  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY     |Z
+Z|  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,     |Z
+Z|  TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE        |Z
+Z|  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                   |Z
+Z|                                                                           |Z
+\*ZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZNZ*/
+
 #include <UnitTest++.h>
 #include <cstdio>
 
-#include <TexMapVolumeRenderer.h>
-#include <TexMapVolumeRendererNode.h>
-#include <Node.h>
+#include <VolumeRenderer.h>
+#include <RenderNode.h>
 #include <ShaderProgram.h>
 
 #include <gl/glew.h>
@@ -12,8 +36,6 @@
 
 #include <fstream>
 #include <iostream>
-
-//#include <GLX/glext.h>
 
 #include <XMLDocument.h>
 
@@ -203,6 +225,18 @@ void ShaderTest()
 	vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc );
 	fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc );
 
+
+	if( !vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc ) )
+	{
+		std::cout << vertShader->GetInfoLog() << std::endl;
+	}
+
+	if( !fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc ) )
+	{
+		std::cout << fragShader->GetInfoLog() << std::endl;
+	};
+
+
 	myShader.AttachShader( vertShader );
 	myShader.AttachShader( fragShader );
 
@@ -283,13 +317,14 @@ void GenerateBricks( VolumeData &vol )
 }
 
 
-TexMapVolumeRenderer *renderer;
+VolumeRenderer *renderer;
 
 
 void UpdateCamera()
 {	 
 	static double angle = 0;
 	angle += 0.1;
+	//double angle = 100;
 
 	Eigen::Transform<float,3, Eigen::Affine> transf;
 			
@@ -328,7 +363,7 @@ int main(int argc, char* args[])
 	else
 	{		
 		sf::RenderWindow theWindow( sf::VideoMode(640, 480), "Graphix Window" );
-		renderer = new TexMapVolumeRenderer();
+		renderer = new VolumeRenderer();
 
 		renderer->GetCamera()->SetOrthographicProjection(-1, 1, -1, 1, 0, 100);
 
@@ -347,12 +382,10 @@ int main(int argc, char* args[])
 		LoadHead( vol[2] );
 		int modelId = 0;
 
-		Node * volumeNode = renderer->GetRootNode();
 
-		TexMapVolumeRendererNode* texNode = 
-			(TexMapVolumeRendererNode*) volumeNode;
+		RenderNode * texNode = renderer->GetRootNode();
 
-		volumeNode->SetVolumeData( &vol[0] );
+		texNode->SetVolumeData( vol[0] );
 		
 
 		texNode->showNorm = 0;
@@ -382,14 +415,14 @@ int main(int argc, char* args[])
 						if( theEvent.key.code == sf::Keyboard::S ) 
 						{
 							int debugFlags = texNode->GetDebugFlags()
-								^ TexMapVolumeRendererNode::DBG_DRAW_SLICES;
+								^ RenderNode::DBG_DRAW_SLICES;
 
 							texNode->SetDebugFlags( debugFlags );
 						}
 						if( theEvent.key.code == sf::Keyboard::B ) 
 						{
 							int debugFlags = texNode->GetDebugFlags()
-								^ TexMapVolumeRendererNode::DBG_DRAW_BBOX;
+								^ RenderNode::DBG_DRAW_BBOX;
 
 							texNode->SetDebugFlags( debugFlags );
 						}
@@ -403,7 +436,7 @@ int main(int argc, char* args[])
 							modelId++;
 							modelId%=3;
 							
-							texNode->SetVolumeData( &vol[modelId] );
+							texNode->SetVolumeData( vol[modelId] );
 						}
 						if( theEvent.key.code == sf::Keyboard::N )
 						{
