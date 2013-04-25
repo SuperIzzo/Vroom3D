@@ -68,10 +68,17 @@ Shader::~Shader()
 //---------------------------------------
 void Shader::CreateShader(ShaderType shaderType)
 {
-	GLenum	glShaderType = GLShaderTypes( shaderType );
-
+	// Sanity check
+	if( !glCreateShader )
+	{
+		throw GraphicsHardwareException( "Shaders not supported." );
+	}
+	
+	// Reset
 	Destroy();
 
+	// Create a new shader
+	GLenum	glShaderType = GLShaderTypes( shaderType );
 	mShader	= glCreateShader( glShaderType );
 
 	if( !mShader )
@@ -89,8 +96,11 @@ void Shader::CreateShader(ShaderType shaderType)
 //---------------------------------------
 void Shader::Destroy()
 {
-	glDeleteShader( mShader );
-	mShader = 0;
+	if( mShader )
+	{
+		glDeleteShader( mShader );
+		mShader = 0;
+	}
 }
 
 
