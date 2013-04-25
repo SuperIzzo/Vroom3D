@@ -76,6 +76,18 @@ Texture3D::Texture3D( const VolumeData &volume ) :
 
 
 //=================================================================
+//	Texture3D::~Texture3D
+//---------------------------------------
+Texture3D::~Texture3D()
+{
+	Destroy();
+}
+
+
+
+
+
+//=================================================================
 //	Texture3D::SetSmooth
 //---------------------------------------
 void Texture3D::SetSmooth( bool smooth )
@@ -138,10 +150,13 @@ void Texture3D::SetWrapFunction( int func )
 //---------------------------------------
 void Texture3D::Destroy()
 {
-	const GLsizei NUMBER_OF_TEXTURES = 1;
+	if( mTextureID ) 
+	{
+		const GLsizei NUMBER_OF_TEXTURES = 1;
 
-	glDeleteTextures( NUMBER_OF_TEXTURES, &mTextureID );
-	mTextureID = 0;
+		glDeleteTextures( NUMBER_OF_TEXTURES, &mTextureID );
+		mTextureID = 0;
+	}
 }
 
 
@@ -187,14 +202,14 @@ void Texture3D::CreateFromData( UInt32 width, UInt32 height, UInt32 depth, void 
 	Destroy();
 
 	PFNGLTEXIMAGE3DPROC glTexImage3D = GetTex3DFunction();
-
+	
 	if( glTexImage3D )
 	{
 		glGenTextures(NUMBER_OF_TEXTURES, &mTextureID);		
 		
 		SetSmooth( true );
 		SetWrapFunction( GL_REPEAT );		
-				
+						
 		glTexImage3D(
 			GL_TEXTURE_3D, 
 			MIP_MAP_LEVEL_0, 

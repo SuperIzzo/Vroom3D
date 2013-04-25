@@ -22,6 +22,7 @@ class Texture3D
 public:
 							Texture3D();
 							Texture3D( const VolumeData &volume );
+							~Texture3D();
 
 	void					Create( const VolumeData &volume );
 	void					Create( UInt32 width, 
