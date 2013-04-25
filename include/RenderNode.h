@@ -69,7 +69,7 @@ private:
 
 private:
 	UInt32					mDebugFlags;
-	Texture3D			  *	mTexture;
+	Texture3DPtr		  	mTexture;
 	Texture3DPtr			mNormalMap;
 
 	UInt32					mNumSlices;

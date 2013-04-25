@@ -370,10 +370,7 @@ void RenderNode::UnsetLightingMode()
 
 void RenderNode::SetVolumeData( VolumeData &volume )
 {
-	delete mTexture;
 	mTexture = new Texture3D( volume );
-
-	//delete mNormalMap;
 	mNormalMap = 0L;	
 }
 
