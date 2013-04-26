@@ -32,21 +32,13 @@ Z|                                                                           |Z
 //=================================================================
 //	Inlude
 //---------------------------------------
+#include <RenderNode.h>
 #include <ShaderProgram.h>
 #include <Camera.h>
-#include <list>
+#include <map>
 
 
 VROOM_BEGIN
-
-
-//=================================================================
-//	Forward Declarations
-//---------------------------------------
-class RenderNode;
-
-
-
 
 
 //=================================================================
@@ -58,7 +50,10 @@ public:
 							VolumeRenderer();
 	virtual					~VolumeRenderer();
 
-	virtual RenderNode *	GetRootNode();
+	virtual RenderNodePtr	CreateNode(const String &name);
+	virtual void			RemoveNode(const String &name);
+	virtual RenderNodePtr	GetNode(const String &name);
+
 	virtual void			Render();
 
 	void					SetShaderProgram( ShaderProgramPtr shader );
@@ -67,15 +62,18 @@ public:
 	CameraPtr				GetCamera();					
 
 private:
+	typedef std::map<String, RenderNodePtr>		NodeMap;
+
 	void					SetupRenderingState();
 	void					SetupLighting();
 	void					SetupCamera();
-	void					DrawNode( RenderNode *node );
+	void					DebugDrawNode( RenderNode *node );
+	void					DrawNode( RenderNode *node );			
 
-private:	
-	RenderNode			  * mRootNode;
-	bool					mLightingEnabled;
+private:		
+	NodeMap					mNodes;	
 	ShaderProgramPtr		mShaderProgram;
+	bool					mLightingEnabled;
 	CameraPtr				mCamera;
 };
 

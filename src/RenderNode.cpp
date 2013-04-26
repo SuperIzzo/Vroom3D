@@ -45,6 +45,20 @@ VROOM_BEGIN
 
 
 //=================================================================
+//	GetUnitBox - static constant
+//---------------------------------------
+static const AABB& GetUnitBox()
+{
+	static const AABB	box( Vector3(0,0,0), Vector3(1,1,1));
+
+	return box;
+}
+
+
+
+
+
+//=================================================================
 //	DrawBox : utility function to draw a wireframe AABB
 //---------------------------------------
 static void DrawBox( const Vector3 &min, const Vector3 &max )
@@ -169,11 +183,11 @@ static void DrawPolygonFill( const Polygon &poly )
 //---------------------------------------
 RenderNode::RenderNode() :
 	mTexture( 0 ),
-	mNumSlices( 200 ),
+	mNumSlices( 100 ),
 	mSpacingExponent( 1 ),
 	mDebugFlags( 0 ),
 	mNormalMap( 0 ),
-	mLighting( 0 )
+	mShadingMode( 0 )
 {
 	mTransform =  Matrix4::Identity();
 }
@@ -271,11 +285,11 @@ UInt32 RenderNode::GetDebugFlags( )
 
 
 //=================================================================
-//	RenderNode::SetLighting
+//	RenderNode::SetShadingModel
 //---------------------------------------
-void RenderNode::SetLighting( bool enable )
+void RenderNode::SetShadingModel( UInt32 mode )
 {
-	mLighting = enable;
+	mShadingMode = mode;
 }
 
 
@@ -283,11 +297,11 @@ void RenderNode::SetLighting( bool enable )
 
 
 //=================================================================
-//	RenderNode::GetLighting
+//	RenderNode::GetShadingModel
 //---------------------------------------
-bool RenderNode::GetLighting()
+UInt32 RenderNode::GetShadingModel()
 {
-	return mLighting;
+	return mShadingMode;
 }
 
 
@@ -324,53 +338,13 @@ void RenderNode::UnsetTransformMatrix()
 //---------------------------------------
 void RenderNode::SetLightingMode(const Vector3 &cameraDir)
 {
-	if( mLighting )
+	if( mShadingMode )
 	{
-		if( !mNormalMap )
+		Texture3DPtr normalMap = GetNormalMap(true);
+
+		if( normalMap )
 		{
-			mNormalMap = NormalMapGenerator::Generate( *mTexture, NM_HARDWARE | NM_QUALITY_POOR );
-		}
-
-		if( mNormalMap )
-		{
-			mNormalMap->Bind(1);
-
-			extern ShaderProgram myShader;
-			
-			myShader.Use();
-
-			ShaderUniform tex1 = myShader.GetUniform( "texture1" );
-
-			if( tex1.IsValid() )
-			{
-				tex1.SetInt( 0 );
-			}
-			else
-			{
-				std::cerr << "Shader uniform 'texture1' not found!" << std::endl;
-			}
-
-
-			ShaderUniform tex2 = myShader.GetUniform( "texture2" );
-
-			if( tex2.IsValid() )
-			{
-				tex2.SetInt( 1 );
-			}
-			else
-			{
-				std::cerr << "Shader uniform 'texture2' not found!" << std::endl;
-			}
-
-			ShaderUniform lm = myShader.GetUniform( "lightModel" );
-			lm.SetInt(mLighting);
-
-			extern Eigen::Vector4f lightPos;
-			ShaderUniform l = myShader.GetUniform( "l" );
-			l.SetVec3Float( lightPos.x(), lightPos.y(), lightPos.z() );
-
-			ShaderUniform h = myShader.GetUniform( "h" );
-			h.SetVec3Float( cameraDir.x(), cameraDir.y(), cameraDir.z() );
+			normalMap->Bind(1);
 		}
 	}
 }
@@ -384,7 +358,7 @@ void RenderNode::SetLightingMode(const Vector3 &cameraDir)
 //---------------------------------------
 void RenderNode::UnsetLightingMode()
 {
-	if( mLighting )
+	if( mShadingMode )
 	{
 		mNormalMap->Unbind(1);
 
@@ -394,6 +368,11 @@ void RenderNode::UnsetLightingMode()
 
 
 
+
+
+//=================================================================
+//	RenderNode::SetVolumeData
+//---------------------------------------
 void RenderNode::SetVolumeData( VolumeData &volume )
 {
 	mTexture = new Texture3D( volume );
@@ -451,19 +430,18 @@ void RenderNode::SetTransform( const Matrix4 &transform )
 
 
 //=================================================================
-//	RenderNode::Draw
+//	RenderNode::DrawDebugGeometry
 //---------------------------------------
-void RenderNode::Draw(const Vector3 &cameraDir)
+void RenderNode::DrawDebugGeometry(const Vector3 &cameraDir)
 {
-	Vector3		minP(0,0,0);
-	Vector3		maxP(1,1,1);
-	AABB		box(minP, maxP);
+	static const Vector3 minP(0,0,0);
+	static const Vector3 maxP(1,1,1);
+
 
 	// Tranformation matrix
 	SetTransformMatrix();
 
 	// Initialize rendering state
-	glUseProgram( 0 );
 	glBindTexture( GL_TEXTURE_3D, 0 );
 
 	// Draw the volume bounding box
@@ -477,6 +455,8 @@ void RenderNode::Draw(const Vector3 &cameraDir)
 	{	
 		for( int slice= mNumSlices; slice > 0; slice-- )
 		{
+			const AABB &box = GetUnitBox();
+
 			Real perc = (Real) slice/(mNumSlices+1);
 			perc = pow( perc, (Real) mSpacingExponent );
 
@@ -484,21 +464,37 @@ void RenderNode::Draw(const Vector3 &cameraDir)
 			DrawPolygon( poly );
 		}
 	}
+}
+
+
+
+
+
+//=================================================================
+//	RenderNode::Draw
+//---------------------------------------
+void RenderNode::Draw(const Vector3 &cameraDir)
+{
+	// Tranformation matrix
+	SetTransformMatrix();
 
 	// Setup rendering state
 	BindTexture();
 	SetLightingMode(cameraDir);
 
 	// Use normal map instead of color
-	if( showNorm%3 == 1 && mNormalMap)
+	if( mDebugFlags & DBG_DRAW_NORMALS )
 	{
-		mNormalMap->Bind();
+		Texture3DPtr normalMap = GetNormalMap(true);
+		normalMap->Bind();
 	}
 	
 
 	// Render Volume
 	for( int slice= mNumSlices; slice > 0; slice-- )
 	{
+		const AABB &box = GetUnitBox();
+
 		Real perc = (Real) slice/(mNumSlices+1);
 		perc = pow( perc, (Real) mSpacingExponent );
 

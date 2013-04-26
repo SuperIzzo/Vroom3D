@@ -33,7 +33,6 @@
     <ClCompile Include="..\..\..\test\TestPolygon.cpp" />
     <ClCompile Include="..\..\..\test\TestShader.cpp" />
     <ClCompile Include="..\..\..\test\TestShaderProgram.cpp" />
-    <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp" />
     <ClCompile Include="..\..\..\test\TestTexture3D.cpp" />
     <ClCompile Include="..\..\..\test\TestVolume.cpp" />
     <ClCompile Include="..\..\..\test\TestXMLDocument.cpp" />
@@ -77,9 +76,6 @@
     <None Include="..\..\..\docs\design\Discussion - 3D Texture Volumes.txt" />
     <None Include="..\..\..\docs\design\Discussion - Transforms and Cameras.txt" />
     <None Include="..\..\..\docs\design\Discussion - What exactly is the project.txt" />
-    <ClInclude Include="..\..\..\src\Shaders.shd">
-      <FileType>Document</FileType>
-    </ClInclude>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4BC5426A-60DE-452D-8434-FE42EC8D23AF}</ProjectGuid>

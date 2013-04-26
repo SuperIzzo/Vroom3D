@@ -213,8 +213,7 @@ String ReadFile( String fname )
 
 
 
-ShaderProgram myShader;
-void ShaderTest()
+ShaderProgramPtr LoadLightingShader()
 {		
 	ShaderPtr vertShader	= new Shader();
 	ShaderPtr fragShader	= new Shader();
@@ -237,11 +236,17 @@ void ShaderTest()
 	};
 
 
-	myShader.AttachShader( vertShader );
-	myShader.AttachShader( fragShader );
+	ShaderProgramPtr shaderProgram = new ShaderProgram();
 
-	myShader.Link();
+	shaderProgram->AttachShader( vertShader );
+	shaderProgram->AttachShader( fragShader );
+
+	shaderProgram->Link();
+
+	return shaderProgram;
 }
+
+
 
 ShaderProgram myNormalShader;
 void NormalTest()
@@ -369,10 +374,12 @@ int main(int argc, char* args[])
 
 		glewInit();
 
+		renderer->SetShaderProgram( LoadLightingShader() );
+
 		// Print something useful 
 		printGLStats();
 
-		ShaderTest();
+		//ShaderTest();
 		NormalTest();
 
 		VolumeData vol[3];
@@ -383,13 +390,9 @@ int main(int argc, char* args[])
 		int modelId = 0;
 
 
-		RenderNode * texNode = renderer->GetRootNode();
+		RenderNodePtr texNode = renderer->CreateNode("Test");
 
 		texNode->SetVolumeData( vol[0] );
-		
-
-		texNode->showNorm = 0;
-
 		
 		sf::Clock clock;
 		clock.restart();
@@ -428,8 +431,9 @@ int main(int argc, char* args[])
 						}
 						if( theEvent.key.code == sf::Keyboard::L )
 						{
-							bool light = texNode->GetLighting();
-							texNode->SetLighting( !light );
+							UInt32 shade = texNode->GetShadingModel() +1;
+							shade = shade % 3;
+							texNode->SetShadingModel( shade );
 						}
 						if( theEvent.key.code == sf::Keyboard::M )
 						{
@@ -440,7 +444,10 @@ int main(int argc, char* args[])
 						}
 						if( theEvent.key.code == sf::Keyboard::N )
 						{
-							texNode->showNorm++;
+							int debugFlags = texNode->GetDebugFlags()
+								^ RenderNode::DBG_DRAW_NORMALS;
+
+							texNode->SetDebugFlags( debugFlags );
 						}
 						
 					break;

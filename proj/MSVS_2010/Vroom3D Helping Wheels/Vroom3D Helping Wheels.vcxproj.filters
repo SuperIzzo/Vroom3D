@@ -72,9 +72,6 @@
     <ClCompile Include="..\..\..\test\TestVolume.cpp">
       <Filter>test\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\test\TestTexMapVolumeRenderer.cpp">
-      <Filter>test\Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\test\TestAABB.cpp">
       <Filter>test\Math</Filter>
     </ClCompile>
@@ -169,9 +166,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\Camera.h">
       <Filter>include\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\src\Shaders.shd">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\VolumeData.h">
       <Filter>include\Graphics</Filter>

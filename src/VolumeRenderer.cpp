@@ -42,7 +42,6 @@ VROOM_BEGIN
 //	VolumeRenderer::VolumeRenderer
 //---------------------------------------
 VolumeRenderer::VolumeRenderer() :
-	mRootNode(0),
 	mLightingEnabled(0)
 {
 	mCamera = new Camera();
@@ -57,7 +56,7 @@ VolumeRenderer::VolumeRenderer() :
 //---------------------------------------
 VolumeRenderer::~VolumeRenderer()
 {
-	delete mRootNode;
+
 }
 
 
@@ -65,16 +64,56 @@ VolumeRenderer::~VolumeRenderer()
 
 
 //=================================================================
-//	VolumeRenderer::GetRootNode
+//	VolumeRenderer::CreateNode
 //---------------------------------------
-RenderNode * VolumeRenderer::GetRootNode()
+RenderNodePtr VolumeRenderer::CreateNode(const String &name)
 {
-	if( !mRootNode )
+	RenderNodePtr newNode= 0;
+
+	NodeMap::iterator foundNode = mNodes.find(name);
+	if( foundNode == mNodes.end() )
 	{
-		mRootNode = new RenderNode();
+		newNode = new RenderNode();
+		mNodes[name] = newNode;
 	}
 
-	return mRootNode;
+	return newNode;
+}
+
+
+
+
+
+//=================================================================
+//	VolumeRenderer::RemoveNode
+//---------------------------------------
+void VolumeRenderer::RemoveNode(const String &name)
+{
+	NodeMap::iterator foundNode = mNodes.find(name);
+	if( foundNode != mNodes.end() )
+	{
+		mNodes.erase(foundNode);
+	}
+}
+
+
+
+
+
+//=================================================================
+//	VolumeRenderer::GetNode
+//---------------------------------------
+RenderNodePtr VolumeRenderer::GetNode(const String &name)
+{
+	RenderNodePtr theNode= 0;
+
+	NodeMap::iterator foundNode = mNodes.find(name);
+	if( foundNode != mNodes.end() )
+	{
+		theNode = foundNode->second;
+	}
+
+	return theNode;
 }
 
 
@@ -87,6 +126,32 @@ RenderNode * VolumeRenderer::GetRootNode()
 CameraPtr VolumeRenderer::GetCamera()
 {
 	return mCamera;
+}
+
+
+
+
+
+
+
+//=================================================================
+//	VolumeRenderer::SetShaderProgram
+//---------------------------------------
+void VolumeRenderer::SetShaderProgram( ShaderProgramPtr shader )
+{
+	mShaderProgram = shader;
+}
+
+
+
+
+
+//=================================================================
+//	VolumeRenderer::GetShaderProgram
+//---------------------------------------
+ShaderProgramPtr VolumeRenderer::GetShaderProgram()
+{
+	return mShaderProgram;
 }
 
 
@@ -118,27 +183,27 @@ void VolumeRenderer::SetupLighting()
 	{		
 		mShaderProgram->Use();
 
-		ShaderUniform tex1 = mShaderProgram->GetUniform( "texture1" );
+		ShaderUniform volume = mShaderProgram->GetUniform( "volume" );
 
-		if( tex1.IsValid() )
+		if( volume.IsValid() )
 		{
-			tex1.SetInt( 0 );
+			volume.SetInt( 0 );
 		}
 		else
 		{
-			std::cerr << "Shader uniform 'texture1' not found!" << std::endl;
+			std::cerr << "Shader uniform 'volume' not found!" << std::endl;
 		}
 
 
-		ShaderUniform tex2 = mShaderProgram->GetUniform( "texture2" );
+		ShaderUniform normalMap = mShaderProgram->GetUniform( "normalMap" );
 
-		if( tex2.IsValid() )
+		if( normalMap.IsValid() )
 		{
-			tex2.SetInt( 1 );
+			normalMap.SetInt( 1 );
 		}
 		else
 		{
-			std::cerr << "Shader uniform 'texture2' not found!" << std::endl;
+			std::cerr << "Shader uniform 'normalMap' not found!" << std::endl;
 		}
 
 		extern Eigen::Vector4f lightPos;
@@ -184,10 +249,25 @@ void VolumeRenderer::SetupCamera()
 
 
 //=================================================================
+//	VolumeRenderer::DebugDrawNode
+//---------------------------------------
+void VolumeRenderer::DebugDrawNode( RenderNode *node )
+{
+	node->DrawDebugGeometry( mCamera->GetForward() );
+}
+
+
+
+
+
+//=================================================================
 //	VolumeRenderer::DrawNode
 //---------------------------------------
 void VolumeRenderer::DrawNode( RenderNode *node )
 {
+	ShaderUniform shadingModel = mShaderProgram->GetUniform( "shadingModel" );
+	shadingModel.SetInt( node->GetShadingModel() );
+
 	node->Draw( mCamera->GetForward() );
 }
 
@@ -206,11 +286,28 @@ void VolumeRenderer::Render()
 	// Setup camera
 	SetupCamera();
 
+
+	mShaderProgram->Unuse();
+
+
+	// Draw debug geometry
+	NodeMap::iterator nodeIter = mNodes.begin();
+	for( ; nodeIter != mNodes.end(); nodeIter++ )
+	{
+		DebugDrawNode( nodeIter->second );
+	}
+
+
 	// Illuminate the scene
 	SetupLighting();
+	
 
 	// Draw nodes
-	DrawNode( mRootNode );	
+	nodeIter = mNodes.begin();
+	for( ; nodeIter != mNodes.end(); nodeIter++ )
+	{		
+		DrawNode( nodeIter->second );
+	}
 }
 
 

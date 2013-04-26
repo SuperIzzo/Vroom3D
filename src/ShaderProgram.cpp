@@ -149,6 +149,22 @@ void ShaderProgram::Use()
 
 
 //=================================================================
+//	ShaderProgram::Unuse
+//---------------------------------------
+void ShaderProgram::Unuse()
+{
+	if( IsLinked() )
+	{
+		glUseProgram( 0 );
+		// TODO: Deal with errors
+	}
+}
+
+
+
+
+
+//=================================================================
 //	ShaderProgram::IsAttached
 //---------------------------------------
 bool ShaderProgram::IsAttached( ShaderPtr shader )

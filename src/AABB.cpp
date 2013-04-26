@@ -78,7 +78,7 @@ const Vector3& AABB::GetMaxCorner()
 //=================================================================
 //	AABB::GetSize
 //---------------------------------------
-Vector3 AABB::GetSize()
+Vector3 AABB::GetSize() const
 {
 	return mMaxCorner - mMinCorner;
 }
@@ -90,7 +90,7 @@ Vector3 AABB::GetSize()
 //=================================================================
 //	AABB::PlaneCutByPercentage
 //---------------------------------------
-Polygon AABB::SliceByPercentage( Vector3 planeDir, Real percent )
+Polygon AABB::SliceByPercentage( Vector3 planeDir, Real percent ) const
 {
 	Polygon slice;
 
@@ -219,7 +219,7 @@ Polygon AABB::SliceByPercentage( Vector3 planeDir, Real percent )
 //---------------------------------------
 void AABB::__GetNearAndFarCornersForDirection(	Vector3 inDirection,
 												Vector3 &outNear,
-												Vector3 &outFar )
+												Vector3 &outFar ) const
 {
 	for( int axis=0; axis<3; axis++ )
 	{

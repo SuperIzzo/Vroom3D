@@ -51,6 +51,7 @@ public:
 	void					Link();
 	bool					IsLinked() const;
 	void					Use();
+	void					Unuse();
 	void					Destroy();
 
 	// Shaders

@@ -50,14 +50,14 @@ public:
 	const Vector3	  &	GetMinCorner();
 	const Vector3	  &	GetMaxCorner();
 
-	Vector3				GetSize();
+	Vector3				GetSize() const;
 
-	Polygon				SliceByPercentage( Vector3 inPlaneDir, Real inLocalPerc );
+	Polygon				SliceByPercentage( Vector3 inPlaneDir, Real inLocalPerc ) const;
 
 	void				__GetNearAndFarCornersForDirection( 
 														Vector3 inDirection,
 														Vector3 &outNear,
-														Vector3 &outFar	);	
+														Vector3 &outFar	) const;	
 
 private:
 	Vector3				mMinCorner;

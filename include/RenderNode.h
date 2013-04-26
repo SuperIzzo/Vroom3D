@@ -50,7 +50,15 @@ public:
 
 	enum DebugFlags {
 			DBG_DRAW_BBOX		= 0x0001,
-			DBG_DRAW_SLICES		= 0x0002
+			DBG_DRAW_SLICES		= 0x0002,
+			DBG_DRAW_NORMALS	= 0x0004,
+	};
+
+
+	enum ShadingModel {
+			SHD_NONE			= 0,
+			SHD_BLINN_PHONG		= 1,
+			SHD_TOON			= 2,
 	};
 
 public:
@@ -63,8 +71,8 @@ public:
 	void					SetDebugFlags(UInt32 debugFlags);
 	UInt32					GetDebugFlags();
 
-	void					SetLighting( bool enable );
-	bool					GetLighting();
+	void					SetShadingModel( UInt32 mode );
+	UInt32					GetShadingModel();
 
 	void					SetVolumeData( VolumeData &volume );
 
@@ -73,10 +81,13 @@ public:
 	Matrix4					GetTransform() const;
 	void					SetTransform( const Matrix4 &transf);
 
-	char					showNorm;
+
+	// Eigen alignment operator
+	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
 protected:
 							RenderNode();
+	void					DrawDebugGeometry(const Vector3 &cameraDir);
 	void					Draw(const Vector3 &cameraDir);
 
 private:
@@ -88,9 +99,6 @@ private:
 	void					SetLightingMode(const Vector3 &cameraDir);
 	void					UnsetLightingMode();
 
-	// Eigen alignment operator
-	EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
 private:
 	UInt32					mDebugFlags;
 	Texture3DPtr		  	mTexture;
@@ -100,8 +108,17 @@ private:
 	Real					mSpacingExponent;
 	Matrix4					mTransform;
 
-	bool					mLighting;
+	UInt32					mShadingMode;
 };
+
+
+
+
+
+//=================================================================
+//	Type RenderNodePtr
+//---------------------------------------
+typedef SharedPointer<RenderNode>::Type	RenderNodePtr;
 
 
 VROOM_END
