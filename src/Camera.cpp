@@ -127,12 +127,7 @@ Vector3 Camera::GetForward()
 
 	cameraDir.normalize();
 
-	return -cameraDir;
-
-	// TODO
-	// Fix the direction
-	// Shader stuff in the renderer - currently things are in Node
-	// Move matrices to shaders
+	return cameraDir;
 }
 
 

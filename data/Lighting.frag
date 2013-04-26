@@ -51,11 +51,12 @@ void main (void)
 	float lnDot = l.x*n.x + l.y*n.y + l.z*n.z;	
 	float hnDot = h.x*n.x + h.y*n.y + h.z*n.z;
 
+	// Clamp the results
 	lnDot = clamp(lnDot, -1.0, 1.0);
-	hnDot = -clamp(hnDot, -1.0, 1.0);
+	hnDot = clamp(hnDot, -1.0, 1.0);
 
-	float k_s = 10.0;
-	float I = lnDot + k_s * pow(hnDot,3.0)   + 0.2;
+	float k_s = 1.0;
+	float I = lnDot + k_s * pow(-hnDot,3.0)   + 0.2;
 	
 	// Avoiding branches by doing some clever maths
 	float cellShadingEnable = float( shadingModel==2 );

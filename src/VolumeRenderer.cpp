@@ -268,7 +268,7 @@ void VolumeRenderer::DrawNode( RenderNode *node )
 	ShaderUniform shadingModel = mShaderProgram->GetUniform( "shadingModel" );
 	shadingModel.SetInt( node->GetShadingModel() );
 
-	node->Draw( mCamera->GetForward() );
+	node->Draw( -mCamera->GetForward() );
 }
 
 
