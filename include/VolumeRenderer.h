@@ -59,7 +59,8 @@ public:
 	void					SetShaderProgram( ShaderProgramPtr shader );
 	ShaderProgramPtr		GetShaderProgram();
 
-	CameraPtr				GetCamera();					
+	CameraPtr				GetCamera();	
+	void					SetLightDirection( Vector3 direction );
 
 private:
 	typedef std::map<String, RenderNodePtr>		NodeMap;
@@ -75,6 +76,7 @@ private:
 	ShaderProgramPtr		mShaderProgram;
 	bool					mLightingEnabled;
 	CameraPtr				mCamera;
+	Vector3					mLightDirection;
 };
 
 

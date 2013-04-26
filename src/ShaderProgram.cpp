@@ -123,8 +123,6 @@ void ShaderProgram::Link()
 	if( mShaders.size()>0 )
 	{
 		glLinkProgram( mProgram );
-
-		// TODO: Deal with errors, 
 	}
 }
 
@@ -140,7 +138,6 @@ void ShaderProgram::Use()
 	if( IsLinked() )
 	{
 		glUseProgram( mProgram );
-		// TODO: Deal with errors
 	}
 }
 
@@ -156,7 +153,6 @@ void ShaderProgram::Unuse()
 	if( IsLinked() )
 	{
 		glUseProgram( 0 );
-		// TODO: Deal with errors
 	}
 }
 
@@ -190,11 +186,7 @@ void ShaderProgram::AttachShader( ShaderPtr shader )
 
 	if( mProgram )
 	{
-		if( IsAttached(shader) )
-		{
-			// Throw an exception
-		}
-		else
+		if( ! IsAttached(shader) )
 		{
 			glAttachShader( mProgram, shader->mShader );
 			// TODO: Consider and deal with error 
@@ -219,7 +211,6 @@ void ShaderProgram::DetachShader( ShaderPtr shader )
 	if( shaderIter != mShaders.end() )
 	{
 		glDetachShader( mProgram, (*shaderIter)->mShader );
-		// TODO: Deal with error
 
 		mShaders.erase( shaderIter );
 	}

@@ -29,6 +29,7 @@ Z|                                                                           |Z
 #include <VolumeRenderer.h>
 #include <RenderNode.h>
 #include <ShaderProgram.h>
+#include <NormalMapGenerator.h>
 
 #include <gl/glew.h>
 #include <SFML/Graphics.hpp>
@@ -84,13 +85,11 @@ void LoadVolumeFromFile( VolumeData &vol, const char *fname )
 void LoadHead( VolumeData &vol )
 {
 	vol.Create(128, 128, 128);
-
 	UInt8 *v = vol.GetData();
 
 	for( int i=1; i<=255; i+=2 )
 	{		
-		std::stringstream name;
-		
+		std::stringstream name;		
 		name << "../../data/HumanHead/a_vm1";
 
 		if( i < 10 )
@@ -101,7 +100,6 @@ void LoadHead( VolumeData &vol )
 		{
 			name << "0";
 		}
-
 
 		name << i;
 		name << "-m.jpg";
@@ -127,35 +125,6 @@ void LoadHead( VolumeData &vol )
 }
 
 
-const char *glErrorName( GLenum err )
-{
-	switch( err ) 
-	{
-		case GL_INVALID_ENUM:
-			return "GL_INVALID_ENUM";
-			break;
-		case GL_INVALID_VALUE:
-			return "GL_INVALID_VALUE";
-			break;
-
-		case GL_INVALID_OPERATION:
-			return "GL_INVALID_OPERATION";
-			break;
-		case GL_STACK_OVERFLOW:
-			return "GL_STACK_OVERFLOW";
-			break;
-		case GL_STACK_UNDERFLOW:
-			return "GL_STACK_UNDERFLOW";
-			break;
-		case GL_OUT_OF_MEMORY:
-			return "GL_OUT_OF_MEMORY";
-			break;
-	}
-}
-
-
-
-
 
 void printGLStats()
 {
@@ -169,11 +138,6 @@ void printGLStats()
 
 	std::cout << "GL_MAX_3D_TEXTURE_SIZE - " << maxTextureSize << std::endl;
 
-	GLenum err = glGetError();
-
-	if( err )
-		std::cout << "GL error - " << glErrorName(err)<< std::endl;
-
 	if( GLEW_ARB_vertex_program )
 		std::cout << "Vertex program supported!" << std::endl;
 	else
@@ -184,98 +148,6 @@ void printGLStats()
 	else
 		std::cout << "!! Fragment program NOT supported!" << std::endl;
 }
-
-
-
-
-String ReadFile( String fname )
-{
-	String			theResult = "";
-	std::ifstream	theFile;
-	
-	theFile.open(fname);	
-	if( theFile.is_open() ) 
-	{
-		while( !theFile.eof() ) 
-		{
-			std::string line;
-			std::getline(theFile, line);
-
-			theResult += line + "\n";
-		}
-	}
-	theFile.close();
-
-	return theResult;
-}
-
-
-
-
-
-ShaderProgramPtr LoadLightingShader()
-{		
-	ShaderPtr vertShader	= new Shader();
-	ShaderPtr fragShader	= new Shader();
-
-	String vertShaderSrc = ReadFile( "../../data/Lighting.vert");
-	String fragShaderSrc = ReadFile( "../../data/Lighting.frag");
-
-	vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc );
-	fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc );
-
-
-	if( !vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc ) )
-	{
-		std::cout << vertShader->GetInfoLog() << std::endl;
-	}
-
-	if( !fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc ) )
-	{
-		std::cout << fragShader->GetInfoLog() << std::endl;
-	};
-
-
-	ShaderProgramPtr shaderProgram = new ShaderProgram();
-
-	shaderProgram->AttachShader( vertShader );
-	shaderProgram->AttachShader( fragShader );
-
-	shaderProgram->Link();
-
-	return shaderProgram;
-}
-
-
-
-ShaderProgram myNormalShader;
-void NormalTest()
-{		
-	ShaderPtr vertShader	= new Shader();
-	ShaderPtr fragShader	= new Shader();
-
-	String vertShaderSrc = ReadFile( "../../data/NormalMap.vert");
-	String fragShaderSrc = ReadFile( "../../data/NormalMap.frag");
-
-	if( !vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc ) )
-	{
-		std::cout << vertShader->GetInfoLog() << std::endl;
-	}
-
-	if( !fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc ) )
-	{
-		std::cout << fragShader->GetInfoLog() << std::endl;
-	};
-
-
-	myNormalShader.AttachShader( vertShader );
-	myNormalShader.AttachShader( fragShader );
-
-	myNormalShader.Link();
-}
-
-
-
 
 
 
@@ -322,14 +194,100 @@ void GenerateBricks( VolumeData &vol )
 }
 
 
-VolumeRenderer *renderer;
+
+String ReadFile( String fname )
+{
+	String			theResult = "";
+	std::ifstream	theFile;
+	
+	theFile.open(fname);	
+	if( theFile.is_open() ) 
+	{
+		while( !theFile.eof() ) 
+		{
+			std::string line;
+			std::getline(theFile, line);
+
+			theResult += line + "\n";
+		}
+	}
+	theFile.close();
+
+	return theResult;
+}
 
 
-void UpdateCamera()
-{	 
+ShaderProgramPtr LoadLightingShader()
+{		
+	ShaderPtr vertShader	= new Shader();
+	ShaderPtr fragShader	= new Shader();
+
+	String vertShaderSrc = ReadFile( "../../data/Lighting.vert");
+	String fragShaderSrc = ReadFile( "../../data/Lighting.frag");
+
+	vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc );
+	fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc );
+
+
+	if( !vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc ) )
+	{
+		std::cout << vertShader->GetInfoLog() << std::endl;
+	}
+
+	if( !fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc ) )
+	{
+		std::cout << fragShader->GetInfoLog() << std::endl;
+	};
+
+
+	ShaderProgramPtr shaderProgram = new ShaderProgram();
+
+	shaderProgram->AttachShader( vertShader );
+	shaderProgram->AttachShader( fragShader );
+	shaderProgram->Link();
+
+	return shaderProgram;
+}
+
+
+ShaderProgramPtr LoadNormalShader()
+{		
+	ShaderPtr vertShader	= new Shader();
+	ShaderPtr fragShader	= new Shader();
+
+	String vertShaderSrc = ReadFile( "../../data/NormalMap.vert");
+	String fragShaderSrc = ReadFile( "../../data/NormalMap.frag");
+
+	if( !vertShader->CompileString( Shader::ST_VERTEX,	vertShaderSrc ) )
+	{
+		std::cout << vertShader->GetInfoLog() << std::endl;
+	}
+
+	if( !fragShader->CompileString( Shader::ST_FRAGMENT,	fragShaderSrc ) )
+	{
+		std::cout << fragShader->GetInfoLog() << std::endl;
+	};
+
+
+	ShaderProgramPtr shaderProgram = new ShaderProgram();
+
+	shaderProgram->AttachShader( vertShader );
+	shaderProgram->AttachShader( fragShader );
+	shaderProgram-> Link();
+
+	return shaderProgram;
+}
+
+
+
+
+void UpdateCamera(VolumeRenderer *renderer)
+{	
+	renderer->GetCamera()->SetOrthographicProjection(-1, 1, -1, 1, 0, 100);
+
+
 	static double angle = 0;
 	angle += 0.1;
-	//double angle = 100;
 
 	Eigen::Transform<float,3, Eigen::Affine> transf;
 			
@@ -348,9 +306,18 @@ void UpdateCamera()
 }
 
 
+void UpdateLight(VolumeRenderer *renderer)
+{
+	static float a = 0;
+	Vector3 lightPos;			
+	a += 0.01;
 
+	lightPos = Vector3( 100*sin(a), 180*cos(a), 34*sin(a) );
+	lightPos.normalize();
 
-Eigen::Vector4f lightPos;
+	renderer->SetLightDirection(lightPos);
+	//glLightfv(GL_LIGHT0, GL_POSITION, lightPos.data() );
+}
 
 
 int main(int argc, char* args[])
@@ -368,19 +335,17 @@ int main(int argc, char* args[])
 	else
 	{		
 		sf::RenderWindow theWindow( sf::VideoMode(640, 480), "Graphix Window" );
-		renderer = new VolumeRenderer();
-
-		renderer->GetCamera()->SetOrthographicProjection(-1, 1, -1, 1, 0, 100);
+		
+		VolumeRenderer * renderer = new VolumeRenderer();		
 
 		glewInit();
 
+		// Setup lighting and normal shaders
 		renderer->SetShaderProgram( LoadLightingShader() );
+		NormalMapGenerator::SetShader( LoadNormalShader() );
 
 		// Print something useful 
 		printGLStats();
-
-		//ShaderTest();
-		NormalTest();
 
 		VolumeData vol[3];
 
@@ -485,31 +450,15 @@ int main(int argc, char* args[])
 
 
 
-			static float a = 0;
-			a += 0.01;
-			lightPos = Eigen::Vector4f( 100*sin(a), 180*cos(a), 34*sin(a), 0 );
-			lightPos.normalize();
-			glLightfv(GL_LIGHT0, GL_POSITION, lightPos.data() );
-
-
-
 			// Clear the screen
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-			UpdateCamera();
+			
+			UpdateCamera(renderer);
+			UpdateLight(renderer);
 
 			renderer->Render();
 		
 			theWindow.display();
-
-
-			// FPS stuff
-			{
-				sf::Time frameTime = clock.restart();
-				float fps = 1/frameTime.asSeconds();
-				std::cout << "FPS: " << fps << std::endl;
-			}
 		}
 
 		delete renderer;

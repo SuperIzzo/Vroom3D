@@ -33,6 +33,7 @@ Z|                                                                           |Z
 //	Inlude
 //---------------------------------------
 #include <Texture3D.h>
+#include <ShaderProgram.h>
 
 
 
@@ -67,14 +68,18 @@ enum NMQualityEnum
 class NormalMapGenerator
 {
 public:	
-	static Texture3DPtr		Generate( Texture3D &volume, UInt32 flags = 0 );
+	static Texture3DPtr			Generate( Texture3D &volume, UInt32 flags =0 );
+	static void					SetShader( ShaderProgramPtr shader );
 
 private:
-	static VolumeDataPtr	GenerateSWOpaque( VolumeData &volume,
+	static VolumeDataPtr		GenerateSWOpaque( VolumeData &volume,
 											  NMQualityEnum quality);
 
-	static Texture3DPtr		GenerateHWOpaque( Texture3D &texture, 
+	static Texture3DPtr			GenerateHWOpaque( Texture3D &texture, 
 											  NMQualityEnum quality);
+
+private:
+	static ShaderProgramPtr		mNormalShader;
 };
 
 

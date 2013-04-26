@@ -132,6 +132,18 @@ CameraPtr VolumeRenderer::GetCamera()
 
 
 
+//=================================================================
+//	VolumeRenderer::SetLight
+//---------------------------------------
+void  VolumeRenderer::SetLightDirection( Vector3 lightDirection )
+{
+	mLightDirection = lightDirection;
+}
+
+
+
+
+
 
 
 //=================================================================
@@ -206,13 +218,14 @@ void VolumeRenderer::SetupLighting()
 			std::cerr << "Shader uniform 'normalMap' not found!" << std::endl;
 		}
 
-		extern Eigen::Vector4f lightPos;
-
-
+		// Setup light source
 		ShaderUniform l = mShaderProgram->GetUniform( "l" );
-		l.SetVec3Float( lightPos.x(), lightPos.y(), lightPos.z() );
+		l.SetVec3Float( mLightDirection.x(), 
+						mLightDirection.y(),
+						mLightDirection.z() );
 
 
+		// Set camera view direction
 		Vector3 cameraDir = mCamera->GetForward();
 
 		ShaderUniform h = mShaderProgram->GetUniform( "h" );

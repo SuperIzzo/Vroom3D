@@ -36,6 +36,14 @@ Z|                                                                           |Z
 
 VROOM_BEGIN
 
+//=================================================================
+//	Static Initialization
+//---------------------------------------
+ShaderProgramPtr	NormalMapGenerator::mNormalShader;
+
+
+
+
 
 //=================================================================
 //	NormalMapKernel : utility function generate normal of a voxel
@@ -170,6 +178,18 @@ Texture3DPtr NormalMapGenerator::Generate( Texture3D &texture, UInt32 flags )
 
 
 //=================================================================
+//	NormalMapGenerator::SetShader
+//---------------------------------------
+void NormalMapGenerator::SetShader( ShaderProgramPtr shader )
+{
+	mNormalShader = shader;
+}
+
+
+
+
+
+//=================================================================
 //	NormalMapGenerator::GenerateSWOpaque
 //---------------------------------------
 VolumeDataPtr NormalMapGenerator::GenerateSWOpaque( VolumeData &volume,
@@ -240,11 +260,10 @@ Texture3DPtr NormalMapGenerator::GenerateHWOpaque(	Texture3D &texture,
 	
 	GLuint theFBO = 0;
 	glGenFramebuffers(1, &theFBO);
-
-	extern ShaderProgram myNormalShader;
-	myNormalShader.Use();
-	myNormalShader.GetUniform("texture1").SetInt(0);
-	myNormalShader.GetUniform("res").SetVec3Float(
+	
+	mNormalShader->Use();
+	mNormalShader->GetUniform("texture1").SetInt(0);
+	mNormalShader->GetUniform("res").SetVec3Float(
 		1.0f/texture.GetWidth(),
 		1.0f/texture.GetHeight(),
 		1.0f/texture.GetDepth()
