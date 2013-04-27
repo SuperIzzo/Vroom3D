@@ -1,35 +1,34 @@
-        __  __                                          __    ____      
-       /\ \/\ \                                       /'__`\ /\  _`\    
-       \ \ \ \ \  _ __   ___     ___     ___ ___     /\_\L\ \\ \ \/\ \  
-        \ \ \ \ \/\`'__\/ __`\  / __`\ /' __` __`\   \/_/_\_<_\ \ \ \ \ 
-         \ \ \_/ \ \ \//\ \L\ \/\ \L\ \/\ \/\ \/\ \    /\ \L\ \\ \ \_\ \
-          \ `\___/\ \_\\ \____/\ \____/\ \_\ \_\ \_\   \ \____/ \ \____/
-           `\/__/  \/_/ \/___/  \/___/  \/_/\/_/\/_/    \/___/   \/___/ 
-        
-                                     v0.1
-                              Release:  26/04/2013
+                        __  __                                          __    ____      
+                       /\ \/\ \                                       /'__`\ /\  _`\    
+                       \ \ \ \ \  _ __   ___     ___     ___ ___     /\_\L\ \\ \ \/\ \  
+                        \ \ \ \ \/\`'__\/ __`\  / __`\ /' __` __`\   \/_/_\_<_\ \ \ \ \ 
+                         \ \ \_/ \ \ \//\ \L\ \/\ \L\ \/\ \/\ \/\ \    /\ \L\ \\ \ \_\ \
+                          \ `\___/\ \_\\ \____/\ \____/\ \_\ \_\ \_\   \ \____/ \ \____/
+                           `\/__/  \/_/ \/___/  \/___/  \/_/\/_/\/_/    \/___/   \/___/ 
+                        
+                                                     v0.1
+                                              Release:  26/04/2013
 
   						
 SUMMARY
--------------- ------- ----- --- - -  -  -   -
+===============================
 Vroom3D (Volume Rendering Object Oriented Machine) is a open source real-time 
 direct volume rendering (DVR) engine, written in C++ and GLSL. It designed to
-be minimal and portable library. 
+be minimal and portable library and is targeted primarily at games. 
 
-
-
-CONTENTS
--------------- ------- ----- --- - -  -  -   -
-1. Software Requirements
-2. Compiling the Source
-3. Running the demo
-4. Dependencies
+The current features include:
+* Volume rendering using 3D texture mapping
+* CPU and GPU based gradient computation (normals)
+* Basic Blinn-Phong and cell (toon) shading
+* Basic and incomplete multi-isntance support and scene mamagent
 
 
 
 1. Software Requirements
--------------- ------- ----- --- - -  -  -   -
+===============================
+
 HARDWARE
+-------------------------------
 Vroom tries to be as low demanding on the hardware as possible, but the 
 graphics card should support at least 3D texture mapping and shaders. The exact
 GL shader language version is not known yet, but the more recent the better.
@@ -38,6 +37,7 @@ textures also vary from one graphics card to the next, the demo requires at
 least 128 voxels.
 
 SOFTWARE
+-------------------------------
 The software has been developed and tested mostly on Windows 7, it is known to
 have run successfully on Windows XP, but even though it does not directly call 
 OS specific code no guarantees can be made that it will happily work on other
@@ -49,7 +49,7 @@ graphics drivers installed.
 
 
 2. Compiling the Source
--------------- ------- ----- --- - -  -  -   -
+===============================
 The project has been built using Visual C++ 2010, but any newer version of VC++
 should do.
 
@@ -76,7 +76,7 @@ to the path. You can find the dll at:
 
 
 3. Running the Demo
--------------- ------- ----- --- - -  -  -   -
+===============================
 
 
 
@@ -85,22 +85,20 @@ Unfortunately the demo does not come with a fancy GUI and may be a little
 hard and unintuitive to use. It is mainly controlled with key presses which 
 change internal states and parameters. The control scheme is as follows:
 
-  [ up/down arrow keys ]    - change the number of slice
-  [ left/right arrow keys ] - change the spacing exponent (bundles more slices
-                                  towards the camera)
-  [ M ]                     - alternates between 3 volume models:
+*  [ up/down arrow keys ]    - change the number of slice
+*  [ left/right arrow keys ] - change the spacing exponent (bundles more slices towards the camera)
+*  [ M ]                     - alternates between 3 volume models:
                                   1) brick wall 2) a test volume 3) human head
-  [ L ]                     - toggles between shading modes
+*  [ L ]                     - toggles between shading modes
                                   1) off 2) Blinn-Phong 3) cell (toon) shading
-  [ N ]                     - shows the normal map of the volume
-  [ B ]                     - draws a bounding box around the volume
-  [ S ]                     - draws the outline of the polygon slices
-                                  ( also drops the frame rate twice )
+*  [ N ]                     - shows the normal map of the volume
+*  [ B ]                     - draws a bounding box around the volume
+*  [ S ]                     - draws the outline of the polygon slices ( also drops the frame rate twice )
 
 
 
 4. Dependencies
--------------- ------- ----- --- - -  -  -   -
+===============================
 Eigen - linear algebra library
   Version:    3.1.1
   Authors:    Gael Guennebaud, Benoit Jacob and others
