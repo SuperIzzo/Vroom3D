@@ -306,6 +306,9 @@ void UpdateCamera(VolumeRenderer *renderer)
 }
 
 
+
+
+
 void UpdateLight(VolumeRenderer *renderer)
 {
 	static float a = 0;
@@ -318,6 +321,8 @@ void UpdateLight(VolumeRenderer *renderer)
 	renderer->SetLightDirection(lightPos);
 	//glLightfv(GL_LIGHT0, GL_POSITION, lightPos.data() );
 }
+
+
 
 
 int main(int argc, char* args[])
@@ -371,6 +376,7 @@ int main(int argc, char* args[])
 				{
 					case sf::Event::Closed :
 						theWindow.close();
+						exit(0);
 					break;
 
 					case sf::Event::Resized :
@@ -459,7 +465,7 @@ int main(int argc, char* args[])
 			renderer->Render();
 		
 			theWindow.display();
-		}
+		}		
 
 		delete renderer;
 
